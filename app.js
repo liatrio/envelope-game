@@ -6,5 +6,5 @@ app.get('/', (req, res) => {
     res.sendFile(public + '/index.html');
 });
 app.listen(port, function () {
- console.log(`Example app listening on port !`);
+ console.log('App running on port: '+port);
 });
