@@ -13,7 +13,7 @@
                 border:2px solid #666;
             }
             html, body {
-            height: 80%;
+            height: 100%;
             }
 
             html {
@@ -135,34 +135,28 @@
 
     </head>
     <body>
-        <p id="output"></p>
-        <div id="controls">
-            <button id="startPause" onclick="startPause()">Start</button>
-            <button onclick="reset()">Reset</button>
-        </div>
 
-        <p id="scoreFlow"></p>
-        <p id="scoreBatch"></p>
-        <div id="scoreButtons">
-            <button id="teamA" onclick ="incrementA()">Flow Delivery (+1)</button>
-            <button id="teamB" onclick ="incrementB()">Batch Delivery (+10)</button>
-        </div>
 
-        <p id="FlowCashValue"></p>
-        <p id="BatchCashValue"></p>
+
+
 
 
 
         <div class="container">
             <div class="row align-items-start">
-              <div class="col-md-6">
-                One of three columns
+              <div class="col">
+                <p id="output"></p>
               </div>
-              <div class="col-md-2">
-                One of three columns
+              <div class="col">
+                <p id="scoreFlow"></p>
               </div>
-              <div class="col-md-2">
-                One of three columns
+              <div class="col">
+                <p id="FlowCashValue"></p>
+              </div>
+              <div class="col">
+                <div id="scoreButtons">
+                    <button id="teamA" onclick ="incrementA()">Flow Delivery (+1)</button>
+                </div>
               </div>
             </div>
             <br>
@@ -170,29 +164,26 @@
             <br>
             <div class="row align-items-center">
               <div class="col">
-                One of three columns
+                <div id="controls">
+                    <button id="startPause" onclick="startPause()">Start</button>
+                    <button onclick="reset()">Reset</button>
+                </div>
               </div>
               <div class="col">
-                One of three columns
+                <p id="scoreBatch"></p>
               </div>
               <div class="col">
-                One of three columns
+                <p id="BatchCashValue"></p>
+              </div>
+              <div class="col">
+                <div id="scoreButtons">
+                    <button id="teamB" onclick ="incrementB()">Batch Delivery (+10)</button>
+                </div>
               </div>
             </div>
             <br>
             <br>
             <br>
-            <div class="row align-items-end">
-              <div class="col">
-                One of three columns
-              </div>
-              <div class="col">
-                One of three columns
-              </div>
-              <div class="col">
-                One of three columns
-              </div>
-            </div>
           </div>
     </body>
 </html>
