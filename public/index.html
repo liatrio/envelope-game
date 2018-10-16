@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
         <style>
             #output{
                 width:100px;
@@ -8,6 +12,21 @@
                 background-color: #CCC;
                 border:2px solid #666;
             }
+            html, body {
+            height: 80%;
+            }
+
+            html {
+                display: table;
+                margin: auto;
+            }
+
+            body {
+                width: 960px;
+                display: table-cell;
+                vertical-align: middle;
+            }
+
         </style>
 
         <script>
@@ -99,20 +118,64 @@
 
     </head>
     <body>
-    <p id="output"></p>
-    <div id="controls">
-        <button id="startPause" onclick="startPause()">Start</button>
-        <button onclick="reset()">Reset</button>
-    </div>
+        <p id="output"></p>
+        <div id="controls">
+            <button id="startPause" onclick="startPause()">Start</button>
+            <button onclick="reset()">Reset</button>
+        </div>
 
-    <p id="scoreA"></p>
-    <p id="scoreB"></p>
-    <div id="scoreButtons">
-        <button id="teamA" onclick ="incrementA()">Team A Delivery</button>
-        <button id="teamB" onclick ="incrementB()">Team B Delivery</button>
-    </div>
+        <p id="scoreA"></p>
+        <p id="scoreB"></p>
+        <div id="scoreButtons">
+            <button id="teamA" onclick ="incrementA()">Team A Delivery</button>
+            <button id="teamB" onclick ="incrementB()">Team B Delivery</button>
+        </div>
 
-    <p id="aCashValue"></p>
-    <p id="bCashValue"></p>
+        <p id="aCashValue"></p>
+        <p id="bCashValue"></p>
+
+
+
+        <div class="container">
+            <div class="row align-items-start">
+              <div class="col-md-6">
+                One of three columns
+              </div>
+              <div class="col-md-2">
+                One of three columns
+              </div>
+              <div class="col-md-2">
+                One of three columns
+              </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <div class="row align-items-center">
+              <div class="col">
+                One of three columns
+              </div>
+              <div class="col">
+                One of three columns
+              </div>
+              <div class="col">
+                One of three columns
+              </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <div class="row align-items-end">
+              <div class="col">
+                One of three columns
+              </div>
+              <div class="col">
+                One of three columns
+              </div>
+              <div class="col">
+                One of three columns
+              </div>
+            </div>
+          </div>
     </body>
 </html>
