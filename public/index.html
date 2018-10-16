@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            #output{
+                width:100px;
+                height:25px;
+                background-color: #CCC;
+                border:2px solid #666;
+            }
+        </style>
+
+        <script>
+            var time = 0;
+            var secs = 0;
+            var running = 0;
+            var mins = 0; var secs = 0; var tenths = 0;
+            var scoreA = 0;
+            var scoreB = 0;
+            var cashA = 0;
+            var cashB = 0;
+            var sumA = 0;
+            var sumB = 0;
+
+            function startPause()
+            {
+                if (running == 0)
+                {
+                    running = 1;
+                    increment();
+                    document.getElementById("startPause").innerHTML = "Pause";
+                }
+                else
+                {
+                    running = 0;
+                    document.getElementById("startPause").innerHTML = "Resume";
+                }
+            }
+
+            function reset()
+            {
+                running = 0;
+                time = 0;
+                scoreA = 0;
+                scoreB = 0;
+                sumA = 0;
+                sumB = 0;
+                document.getElementById("startPause").innerHTML = "Start";
+                document.getElementById("output").innerHTML = "00:00:00";
+                document.getElementById("scoreA").innerHTML = "Team A Delievered = 0";
+                document.getElementById("aCashValue").innerHTML = "$0";
+                document.getElementById("scoreB").innerHTML = "Team B Delievered = 0";
+                document.getElementById("bCashValue").innerHTML = "$0";
+
+
+            }
+
+            function increment()
+            {
+                if (running == 1)
+                {
+                    setTimeout(function () {
+                        time++;
+                        mins = Math.floor(time/10/60);
+                        secs = Math.floor(time/10 % 60);
+                        tenths = time % 10;
+                        if (mins < 10)
+                        {
+                            mins = "0" + mins;
+                        }
+                        if (secs < 10)
+                        {
+                            secs = "0" + secs;
+                        }
+                        document.getElementById("output").innerHTML = mins + ":" + secs + ":" + "0" + tenths;
+                        increment();
+                    },100);
+                }
+            }
+
+            function incrementA()
+            {
+                scoreA++;
+                document.getElementById("scoreA").innerHTML = "Team A Delievered = " + scoreA;
+                sumA = (((mins*60) + secs) * scoreA) + sumA;
+                document.getElementById("aCashValue").innerHTML = "$" + sumA;
+            }
+
+            function incrementB()
+            {
+                scoreB = scoreB + 10;
+                document.getElementById("scoreB").innerHTML = "Team B Delievered = " + scoreB;
+                sumB = (((mins*60) + secs) * scoreB) + sumB;
+                document.getElementById("bCashValue").innerHTML = "$" + sumB;
+            }
+
+        </script>
+
+
+    </head>
+    <body>
+    <p id="output"></p>
+    <div id="controls">
+        <button id="startPause" onclick="startPause()">Start</button>
+        <button onclick="reset()">Reset</button>
+    </div>
+
+    <p id="scoreA"></p>
+    <p id="scoreB"></p>
+    <div id="scoreButtons">
+        <button id="teamA" onclick ="incrementA()">Team A Delivery</button>
+        <button id="teamB" onclick ="incrementB()">Team B Delivery</button>
+    </div>
+
+    <p id="aCashValue"></p>
+    <p id="bCashValue"></p>
+    </body>
+</html>
