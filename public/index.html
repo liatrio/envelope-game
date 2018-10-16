@@ -32,14 +32,15 @@
         <script>
             var time = 0;
             var secs = 0;
+            var value = 0;
             var running = 0;
             var mins = 0; var secs = 0; var tenths = 0;
-            var scoreA = 0;
-            var scoreB = 0;
-            var cashA = 0;
-            var cashB = 0;
-            var sumA = 0;
-            var sumB = 0;
+            var scoreFlow= 0;
+            var scoreBatch = 0;
+            var cashFlow = 0;
+            var cashBatch = 0;
+            var sumFlow = 0;
+            var sumBatch = 0;
 
             function startPause()
             {
@@ -47,6 +48,7 @@
                 {
                     running = 1;
                     increment();
+                    increaseValue();
                     document.getElementById("startPause").innerHTML = "Pause";
                 }
                 else
@@ -60,16 +62,16 @@
             {
                 running = 0;
                 time = 0;
-                scoreA = 0;
-                scoreB = 0;
-                sumA = 0;
-                sumB = 0;
+                scoreFlow = 0;
+                scoreBatch = 0;
+                sumFlow = 0;
+                sumBatch = 0;
                 document.getElementById("startPause").innerHTML = "Start";
                 document.getElementById("output").innerHTML = "00:00:00";
-                document.getElementById("scoreA").innerHTML = "Team A Delievered = 0";
-                document.getElementById("aCashValue").innerHTML = "$0";
-                document.getElementById("scoreB").innerHTML = "Team B Delievered = 0";
-                document.getElementById("bCashValue").innerHTML = "$0";
+                document.getElementById("scoreFlow").innerHTML = "Flow Side Delievered = 0";
+                document.getElementById("FlowCashValue").innerHTML = "Flow Cash Profits $0";
+                document.getElementById("scoreBatch").innerHTML = "Batch Side Delievered = 0";
+                document.getElementById("BatchCashValue").innerHTML = "Batch Cash Profits $0";
 
 
             }
@@ -83,6 +85,7 @@
                         mins = Math.floor(time/10/60);
                         secs = Math.floor(time/10 % 60);
                         tenths = time % 10;
+
                         if (mins < 10)
                         {
                             mins = "0" + mins;
@@ -97,20 +100,34 @@
                 }
             }
 
+            function increaseValue()
+            {
+              if (running == 1)
+              {
+                  setTimeout(function () {
+                      value++;
+                      sumBatch = scoreBatch + sumBatch;
+                      document.getElementById("BatchCashValue").innerHTML = "Batch Cash Profits $" + sumBatch;
+                      sumFlow = scoreFlow + sumFlow;
+                      document.getElementById("FlowCashValue").innerHTML = "Flow Cash Profits $" + sumFlow;
+                      increaseValue();
+                  },1000);
+              }
+            }
             function incrementA()
             {
-                scoreA++;
-                document.getElementById("scoreA").innerHTML = "Team A Delievered = " + scoreA;
-                sumA = (((mins*60) + secs) * scoreA) + sumA;
-                document.getElementById("aCashValue").innerHTML = "$" + sumA;
+                scoreFlow++;
+                document.getElementById("scoreFlow").innerHTML = "Flow Side Delievered = " + scoreFlow;
+               // sumA = (((mins*60) + secs) * scoreA) + sumA;
+                //document.getElementById("aCashValue").innerHTML = "$" + sumA;
             }
 
             function incrementB()
             {
-                scoreB = scoreB + 10;
-                document.getElementById("scoreB").innerHTML = "Team B Delievered = " + scoreB;
-                sumB = (((mins*60) + secs) * scoreB) + sumB;
-                document.getElementById("bCashValue").innerHTML = "$" + sumB;
+                scoreBatch = scoreBatch + 10;
+                document.getElementById("scoreBatch").innerHTML = "Batch Side Delievered = " + scoreBatch;
+                //sumB = (((mins*60) + secs) * scoreB) + sumB;
+                //document.getElementById("bCashValue").innerHTML = "$" + sumB;
             }
 
         </script>
@@ -124,15 +141,15 @@
             <button onclick="reset()">Reset</button>
         </div>
 
-        <p id="scoreA"></p>
-        <p id="scoreB"></p>
+        <p id="scoreFlow"></p>
+        <p id="scoreBatch"></p>
         <div id="scoreButtons">
-            <button id="teamA" onclick ="incrementA()">Team A Delivery</button>
-            <button id="teamB" onclick ="incrementB()">Team B Delivery</button>
+            <button id="teamA" onclick ="incrementA()">Flow Delivery (+1)</button>
+            <button id="teamB" onclick ="incrementB()">Batch Delivery (+10)</button>
         </div>
 
-        <p id="aCashValue"></p>
-        <p id="bCashValue"></p>
+        <p id="FlowCashValue"></p>
+        <p id="BatchCashValue"></p>
 
 
 
