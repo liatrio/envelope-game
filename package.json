@@ -1,7 +1,7 @@
 {
   "name": "envelope-game",
   "version": "1.0.0",
-  "main": "/public/index.js",
+  "main": "app.js",
   "license": "MIT",
   "dependencies": {
     "express": "^4.15.3"
