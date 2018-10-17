@@ -130,7 +130,7 @@
           sumFlow = 0;
           sumBatch = 0;
           document.getElementById("startPause").innerHTML = "Start";
-          document.getElementById("output").innerHTML = "00:00:00";
+          document.getElementById("output").innerHTML = "00:00";
           document.getElementById("scoreFlow").innerHTML = "Flow Side Delievered = 0";
           document.getElementById("FlowCashValue").innerHTML = "Flow Cash Profits $0";
           document.getElementById("scoreBatch").innerHTML = "Batch Side Delievered = 0";
@@ -147,7 +147,6 @@
                   time++;
                   mins = Math.floor(time/10/60);
                   secs = Math.floor(time/10 % 60);
-                  tenths = time % 10;
 
                   if (mins < 10)
                   {
@@ -157,7 +156,7 @@
                   {
                       secs = "0" + secs;
                   }
-                  document.getElementById("output").innerHTML = mins + ":" + secs + ":" + "0" + tenths;
+                  document.getElementById("output").innerHTML = mins + ":" + secs;
                   increment();
               },100);
           }
@@ -180,7 +179,7 @@
       function incrementA()
       {
           scoreFlow++;
-          document.getElementById("scoreFlow").innerHTML = "Flow Side Delievered = " + scoreFlow;
+          document.getElementById("scoreFlow").innerHTML = "Flow Side Delivered = " + scoreFlow;
          // sumA = (((mins*60) + secs) * scoreA) + sumA;
           //document.getElementById("aCashValue").innerHTML = "$" + sumA;
       }
@@ -188,7 +187,7 @@
       function incrementB()
       {
           scoreBatch = scoreBatch + 10;
-          document.getElementById("scoreBatch").innerHTML = "Batch Side Delievered = " + scoreBatch;
+          document.getElementById("scoreBatch").innerHTML = "Batch Side Delivered = " + scoreBatch;
           //sumB = (((mins*60) + secs) * scoreB) + sumB;
           //document.getElementById("bCashValue").innerHTML = "$" + sumB;
       }
