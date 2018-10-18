@@ -128,6 +128,7 @@
       }
 
       .counter {
+        display: inline-block;
         text-align: center;
         background: #DDD;
         width: 5em;
@@ -138,12 +139,15 @@
         border-radius: 5px;
           border: 1px solid #273948;
       }
+      .check {
+        display: inline;
+      }
 
       .cash {
         font-size: 3em;
         text-align: center;
         background: #DDD;
-        width: 5em;
+        width: 100%;
         margin: .25em auto;
         padding: .25em 0;
         color: #263848;
@@ -317,12 +321,17 @@
           </div>
 
           <div class="row align-items-center">
-            <div class="col">
-              <p id="scoreFlow" class="counter">✅ 0</p>
+            <div class="col" style="text-align:center">
+
+              <p class="check" style="font-size:2em; vertical-align:middle">✉️ </p>
+              <p id="scoreFlow" class="counter">0</p>
+
             </div>
-            <div class="col">
-              <p></p>
-              <p id="scoreBatch" class="counter">✅ 0</p>
+            <div class="col" style="text-align:center">
+
+              <p class="check" style="font-size:2em; vertical-align:middle">✉️ </p>
+              <p id="scoreBatch" class="counter">0</p>
+
             </div>
 
             <div class="col">
