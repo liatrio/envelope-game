@@ -1,189 +1,317 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <style>
-            #output{
-                width:100px;
-                height:25px;
-                background-color: #CCC;
-                border:2px solid #666;
-            }
-            html, body {
-            height: 100%;
-            }
+  <head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <title>The Envelope Game </title>
+  <link rel="shortcut icon" type = "png" href="favicon.png">
+  <style>
+      #header {
+          position: absolute;
+          color: #263847;
+          background-color: #DDD;
+          background-image: linear-gradient(180deg, #DDD 0%, #EEE 50%, #DDD 100%);
+          width: 100%;
+      }
 
-            html {
-                display: table;
-                margin: auto;
-            }
+      #header .title {
+          font-size: 1.4em;
+          margin: .25em 0 .25em 10%;
+      }
 
-            body {
-                width: 960px;
-                display: table-cell;
-                vertical-align: middle;
-            }
+      #output{
+        /*height:25px;*/
+        /*border: 2px solid #fff;*/
+        /*height: 5em;*/
+        text-align: center;
+        font-size: 2.5em;
+        /*line-height: 4em;*/
+        /*width: 80%;*/
+        /*height: 36px;*/
+        /*line-height: 32px;*/
+      }
+      p {
+        margin: 0;
+        font-size: 1em;
+        /*font-size: 14px;*/
+        /*line-height: 18px;*/
+      }
+      html, body {
+        height: 100%;
+      }
 
-        </style>
+      body {
+        background-image: linear-gradient(180deg, #263847 0%, #41515e 100%);
+        color: #fff;
+        font-size: 2.25em;
+      }
 
-        <script>
-            var time = 0;
-            var secs = 0;
-            var value = 0;
-            var running = 0;
-            var mins = 0; var secs = 0; var tenths = 0;
-            var scoreFlow= 0;
-            var scoreBatch = 0;
-            var cashFlow = 0;
-            var cashBatch = 0;
-            var sumFlow = 0;
-            var sumBatch = 0;
+      #wrapper {
+        width: 80%;
+        height: 100%;
+        display: table;
+        margin: 0 auto;
+      }
 
-            function startPause()
-            {
-                if (running == 0)
-                {
-                    running = 1;
-                    increment();
-                    increaseValue();
-                    document.getElementById("startPause").innerHTML = "Pause";
-                }
-                else
-                {
-                    running = 0;
-                    document.getElementById("startPause").innerHTML = "Resume";
-                }
-            }
+      .container {
+        /*width: 80%;*/
+        display: table-cell;
+        vertical-align: middle;
+      }
 
-            function reset()
-            {
-                running = 0;
-                time = 0;
-                scoreFlow = 0;
-                scoreBatch = 0;
-                sumFlow = 0;
-                sumBatch = 0;
-                document.getElementById("startPause").innerHTML = "Start";
-                document.getElementById("output").innerHTML = "00:00:00";
-                document.getElementById("scoreFlow").innerHTML = "Flow Side Delievered = 0";
-                document.getElementById("FlowCashValue").innerHTML = "Flow Cash Profits $0";
-                document.getElementById("scoreBatch").innerHTML = "Batch Side Delievered = 0";
-                document.getElementById("BatchCashValue").innerHTML = "Batch Cash Profits $0";
+      .row {
+        padding: 20px 0;
+      }
+
+      .timer {
+        height: 5em;
+      }
+
+      .timer > * {
+        height: 100%;
+      }
+
+      .timer_display {
+        background-image: linear-gradient(180deg, #394e5f 0%, #2d363c 100%);
+        border: 1px solid #273948;
+          border-radius: 10px;
+      }
+
+      button {
+        border: none;
+
+          display: inline-block;
+        vertical-align: top;
+        background: #90cf36;
+        color: #3b454d;
+        padding: .5em 10px;
+        cursor: pointer;
+        outline: none !important;
+        box-shadow: none !important;
+        -webkit-appearance: none !important;
+        font-weight: 700;
+        transition: all 0.4s ease;
+      }
+
+      button:hover {
+          background: #87e000;
+      }
+
+      #startPause {
+          background-color: #b7e07a;
+      }
+
+      #startPause:hover {
+          background: #87e000;
+      }
+
+      #startPause, .reset {
+        width: 100%;
+        margin: .7em 0;
+        font-size: 1em;
+      }
+
+      .reset {
+        background: #ecc665;
+        color: #333;
+      }
+
+      .reset:hover {
+          background: #f5bd30;
+      }
+
+      .counter {
+        text-align: center;
+        background: #DDD;
+        width: 5em;
+        margin: .25em auto;
+        padding: .25em 0;
+        color: #263848;
+        font-weight: 700;
+        border-radius: 5px;
+          border: 1px solid #273948;
+      }
+
+      #teamA,
+      #teamB {
+        display: block;
+        width: 100%;
+      }
+
+      @media (min-width: 2000px) {
+        /*.container {*/
+          /*width: 1700px;*/
+        /*}*/
+      }
+
+      @media (max-width: 991px) {
+        button {
+          padding: 8px 5px;
+          font-size: 12px;
+        }
+        p {
+          font-size: 12px;
+          line-height: 15px;
+        }
+      }
+
+  </style>
+
+  <script>
+      var time = 0;
+      var secs = 0;
+      var value = 0;
+      var running = 0;
+      var mins = 0; var secs = 0; var tenths = 0;
+      var scoreFlow= 0;
+      var scoreBatch = 0;
+      var cashFlow = 0;
+      var cashBatch = 0;
+      var sumFlow = 0;
+      var sumBatch = 0;
+
+      function startPause()
+      {
+          if (running == 0)
+          {
+              running = 1;
+              increment();
+              increaseValue();
+              document.getElementById("startPause").innerHTML = "Pause";
+          }
+          else
+          {
+              running = 0;
+              document.getElementById("startPause").innerHTML = "Resume";
+          }
+      }
+
+      function reset()
+      {
+          running = 0;
+          time = 0;
+          scoreFlow = 0;
+          scoreBatch = 0;
+          sumFlow = 0;
+          sumBatch = 0;
+          document.getElementById("startPause").innerHTML = "Start";
+          document.getElementById("output").innerHTML = "00:00";
+          document.getElementById("scoreFlow").innerHTML = "0";
+          document.getElementById("FlowCashValue").innerHTML = "$0";
+          document.getElementById("scoreBatch").innerHTML = "0";
+          document.getElementById("BatchCashValue").innerHTML = "$0";
 
 
-            }
+      }
 
-            function increment()
-            {
-                if (running == 1)
-                {
-                    setTimeout(function () {
-                        time++;
-                        mins = Math.floor(time/10/60);
-                        secs = Math.floor(time/10 % 60);
-                        tenths = time % 10;
+      function increment()
+      {
+          if (running == 1)
+          {
+              setTimeout(function () {
+                  time++;
+                  mins = Math.floor(time/10/60);
+                  secs = Math.floor(time/10 % 60);
 
-                        if (mins < 10)
-                        {
-                            mins = "0" + mins;
-                        }
-                        if (secs < 10)
-                        {
-                            secs = "0" + secs;
-                        }
-                        document.getElementById("output").innerHTML = mins + ":" + secs + ":" + "0" + tenths;
-                        increment();
-                    },100);
-                }
-            }
+                  if (mins < 10)
+                  {
+                      mins = "0" + mins;
+                  }
+                  if (secs < 10)
+                  {
+                      secs = "0" + secs;
+                  }
+                  document.getElementById("output").innerHTML = mins + ":" + secs;
+                  increment();
+              },100);
+          }
+      }
 
-            function increaseValue()
-            {
-              if (running == 1)
-              {
-                  setTimeout(function () {
-                      value++;
-                      sumBatch = scoreBatch + sumBatch;
-                      document.getElementById("BatchCashValue").innerHTML = "Batch Cash Profits $" + sumBatch;
-                      sumFlow = scoreFlow + sumFlow;
-                      document.getElementById("FlowCashValue").innerHTML = "Flow Cash Profits $" + sumFlow;
-                      increaseValue();
-                  },1000);
-              }
-            }
-            function incrementA()
-            {
-                scoreFlow++;
-                document.getElementById("scoreFlow").innerHTML = "Flow Side Delievered = " + scoreFlow;
-               // sumA = (((mins*60) + secs) * scoreA) + sumA;
-                //document.getElementById("aCashValue").innerHTML = "$" + sumA;
-            }
+      function increaseValue()
+      {
+        if (running == 1)
+        {
+            setTimeout(function () {
+                value++;
+                sumBatch = scoreBatch + sumBatch;
+                document.getElementById("BatchCashValue").innerHTML = "$" + sumBatch;
+                sumFlow = scoreFlow + sumFlow;
+                document.getElementById("FlowCashValue").innerHTML = "$" + sumFlow;
+                increaseValue();
+            },1000);
+        }
+      }
+      function incrementA()
+      {
+          scoreFlow++;
+          document.getElementById("scoreFlow").innerHTML = scoreFlow;
+         // sumA = (((mins*60) + secs) * scoreA) + sumA;
+          //document.getElementById("aCashValue").innerHTML = "$" + sumA;
+      }
 
-            function incrementB()
-            {
-                scoreBatch = scoreBatch + 10;
-                document.getElementById("scoreBatch").innerHTML = "Batch Side Delievered = " + scoreBatch;
-                //sumB = (((mins*60) + secs) * scoreB) + sumB;
-                //document.getElementById("bCashValue").innerHTML = "$" + sumB;
-            }
+      function incrementB()
+      {
+          scoreBatch = scoreBatch + 10;
+          document.getElementById("scoreBatch").innerHTML = scoreBatch;
+          //sumB = (((mins*60) + secs) * scoreB) + sumB;
+          //document.getElementById("bCashValue").innerHTML = "$" + sumB;
+      }
 
-        </script>
-
-
-    </head>
-    <body>
+  </script>
 
 
-
-
-
-
-
+  </head>
+  <body>
+      <div id="header">
+          <h1 class="title"><strong>The Envelope Game</strong></h1>
+      </div>
+      <div id="wrapper">
         <div class="container">
-            <div class="row align-items-start">
-              <div class="col">
-                <p id="output"></p>
-              </div>
-              <div class="col">
-                <p id="scoreFlow">Flow Side Delivered = </p>
-              </div>
-              <div class="col">
-                <p id="FlowCashValue">Flow Cash Profits $</p>
-              </div>
-              <div class="col">
-                <div id="scoreButtons">
-                    <button id="teamA" onclick ="incrementA()">Flow Delivery (+1)</button>
-                </div>
-              </div>
+          <div class="row align-items-center timer">
+            <div class="col-8">
+              <div class="timer_display"><p id="output">00:00</p></div>
             </div>
-            <br>
-            <br>
-            <br>
-            <div class="row align-items-center">
-              <div class="col">
-                <div id="controls">
-                    <button id="startPause" onclick="startPause()">Start</button>
-                    <button onclick="reset()">Reset</button>
-                </div>
-              </div>
-              <div class="col">
-                <p id="scoreBatch">Batch Side Delivered = </p>
-              </div>
-              <div class="col">
-                <p id="BatchCashValue">Batch Cash Profits $ </p>
-              </div>
-              <div class="col">
-                <div id="scoreButtons">
-                    <button id="teamB" onclick ="incrementB()">Batch Delivery (+10)</button>
-                </div>
-              </div>
+            <div class="col-2">
+              <button id="startPause" onclick="startPause()">Start</button>
             </div>
-            <br>
-            <br>
-            <br>
+            <div class="col-2">
+              <button onclick="reset()" class="reset">Reset</button>
+            </div>
           </div>
-    </body>
+          <div class="row align-items-center">
+            <div class="col">
+              <p>Flow Side Delivered:</p>
+              <p id="scoreFlow" class="counter">0</p>
+            </div>
+            <div class="col">
+              <p>Flow Cash Profits:</p>
+              <p id="FlowCashValue" class="counter">$0</p>
+            </div>
+            <div class="col">
+              <div id="scoreButtons">
+                <button id="teamA" onclick ="incrementA()">Flow Delivery (+1)</button>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col">
+              <p>Batch Side Delivered:</p>
+              <p id="scoreBatch" class="counter">0</p>
+            </div>
+            <div class="col">
+              <p>Batch Cash Profits:</p>
+              <p id="BatchCashValue" class="counter">$0</p>
+            </div>
+            <div class="col">
+              <div id="scoreButtons">
+                <button id="teamB" onclick ="incrementB()">Batch Delivery (+10)</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+  </body>
 </html>
