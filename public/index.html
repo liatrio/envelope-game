@@ -8,6 +8,19 @@
   <title>The Envelope Game </title>
   <link rel="shortcut icon" type = "png" href="favicon.png">
   <style>
+      #header {
+          position: absolute;
+          color: #263847;
+          background-color: #DDD;
+          background-image: linear-gradient(180deg, #DDD 0%, #EEE 50%, #DDD 100%);
+          width: 100%;
+      }
+
+      #header .title {
+          font-size: 1.4em;
+          margin: .25em 0 .25em 10%;
+      }
+
       #output{
         /*height:25px;*/
         /*border: 2px solid #fff;*/
@@ -251,9 +264,11 @@
 
   </head>
   <body>
+      <div id="header">
+          <h1 class="title"><strong>The Envelope Game</strong></h1>
+      </div>
       <div id="wrapper">
         <div class="container">
-          <h1 class="text-center"><strong>The Envelope Game</strong></h1>
           <div class="row align-items-center timer">
             <div class="col-8">
               <div class="timer_display"><p id="output">00:00</p></div>
