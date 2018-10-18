@@ -1,0 +1,13 @@
+version: '2.2'
+services:
+  envelope:
+    image: node:8
+    user: "node"
+    working_dir: /home/node/app
+    volumes: 
+      - ./:/home/node/app/
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    command: "node app.js"
