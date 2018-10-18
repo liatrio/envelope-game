@@ -32,6 +32,11 @@
         /*height: 36px;*/
         /*line-height: 32px;*/
       }
+      h2{
+        text-align: center;
+        font-size: 2.5em;
+
+      }
       p {
         margin: 0;
         font-size: 1em;
@@ -123,6 +128,19 @@
       }
 
       .counter {
+        text-align: center;
+        background: #DDD;
+        width: 5em;
+        margin: .25em auto;
+        padding: .25em 0;
+        color: #263848;
+        font-weight: 700;
+        border-radius: 5px;
+          border: 1px solid #273948;
+      }
+
+      .cash {
+        font-size: 3em;
         text-align: center;
         background: #DDD;
         width: 5em;
@@ -269,6 +287,51 @@
       </div>
       <div id="wrapper">
         <div class="container">
+
+          <div class="row align-items-center">
+            <div class="col">
+              <h2>Flow</h2>
+            </div>
+            <div class="col">
+              <h2>Batch</h2>
+            </div>
+            <div class="col">
+            </div>
+          </div>
+
+
+
+          <div class="row align-items-center">
+            <div class="col">
+              <p id="FlowCashValue" class="cash">$0</p>
+            </div>
+            <div class="col">
+              <p id="BatchCashValue" class="cash">$0</p>
+            </div>
+
+            <div class="col">
+              <div id="scoreButtons">
+                <button id="teamA" onclick ="incrementA()">Flow Delivery (+1)</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row align-items-center">
+            <div class="col">
+              <p id="scoreFlow" class="counter">✅ 0</p>
+            </div>
+            <div class="col">
+              <p></p>
+              <p id="scoreBatch" class="counter">✅ 0</p>
+            </div>
+
+            <div class="col">
+              <div id="scoreButtons">
+                <button id="teamB" onclick ="incrementB()">Batch Delivery (+10)</button>
+              </div>
+            </div>
+          </div>
+
           <div class="row align-items-center timer">
             <div class="col-8">
               <div class="timer_display"><p id="output">00:00</p></div>
@@ -280,36 +343,7 @@
               <button onclick="reset()" class="reset">Reset</button>
             </div>
           </div>
-          <div class="row align-items-center">
-            <div class="col">
-              <p>Flow Side Delivered:</p>
-              <p id="scoreFlow" class="counter">0</p>
-            </div>
-            <div class="col">
-              <p>Flow Cash Profits:</p>
-              <p id="FlowCashValue" class="counter">$0</p>
-            </div>
-            <div class="col">
-              <div id="scoreButtons">
-                <button id="teamA" onclick ="incrementA()">Flow Delivery (+1)</button>
-              </div>
-            </div>
-          </div>
-          <div class="row align-items-center">
-            <div class="col">
-              <p>Batch Side Delivered:</p>
-              <p id="scoreBatch" class="counter">0</p>
-            </div>
-            <div class="col">
-              <p>Batch Cash Profits:</p>
-              <p id="BatchCashValue" class="counter">$0</p>
-            </div>
-            <div class="col">
-              <div id="scoreButtons">
-                <button id="teamB" onclick ="incrementB()">Batch Delivery (+10)</button>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
 
