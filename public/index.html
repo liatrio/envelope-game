@@ -21,17 +21,7 @@
           margin: .25em 0 .25em 10%;
       }
 
-      #output{
-        /*height:25px;*/
-        /*border: 2px solid #fff;*/
-        /*height: 5em;*/
-        text-align: center;
-        font-size: 2.5em;
-        /*line-height: 4em;*/
-        /*width: 80%;*/
-        /*height: 36px;*/
-        /*line-height: 32px;*/
-      }
+
       h2{
         text-align: center;
         font-size: 2.5em;
@@ -143,12 +133,73 @@
         display: inline;
       }
 
+      @media only screen and (max-width: 400px) {
+        .cash {
+          font-size: 3em;
+          text-align: center;
+          background: #DDD;
+          width: 100%;
+          padding: .50em 0;
+          color: #263848;
+          font-weight: 700;
+          border-radius: 5px;
+          border: 1px solid #273948;
+        }
+        #output{
+          /*height:25px;*/
+          /*border: 2px solid #fff;*/
+          /*height: 5em;*/
+          text-align: center;
+          font-size: 2.5em;
+          line-height: 1em;
+          /*width: 80%;*/
+          /*height: 36px;*/
+          /*line-height: 32px;*/
+        }
+      }
+
+
+      @media only screen and (min-width: 800px) {
+        .cash {
+          font-size: 3em;
+          text-align: center;
+          background: #DDD;
+          width: 100%;
+          padding: .25em 0;
+          color: #263848;
+          font-weight: 700;
+          border-radius: 5px;
+          border: 1px solid #273948;
+        }
+        #output{
+          /*height:25px;*/
+          /*border: 2px solid #fff;*/
+          /*height: 5em;*/
+          text-align: center;
+          font-size: 2.5em;
+          /*line-height: 4em;*/
+          /*width: 80%;*/
+          /*height: 36px;*/
+          /*line-height: 32px;*/
+        }
+      }
+/*
+      @media (max-width: 991px) {
+        button {
+          padding: 8px 5px;
+          font-size: 12px;
+        }
+        p {
+          font-size: 12px;
+          line-height: 15px;
+        }
+      }*/
+
       .cash {
         font-size: 3em;
         text-align: center;
         background: #DDD;
         width: 100%;
-        margin: .25em auto;
         padding: .25em 0;
         color: #263848;
         font-weight: 700;
@@ -162,22 +213,7 @@
         width: 100%;
       }
 
-      @media (min-width: 2000px) {
-        /*.container {*/
-          /*width: 1700px;*/
-        /*}*/
-      }
 
-      @media (max-width: 991px) {
-        button {
-          padding: 8px 5px;
-          font-size: 12px;
-        }
-        p {
-          font-size: 12px;
-          line-height: 15px;
-        }
-      }
 
   </style>
 
