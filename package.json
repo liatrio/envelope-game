@@ -23,5 +23,10 @@
   "bugs": {
     "url": "https://github.com/liatrio/envelope-game/issues"
   },
-  "homepage": "https://github.com/liatrio/envelope-game#readme"
+  "homepage": "https://github.com/liatrio/envelope-game#readme",
+  "dependencies": {
+    "bootstrap": ">=4.3.1",
+    "jquery": ">=3.4.0",
+    "npm": ">=6.13.4"
+  }
 }
