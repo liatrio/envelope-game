@@ -12,3 +12,9 @@ API endpoints
 * Update player name (‘updateplayername’, request: POST, arguments: seatId, name)
 * Update stages (‘/updatestage/teamId/seatId’ request: POST, arguments: envelopes_completed, envelopes_ready)
 * Get game state (‘/getstate/gameId’: GET, response: JSON representation of game state)
+
+Game Mechanics
+At each stage the player will:
+* Open the envelope via a click
+* Type up a randomly generated string
+* Pass the envelope to the next person on their team via a click 
