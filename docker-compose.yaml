@@ -1,13 +1,14 @@
-version: '2.2'
+version: '3.8'
 services:
-  envelope:
-    image: node:8
-    user: "node"
+  node:
+    image: node:14
     working_dir: /home/node/app
+    environment: 
+      - NODE_ENV=development
     volumes: 
       - ./:/home/node/app/
     expose:
       - "8080"
     ports:
-      - "8080:8080"
-    command: "node app.js"
+      - "3000:3000"
+    command: "npm start"
