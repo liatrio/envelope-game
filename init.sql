@@ -7,27 +7,27 @@ USE envelope_game
 
 DROP TABLE IF EXISTS TEAMS
 DROP TABLE IF EXISTS GAME
-DROP TABLE IF EXISTS PLAYERS
-DROP TABLE IF EXISTS STAGE
+DROP TABLE IF EXISTS SEATS
 
 /*
-Define tables needed
+Define tables needed 
 */
 CREATE TABLE TEAMS
 (
   team_id INT NOT NULL,
   envelopes_completed INT NOT NULL,
-  team_name VARCHAR(32) NOT NULL,
-  is_team_1 INT NOT NULL,
-  finish_time DATE NOT NULL,
+  team_name VARCHAR(32),
+  is_team_1 BOOLEAN NOT NULL,
+  finish_time DATE,
   PRIMARY KEY (team_id)
 );
 
 CREATE TABLE GAME
 (
   game_id INT NOT NULL,
-  start_time DATE NOT NULL,
+  start_time DATE,
   total_stages INT NOT NULL,
+  facilitator_id INT NOT NULL,
   team_1_id INT NOT NULL,
   team_2_id INT NOT NULL,
   PRIMARY KEY (game_id),
@@ -37,25 +37,17 @@ CREATE TABLE GAME
   UNIQUE (team_2_id)
 );
 
-CREATE TABLE PLAYERS
+CREATE TABLE SEATS
 (
-  seat INT NOT NULL,
-  player_id INT NOT NULL,
-  display_name INT NOT NULL,
+  seat_number INT NOT NULL,
+  seat_id INT NOT NULL,
+  envelopes_completed INT NOT NULL,
+  envelopes_ready INT NOT NULL,
+  is_taken BOOLEAN NOT NULL,
+  display_name VARCHAR(16),
   game_id INT NOT NULL,
   team_id INT NOT NULL,
-  PRIMARY KEY (player_id),
+  PRIMARY KEY (seat_id),
   FOREIGN KEY (game_id) REFERENCES GAME(game_id),
   FOREIGN KEY (team_id) REFERENCES TEAMS(team_id)
-);
-
-CREATE TABLE STAGE
-(
-  envelopes_completed_stage INT NOT NULL,
-  envelopes_ready_stage INT NOT NULL,
-  team_id INT NOT NULL,
-  seat INT NOT NULL,
-  PRIMARY KEY (team_id, seat),
-  FOREIGN KEY (team_id) REFERENCES TEAMS(team_id),
-  FOREIGN KEY (seat) REFERENCES PLAYERS(seat)
 );
