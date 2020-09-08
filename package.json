@@ -1,39 +1,42 @@
 {
-	"name": "envelope-game",
-	"version": "1.1.0",
-	"private": true,
-	"dependencies": {
-		"@babel/core": "^7.11.6",
-		"@babel/plugin-transform-runtime": "^7.11.5",
-		"babel-loader": "^8.1.0",
-		"css-loader": "^3.6.0",
-		"express": "^4.17.1",
-		"html-webpack-plugin": "^4.4.1",
-		"node-hot": "^4.0.3",
-		"react": "^16.13.1",
-		"react-dom": "^16.13.1",
-		"react-hot-loader": "^4.12.21",
-		"react-scripts": "3.4.3",
-		"style-loader": "^1.2.1",
-		"webpack": "^4.44.1",
-		"webpack-cli": "^3.3.12",
-		"webpack-dev-middleware": "^3.7.2",
-		"webpack-hot-middleware": "^2.25.0"
-	},
-	"scripts": {
-		"start": "node .",
-		"build": "webpack",
-		"test": "jest",
-		"eject": "react-scripts eject"
-	},
-	"eslintConfig": {
-		"extends": "react-app"
-	},
-	"browserslist": {
-		"production": [
-			">0.2%",
-			"not dead",
-			"not op_mini all"
+  "name": "envelope-game",
+  "version": "1.1.0",
+  "private": true,
+  "dependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-transform-runtime": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.6.0",
+    "express": "^4.17.1",
+    "html-webpack-plugin": "^4.4.1",
+    "node-hot": "^4.0.3",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-hot-loader": "^4.12.21",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.3",
+    "style-loader": "^1.2.1",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-hot-middleware": "^2.25.0"
+  },
+  "scripts": {
+    "start": "node .",
+    "build": "webpack",
+    "test": "jest",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
     ],
     "development": [
 	    "last 1 chrome version",
