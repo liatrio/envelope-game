@@ -1,15 +1,4 @@
 /*
-Cleanup any remaining tables or databases
-*/
-DROP DATABASE IF EXISTS envelope_game
-CREATE DATABASE envelope_game
-USE envelope_game
-
-DROP TABLE IF EXISTS TEAMS
-DROP TABLE IF EXISTS GAME
-DROP TABLE IF EXISTS SEATS
-
-/*
 Define tables needed 
 */
 CREATE TABLE TEAMS
