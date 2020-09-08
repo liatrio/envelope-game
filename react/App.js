@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component } from 'react';
+import React, {Component } from 'react';
 import Home from './homepage';
 
 class App extends Component {
