@@ -47,7 +47,9 @@
   "main": "server.js",
   "devDependencies": {
     "@babel/register": "^7.11.5",
+    "jest": "^26.4.2",
     "jsdom": "^16.4.0",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "react-test-renderer": "^16.13.1"
   }
 }
