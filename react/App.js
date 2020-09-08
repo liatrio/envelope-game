@@ -1,20 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
+import Home from './homepage';
 
-const App = () => {
-   const [text, setText] = useState('Loading...');
-
-   useEffect(() => {
-      fetch('/foo').then(async (response) => {
-         const text = await response.text();
-         setText(text);
-      });
-   }, []);
-
-   return (
-      <div>
-         <h1>{text}</h1>
-      </div>
-   );
+class App extends Component {
+   render() {
+      return (
+         <div>
+            <Home />
+         </div>
+      );
+   }
 }
 
 export default App;
