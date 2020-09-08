@@ -12,6 +12,7 @@
     "express": "^4.17.1",
     "html-webpack-plugin": "^4.4.1",
     "mysql": "^2.18.1",
+    "nanoid": "^3.1.12",
     "node-hot": "^4.0.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
