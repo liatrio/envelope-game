@@ -20,7 +20,7 @@ services:
       - "3306"
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=ENVELOPE-GAME
+      - MYSQL_DATABASE=envelope-game
     volumes: 
       - ./initdb/:/docker-entrypoint-initdb.d/
 volumes:
