@@ -1,9 +1,8 @@
 version: '3.8'
 services:
   node:
-    image: node:14
     build:
-      context: ./docker
+      context: ./docker/node
       dockerfile: Dockerfile
     working_dir: /home/node/app
     environment: 
@@ -14,17 +13,15 @@ services:
       - "8080"
     ports:
       - "3000:3000"
-    command: "npm start"
   db:
-    image: mysql:8
+    build:
+      context: ./docker/sql
+      dockerfile: Dockerfile
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     expose:
       - "3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=envelope-game
-    volumes: 
-      - ./initdb/:/docker-entrypoint-initdb.d/
-volumes:
-  game-data:
+#     volumes: 
+#       - ./initdb/:/docker-entrypoint-initdb.d/
+# volumes:
+#   game-data:
