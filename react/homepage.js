@@ -1,8 +1,20 @@
 import React, { Component } from 'react'
 
-class homepage extends Component {
+class Homepage extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            disabled : false
+        }
+        this.createGame = this.createGame.bind(this);
+    }
+    
     createGame() {
         console.log("in create game");
+        if (this.state.disabled) {
+            return;
+        }
+        this.setState({disabled: true})
 
     }
     render() {
@@ -26,12 +38,12 @@ class homepage extends Component {
             <br/><br/>- Development will take the envelope, open it, and stamp on the index card the number that they see on the envelope and then they pass the envelope off to the Testing partner
             <br/><br/>- Testing will open the envelope, take the index card and adds a post-it note onto the index card that matches the number on the envelope and then they submit it to production
             <br/>
-            <button onClick={this.createGame}>
-            Create a Game    
+            <button onClick={this.createGame} disabled={this.state.disabled}>
+            {this.state.disabled ? 'Creating Game...' : 'Create a Game'}    
             </button>
             </div>
         )
     }
 }
 
-export default homepage;
+export default Homepage;
