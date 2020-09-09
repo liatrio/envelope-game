@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 
-class homepage extends Component {
+class Homepage extends Component {
     createGame() {
         console.log("in create game");
     }
     render() {
         return (
             <div>
-            <h1>The Envelope Game</h1>
+            <h1 data-testid = '123'>The Envelope Game</h1>
             <h5>About The Game</h5>
             <button onClick={this.createGame}>
             Create a Game    
@@ -17,4 +17,4 @@ class homepage extends Component {
     }
 }
 
-export default homepage;
+export default Homepage;
