@@ -2,7 +2,6 @@ const webpack = require('webpack');
 const middleware = require('webpack-dev-middleware');
 const hotMiddleware = require('webpack-hot-middleware');
 const express = require('express');
-const mysql = require('mysql');
 const path = require('path');
 
 const app = express();
@@ -28,14 +27,6 @@ if (webpackConfig.mode === 'production') {
         require('./routes').handle(req, res, next);
     });
 }
-
-// setup database connection
-const db = mysql.createConnection({
-    host: 'db',
-    user: 'root',
-    password: 'root',
-    database: 'envelope-game'
-});
 
 const port = process.env.PORT || 3000;
 
