@@ -1,10 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import {BrowserRouter as Router, Route, Link} from "react-router-dom";
 
 class Homepage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            disabled : false
+            disabled : false,
+            gameID : []
         }
         this.createGame = this.createGame.bind(this);
     }
@@ -15,7 +17,9 @@ class Homepage extends Component {
             return;
         }
         this.setState({disabled: true})
-
+        fetch('/api/create-game')
+            .then(res => res.json())
+            .then(json => this.setState({gameID: json}));
     }
     render() {
         return (
