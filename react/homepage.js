@@ -7,7 +7,7 @@ class Homepage extends Component {
         this.state = {
             disabled : false,
             gameID : null,
-            facilitatorID: []
+            facilitatorID: null
         }
         this.createGame = this.createGame.bind(this);
     }
@@ -21,8 +21,7 @@ class Homepage extends Component {
             const response = await fetch('/api/create')
             const json = await response.json();
             console.log("After await");
-            this.setState({gameID: json.game})
-            this.setState({facilitatorID: json.facilitator})
+            this.setState({gameID: json.game, facilitatorID: json.facilitator})
 
         //history.push('/Gamearea');
             //localhost:3000/gamearea/gameID
@@ -31,7 +30,7 @@ class Homepage extends Component {
         if (this.state.gameID)  {
             let redirectID = `Gamearea/${this.state.gameID}`;
             console.log(redirectID);
-            return <Redirect to={"/Gamearea/" + this.state.gameID}/>
+            return <Redirect to={{state: {facilitatorID: this.state.facilitatorID}, pathname: "/Gamearea/" + this.state.gameID}}/>
         }
         return (
             <div>
