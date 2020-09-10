@@ -6,26 +6,32 @@ class Homepage extends Component {
         super(props);
         this.state = {
             disabled : false,
-            gameID : []
+            gameID : null,
+            facilitatorID: []
         }
         this.createGame = this.createGame.bind(this);
     }
     
-    createGame() {
+    async createGame() {
         console.log("in create game");
         if (this.state.disabled) {
             return;
         }
-        this.setState({disabled: true})
-        //fetch('/api/create')
-            //.then(res => res.json())
-            //.then(json => this.setState({gameID: json}));
+            this.setState({disabled: true});
+            const response = await fetch('/api/create')
+            const json = await response.json();
+            console.log("After await");
+            this.setState({gameID: json.game})
+            this.setState({facilitatorID: json.facilitator})
+
         //history.push('/Gamearea');
             //localhost:3000/gamearea/gameID
     }
     render() {
-        if (this.state.disabled)  {
-            return <Redirect to="/Gamearea"/>
+        if (this.state.gameID)  {
+            let redirectID = `Gamearea/${this.state.gameID}`;
+            console.log(redirectID);
+            return <Redirect to={"/Gamearea/" + this.state.gameID}/>
         }
         return (
             <div>

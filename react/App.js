@@ -11,7 +11,7 @@ class App extends Component {
          <div>
             <Switch>
                <Route path="/" component={Homepage} exact/>
-               <Route path="/Gamearea" component={Gamearea}/>
+               <Route path="/Gamearea/:gameID" component={Gamearea}/>
             </Switch>
          </div>
       );
