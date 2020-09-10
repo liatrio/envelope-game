@@ -73,7 +73,7 @@ router.get('/api/create', (req, res) => {
         console.log("Number of records inserted: " + result.affectedRows);
     });
 
-    res.send(game_id);
+    res.send({game: game_id, facilitator: facilitator_id});
 });
 
 module.exports = router;
