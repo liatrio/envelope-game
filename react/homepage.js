@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {HashRouter as Router, Route, Link, useHistory, Redirect} from "react-router-dom";
+import {Redirect} from "react-router-dom";
 
 class Homepage extends Component {
     constructor(props) {
