@@ -11,6 +11,7 @@ class Gameprogress extends Component {
     render() {
         const t1TimeSpent = doMath(this.props.t1End, this.props.t1Begin);
         const t2TimeSpent = doMath(this.props.t2End, this.props.t2Begin);
+        const profitPerEnvelope = 22;
         return (
             
             <div>
@@ -18,10 +19,10 @@ class Gameprogress extends Component {
                <p> { this.props.t1Name } --- VS --- { this.props.t2Name }</p>
                <span>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    { t1TimeSpent }
+                    ${ t1TimeSpent  * profitPerEnvelope} 
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    { t2TimeSpent } 
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    ${ t2TimeSpent * profitPerEnvelope} 
                 </span>
             </div>   
         );
