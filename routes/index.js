@@ -1,6 +1,5 @@
 const { nanoid } = require('nanoid/non-secure');
 const { Router } = require('express');
-const mysql = require('mysql');
 const router = Router();
 const db = require('../db');
 const num_env = 20;

@@ -1,11 +1,18 @@
-import React, { Component } from 'react';
-import Home from './homepage';
+import React, {Component } from 'react';
+import Homepage from './homepage';
+import Gamearea from './gamearea';
+import {HashRouter as Router, Route, Link, Switch} from "react-router-dom";
+
+
 
 class App extends Component {
    render() {
       return (
          <div>
-            <Home />
+            <Switch>
+               <Route path="/" component={Homepage} exact/>
+               <Route path="/Gamearea" component={Gamearea}/>
+            </Switch>
          </div>
       );
    }

@@ -3,7 +3,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
+import {HashRouter as Router, Route, Link, Switch, browserHistory, IndexRoute} from "react-router-dom";
 
 const HotApp = hot(App);
-
-ReactDOM.render(<HotApp />, document.getElementById('app'));
+ReactDOM.render(
+    <Router>
+        <HotApp />
+    </Router>, 
+    document.getElementById('app')
+)
