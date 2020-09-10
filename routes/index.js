@@ -5,26 +5,10 @@ const router = Router();
 const db = require('../db');
 const num_env = 20;
 
-// // setup database connection
-// const db = mysql.createConnection({
-//     host: 'db',
-//     user: 'root',
-//     password: 'root',
-//     database: 'envelope-game'
-// });
-
-// // connect to the db instance
-// db.connect((err) => {
-//     if (err) {
-//         throw err;
-//     }
-//     console.log('MySql Connected...');
-// });
-
 router.get('/foo', (req, res) => res.send('Hello world!'));
 
 // endpoint to create a game
-router.get('/create-game', (req, res) => {
+router.get('/api/create', (req, res) => {
     // generate a game and facilitator id
     let game_id = nanoid(16);
     let facilitator_id = nanoid(16);
