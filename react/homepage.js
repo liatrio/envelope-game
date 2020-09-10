@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {BrowserRouter as Router, Route, Link} from "react-router-dom";
+import {BrowserRouter as Router, Route, Link, useHistory} from "react-router-dom";
 
 class Homepage extends Component {
     constructor(props) {
@@ -12,14 +12,17 @@ class Homepage extends Component {
     }
     
     createGame() {
+        //const history = useHistory();
         console.log("in create game");
         if (this.state.disabled) {
             return;
         }
         this.setState({disabled: true})
-        fetch('/api/create-game')
-            .then(res => res.json())
-            .then(json => this.setState({gameID: json}));
+        //fetch('/api/create-game')
+            //.then(res => res.json())
+            //.then(json => this.setState({gameID: json}));
+
+            //localhost:3000/gamearea/gameID
     }
     render() {
         return (
