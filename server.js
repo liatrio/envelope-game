@@ -29,7 +29,6 @@ if (webpackConfig.mode === 'production') {
 }
 
 const port = process.env.PORT || 3000;
-app.get('/Gamearea', (req, res) => res.sendFile('react/index.html'));
 
 
 app.listen(port, () => {

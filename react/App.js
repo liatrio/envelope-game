@@ -1,7 +1,7 @@
 import React, {Component } from 'react';
 import Homepage from './homepage';
 import Gamearea from './gamearea';
-import {BrowserRouter as Router, Route, Link, Switch} from "react-router-dom";
+import {HashRouter as Router, Route, Link, Switch} from "react-router-dom";
 
 
 
