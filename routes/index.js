@@ -73,7 +73,46 @@ router.get('/api/create', (req, res) => {
         console.log("Number of records inserted: " + result.affectedRows);
     });
 
-    res.send({game: game_id, facilitator: facilitator_id});
+    res.send({ game: game_id, facilitator: facilitator_id });
+});
+
+router.get('/api/join/:game_id', (req, res) => {
+    console.log(req.params.gameID)
+    let sql = `SELECT SEATS.seat_number, SEATS.seat_id, SEATS.is_taken, SEATS.display_name, GAME.game_id, TEAMS.team_id, TEAMS.is_team_1, GAME.start_time 
+               FROM SEATS 
+               INNER JOIN GAME on GAME.game_id = SEATS.game_id 
+               INNER JOIN TEAMS on TEAMS.team_id = SEATS.team_id 
+               WHERE SEATS.game_id = '${req.params.game_id}';`
+    
+    db.query(sql, function(err, result) {
+        if (err) throw err;
+        console.log(result);
+
+        if (result.length === 0) {
+            res.send({game: null});
+        }
+        let summary = {};
+        console.log(result[0].game_id);
+        summary.game = result[0].game_id;
+        summary.is_started = (result[0].start_time === null) ? false : true;
+        summary.team_1_seats = [];
+        summary.team_2_seats = [];
+        for (let i of result) {
+            let seat = {};
+            seat.seat_id = i.seat_id;
+            seat.is_taken = (i.is_taken === 1) ? true : false;
+            seat.is_team_1 = (i.is_team_1 === 1) ? true : false;
+            seat.seat_number = i.seat_number;
+            seat.team_id = i.team_id;
+            seat.display_name = i.display_name;
+            if (i.is_team_1) {
+                summary.team_1_seats.push(seat);
+            } else {
+                summary.team_2_seats.push(seat);
+            }
+        }
+        res.send(summary);
+    });
 });
 
 module.exports = router;
