@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faChair} from '@fortawesome/free-solid-svg-icons'
 import {useParams} from 'react-router-dom'
+import {withRouter} from 'react-router'
 
 class Gamearea extends Component {
     constructor(props)
@@ -24,7 +25,7 @@ class Gamearea extends Component {
     }
 
     async componentDidMount() {
-        let gameID = useParams();
+        const gameID = this.props.match.params.gameID;
         console.log(gameID);
         const response = await fetch('/api/join/{gameID}')
         const json = await response.json();
