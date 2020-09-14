@@ -1,7 +1,7 @@
 import React, {Component } from 'react';
 import Homepage from './homepage';
 import Gamearea from './gamearea';
-import {HashRouter as Router, Route, Link, Switch} from "react-router-dom";
+import {Route, Switch} from "react-router-dom";
 
 
 
@@ -11,7 +11,7 @@ class App extends Component {
          <div>
             <Switch>
                <Route path="/" component={Homepage} exact/>
-               <Route path="/Gamearea" component={Gamearea}/>
+               <Route path="/Gamearea/:gameID" component={Gamearea}/>
             </Switch>
          </div>
       );
