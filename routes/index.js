@@ -86,8 +86,8 @@ router.get('/api/join/:game_id', (req, res) => {
 
   db.query(sql, function (err, result) {
     if (err) throw err;
-    console.log(result);
 
+    // if result from query is of length 0 then query was invalid
     if (result.length === 0) {
       res.send({ game: null });
     }
@@ -116,7 +116,8 @@ router.get('/api/join/:game_id', (req, res) => {
 });
 
 router.get('/api/choose-seat/:game_id/:seat_id', (req, res) => {
-  let sql = `UPDATE SEATS SET is_taken = 1 WHERE seat_id = '${req.params.seat_id}' and game_id = '${req.params.game_id}' and is_taken = 0`;
+  let sql = `UPDATE SEATS SET is_taken = 1 WHERE seat_id = '${req.params.seat_id}'
+             AND game_id = '${req.params.game_id}' and is_taken = 0`;
   db.query(sql, function (err, result) {
     if (err) throw err;
     // if there was not a changed row then seat is already taken
@@ -128,6 +129,13 @@ router.get('/api/choose-seat/:game_id/:seat_id', (req, res) => {
       res.send({ sucess: true, seat_id: req.params.seat_id });
     }
   })
+});
+
+router.post('/api/set-team-name', (req, res) => {
+  let sql = `UPDATE TEAMS INNER JOIN GAME on GAME.team_1_id = team_id or GAME.team_2_id = team_id
+             SET team_name = '${req.body.team_name}'
+             WHERE team_id = '${req.body.team_id}'
+             AND facilitator_id = '${req.body.facilitator_id}'`;
 });
 
 module.exports = router;
