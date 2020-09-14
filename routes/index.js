@@ -95,8 +95,7 @@ router.get('/api/join/:game_id', (req, res) => {
     console.log(result[0].game_id);
     summary.game = result[0].game_id;
     summary.is_started = (result[0].start_time === null) ? false : true;
-    summary.team_1_seats = [];
-    summary.team_2_seats = [];
+    summary.seats = [];
     for (let i of result) {
       let seat = {};
       seat.seat_id = i.seat_id;
@@ -105,11 +104,7 @@ router.get('/api/join/:game_id', (req, res) => {
       seat.seat_number = i.seat_number;
       seat.team_id = i.team_id;
       seat.display_name = i.display_name;
-      if (i.is_team_1) {
-        summary.team_1_seats.push(seat);
-      } else {
-        summary.team_2_seats.push(seat);
-      }
+      summary.seats.push(seat);
     }
     res.send(summary);
   });
