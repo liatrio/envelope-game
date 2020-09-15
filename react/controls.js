@@ -17,8 +17,8 @@ class Controls extends Component {
 
     // bind any handlers in the constructor
     this.togglePlay = this.togglePlay.bind(this);
-    this.itemInputChange = this.itemInputChange.bind(this);
     this.teamOneChange = this.teamOneChange.bind(this);
+    this.teamTwoChange = this.teamTwoChange.bind(this);
     this.setTeamName = this.setTeamName.bind(this);
   }
 
@@ -26,26 +26,9 @@ class Controls extends Component {
     this.setState({ isGoing: !this.state.isGoing });
   }
 
-  itemInputChange(event){
-    
-    console.log('Before Switch');
-    switch(event.target.name){
-      case 'teamOneInput': {
-        console.log('Inside teamOneInput');
-        this.setState({teamOneName: event.target.value});
-        break;
-      }
-      case 'teamTwoInput':{
-        console.log('Inside teamTwoInput');
-      this.setState({teamTwoName: event.target.value});
-      break;
-      }
-    }
-  }
+  teamOneChange(event){this.setState({teamOneName: event.target.value});}
 
-   teamOneChange(event){this.setState({teamOneName: event.target.value});}
-
-   teamTwoChange(event){this.setState({teamTwoName: event.target.value});}
+  teamTwoChange(event){this.setState({teamTwoName: event.target.value});}
 
 
   async setTeamName() {
