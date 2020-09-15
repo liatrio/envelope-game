@@ -11,54 +11,59 @@ class Gamearea extends Component {
     {
         super(props);
         this.state = {
-            gameID: null,
-            color: Array(6).fill('black'),
+            chairColor: Array(6).fill('black'),
             isStarted: false,
-            team1Seats: [],
-            team2Seats: []
+            seats: [],
         }
     }
-    chooseSeat(index)
+    chooseSeat(index, seat_id)
     {
-        let colorChoice = this.state.color;
-        colorChoice[index] = 'blue';
-        console.log(index);
-        this.setState({color: colorChoice});
+        console.log(seat_id);
+        // api/chooseSeat/gameID/seatID
+
     }
 
     async componentDidMount() {
         const gameID = this.props.match.params.gameID;
         console.log(gameID);
-        const response = await fetch('/api/join/{gameID}')
+        const response = await fetch(`/api/join/${gameID}`)
         const json = await response.json();
-        this.setState({isStarted: json.isStarted, })
+        console.log(json);
+        this.setState({isStarted: json.is_started, seats: json.seats});
+        console.log(this.state.seats);
     }
 
     render() {
-        
-        var chairs = this.state.color;
-        var team1Chairs = [];
-        var team2Chairs = [];
-        /* chairs.forEach(c, index => {
-            if (c.isTeamOne) {
-              team1Chairs.append(<li><button onClick={() => this.chooseSeat(index)}>
-              <FontAwesomeIcon icon={faChair} size = '7x' color={c} /><br/>
+        var team1Chairs = []
+        var team2Chairs = []
+        //var chairColor = this.state.chairColor;
+        var chairs = this.state.seats;
+        chairs.forEach((c, index) => {
+            console.log(c.seat_id);
+            if (c.is_team_1) {
+              team1Chairs.push(<li><button onClick={() => this.chooseSeat(index, c.seat_id)}>
+              <FontAwesomeIcon icon={faChair} size = '7x' color={c.is_taken ? 'blue' : 'black'} /><br/>
           </button></li>);
             }
             else {
-                team2Chairs.append(<li><button onClick={() => this.chooseSeat(index)}>
-              <FontAwesomeIcon icon={faChair} size = '7x' color={c} /><br/>
+                team2Chairs.push(<li><button onClick={() => this.chooseSeat(index, c.seat_id)}>
+              <FontAwesomeIcon icon={faChair} size = '7x' color={c.is_taken ? 'blue' : 'black'} /><br/>
           </button></li>);
             }  
-        }); */
+        });
+        console.log(team1Chairs);
 
         console.log(this.props.location.facilitatorID)
         return (
             <div>
                 Game Area
+                <ul>{team1Chairs}
+                </ul>
+                <ul>
+                {team2Chairs}
+                </ul>
                 <Gameprogress t1Name = {'Eager Carabou'} t1Begin={4} t1End={9} t2Name={'Gothic Toads'} t2Begin={1} t2End={2}/>
                 <Controls facilitatorGets = {this.props.location.state.facilitatorID} />
-
             </div>
         )
 
