@@ -25,14 +25,7 @@ class Gamearea extends Component {
         const response = await fetch(`/api/choose-seat/${gameID}/${seat_id}`)
         const json = await response.json();
         console.log(json);
-        //this.setState({disabled: true});
-        //this.updateGame();
         // api/chooseSeat/gameID/seatID
-
-    }
-
-    tick() {
-        this.setState({seconds: this.state.seconds + 1});
     }
 
     async componentDidMount() {
@@ -41,13 +34,9 @@ class Gamearea extends Component {
 
     async joinGame() {
         const gameID = this.props.match.params.gameID;
-        console.log("interval begin");
-        console.log(gameID);
         const response = await fetch(`/api/join/${gameID}`)
         const json = await response.json();
-        console.log(json);
         this.setState({isStarted: json.is_started, seats: json.seats});
-        console.log(this.state.seats);
         this.intervalID = setTimeout(this.joinGame.bind(this), 500);
     }
 
