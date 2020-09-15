@@ -2,49 +2,80 @@ import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faChair} from '@fortawesome/free-solid-svg-icons'
 import {useParams} from 'react-router-dom'
+import './index.css'
 import {withRouter} from 'react-router'
 
 class Gamearea extends Component {
+    
     constructor(props)
     {
         super(props);
+        this.intervalID = '';
         this.state = {
-            chairColor: Array(6).fill('black'),
             isStarted: false,
             seats: [],
+            seconds: 0,
+            seatsFull: false,       
         }
     }
-    chooseSeat(index, seat_id)
+    async chooseSeat(index, seat_id)
     {
+        const gameID = this.props.match.params.gameID;
         console.log(seat_id);
+        const response = await fetch(`/api/choose-seat/${gameID}/${seat_id}`)
+        const json = await response.json();
+        console.log(json);
+        //this.setState({disabled: true});
+        //this.updateGame();
         // api/chooseSeat/gameID/seatID
 
     }
 
+    tick() {
+        this.setState({seconds: this.state.seconds + 1});
+    }
+
     async componentDidMount() {
+        this.joinGame();
+    }
+
+    async joinGame() {
         const gameID = this.props.match.params.gameID;
+        console.log("interval begin");
         console.log(gameID);
         const response = await fetch(`/api/join/${gameID}`)
         const json = await response.json();
         console.log(json);
         this.setState({isStarted: json.is_started, seats: json.seats});
         console.log(this.state.seats);
+        this.intervalID = setTimeout(this.joinGame.bind(this), 500);
+    }
+
+    async updateGame() {
+        const gameID = this.props.match.params.gameID;
+        console.log("interval begin");
+        console.log(gameID);
+        const response = await fetch(`/api/updatestate/${gameID}`)
+        const json = await response.json();
+        console.log(json);
+        this.setState({isStarted: json.is_started, seats: json.seats});
+        console.log(this.state.seats);
+        
     }
 
     render() {
         var team1Chairs = []
         var team2Chairs = []
-        //var chairColor = this.state.chairColor;
         var chairs = this.state.seats;
         chairs.forEach((c, index) => {
-            console.log(c.seat_id);
+            console.log(c.is_taken);
             if (c.is_team_1) {
-              team1Chairs.push(<li><button onClick={() => this.chooseSeat(index, c.seat_id)}>
+              team1Chairs.push(<li><button disabled={c.is_taken ? true : false} onClick={() => this.chooseSeat(index, c.seat_id)}>
               <FontAwesomeIcon icon={faChair} size = '7x' color={c.is_taken ? 'blue' : 'black'} /><br/>
           </button></li>);
             }
             else {
-                team2Chairs.push(<li><button onClick={() => this.chooseSeat(index, c.seat_id)}>
+                team2Chairs.push(<li><button disabled={c.is_taken ? true : false} onClick={() => this.chooseSeat(index, c.seat_id)}>
               <FontAwesomeIcon icon={faChair} size = '7x' color={c.is_taken ? 'blue' : 'black'} /><br/>
           </button></li>);
             }  
