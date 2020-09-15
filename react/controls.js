@@ -60,6 +60,7 @@ class Controls extends Component {
           <label>
            Name:
           <input type="text" onChange= {this.teamOneChange} name="teamOneName" />
+          <input type="text" onChange= {this.teamTwoChange} name="teamTwoName" />
           </label>
           <input type="button" onClick= {this.setTeamName}  value="Submit" />
         </form>
