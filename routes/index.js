@@ -70,13 +70,12 @@ router.get('/api/create', (req, res) => {
     if (err) throw err;
     console.log("Number of records inserted: " + result.affectedRows);
   });
-
   res.send({ game: game_id, facilitator: facilitator_id });
 });
 
 router.get('/api/join/:game_id', (req, res) => {
   console.log(req.params.game_id);
-  let sql = `SELECT SEATS.seat_number, SEATS.seat_id, SEATS.is_taken, SEATS.display_name, GAME.game_id, TEAMS.team_id, TEAMS.is_team_1, GAME.start_time 
+  let sql = `SELECT SEATS.seat_number, SEATS.seat_id, SEATS.is_taken, SEATS.display_name, GAME.game_id, TEAMS.team_id, TEAMS.is_team_1, GAME.start_time, GAME.team_1_id, GAME.team_2_id
                FROM SEATS 
                INNER JOIN GAME on GAME.game_id = SEATS.game_id 
                INNER JOIN TEAMS on TEAMS.team_id = SEATS.team_id 
@@ -93,6 +92,8 @@ router.get('/api/join/:game_id', (req, res) => {
     console.log(result[0].game_id);
     summary.game = result[0].game_id;
     summary.is_started = (result[0].start_time === null) ? false : true;
+    summary.team_1_id = result[0].team_1_id;
+    summary.team_2_id = result[0].team_2_id;
     summary.seats = [];
     for (let i of result) {
       let seat = {};
