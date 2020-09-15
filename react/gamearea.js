@@ -69,8 +69,6 @@ class Gamearea extends Component {
           </button></li>);
             }  
         });
-        console.log(team1Chairs);
-
         return (
             <div>
                 Game Area<br/>
