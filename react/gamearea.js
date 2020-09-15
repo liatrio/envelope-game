@@ -58,12 +58,10 @@ class Gamearea extends Component {
                 Game Area
                 <Gameprogress t1Name = {'Eager Carabou'} t1Begin={4} t1End={9} t2Name={'Gothic Toads'} t2Begin={1} t2End={2}/>
                 <Controls facilitatorGets = {this.props.location.state.facilitatorID} />
-        return (
-            <div>
-                Game Area<br/>
-                <ul>{team1Chairs}</ul>
+
             </div>
         )
+
     }
 }
 

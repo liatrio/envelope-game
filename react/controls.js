@@ -52,7 +52,7 @@ class Controls extends Component {
       body: JSON.stringify({title: 'React POST Set Team Names'})
     }
     console.log(" before await fetch")
-    const response = await fetch('/api/setteamname')
+    const response = await fetch('/api/set-team-name')
     const json = await response.json();
     console.log("After team name await");
     this.setState( {facilitator_id: json.facilitator, })
