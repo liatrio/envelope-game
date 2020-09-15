@@ -14,6 +14,8 @@ class Gamearea extends Component {
             chairColor: Array(6).fill('black'),
             isStarted: false,
             seats: [],
+            team_id_1: '',
+            team_id_2: '',
         }
     }
     chooseSeat(index, seat_id)
@@ -29,8 +31,9 @@ class Gamearea extends Component {
         const response = await fetch(`/api/join/${gameID}`)
         const json = await response.json();
         console.log(json);
-        this.setState({isStarted: json.is_started, seats: json.seats});
+        this.setState({isStarted: json.is_started, seats: json.seats, team_id_1: json.team_id_1, team_id_2: json.team_id_2});
         console.log(this.state.seats);
+        console.log(this.state.seats[0].team_id)
     }
 
     render() {
@@ -57,13 +60,13 @@ class Gamearea extends Component {
         return (
             <div>
                 Game Area
+                <Gameprogress t1Name = {'Eager Carabou'} t1Begin={4} t1End={9} t2Name={'Gothic Toads'} t2Begin={1} t2End={2}/>
                 <ul>{team1Chairs}
                 </ul>
                 <ul>
                 {team2Chairs}
                 </ul>
-                <Gameprogress t1Name = {'Eager Carabou'} t1Begin={4} t1End={9} t2Name={'Gothic Toads'} t2Begin={1} t2End={2}/>
-                <Controls facilitatorGets = {this.props.location.state.facilitatorID} />
+                <Controls facilitatorGets = {this.props.location.state.facilitatorID} team_id_1 = {this.props.location.state.team_id_1} team_id_2 = {this.props.location.state.team_id_2} />
             </div>
         )
 

@@ -16,9 +16,9 @@ class Controls extends Component {
     };
 
     // bind any handlers in the constructor
-    //this.togglePlay = this.togglePlay.bind(this);
+    this.togglePlay = this.togglePlay.bind(this);
     this.itemInputChange = this.itemInputChange.bind(this);
-    //this.inputSubmitHandler = this.inputSubmitHandler.bind(this);
+    this.setTeamName = this.setTeamName.bind(this);
   }
 
   togglePlay(val) {
@@ -49,10 +49,10 @@ class Controls extends Component {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
-      body: JSON.stringify({title: 'React POST Set Team Names'})
+      body: JSON.stringify({team_name: this.state.teamOneName, team_id: this.state.team_id, faciliatator_id: this.props.facilitatorGets})
     }
     console.log(" before await fetch")
-    const response = await fetch('/api/set-team-name')
+    const response = await fetch('/api/set-team-name', requestOptions)
     const json = await response.json();
     console.log("After team name await");
     this.setState( {facilitator_id: json.facilitator, })
