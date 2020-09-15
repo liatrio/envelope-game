@@ -18,6 +18,7 @@ class Controls extends Component {
     // bind any handlers in the constructor
     this.togglePlay = this.togglePlay.bind(this);
     this.itemInputChange = this.itemInputChange.bind(this);
+    this.teamOneChange = this.teamOneChange.bind(this);
     this.setTeamName = this.setTeamName.bind(this);
   }
 
@@ -26,6 +27,7 @@ class Controls extends Component {
   }
 
   itemInputChange(event){
+    
     console.log('Before Switch');
     switch(event.target.name){
       case 'teamOneInput': {
@@ -41,6 +43,11 @@ class Controls extends Component {
     }
   }
 
+   teamOneChange(event){this.setState({teamOneName: event.target.value});}
+
+   teamTwoChange(event){this.setState({teamTwoName: event.target.value});}
+
+
   async setTeamName() {
     //if(this.state.disabled) {
     //  return;
@@ -49,13 +56,13 @@ class Controls extends Component {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
-      body: JSON.stringify({team_name: this.state.teamOneName, team_id: this.state.team_id, faciliatator_id: this.props.facilitatorGets})
+      body: JSON.stringify({team_name: this.state.teamOneName, team_id: this.props.team_id_1, faciliatator_id: this.props.facilitatorGets})
     }
     console.log(" before await fetch")
     const response = await fetch('/api/set-team-name', requestOptions)
     const json = await response.json();
     console.log("After team name await");
-    this.setState( {facilitator_id: json.facilitator, })
+    this.setState( { facilitator_id: json.facilitator })
 
   }
 
@@ -69,7 +76,7 @@ class Controls extends Component {
         <form>
           <label>
            Name:
-          <input type="text" onChange= {this.itemInputChange} name="teamOneName" />
+          <input type="text" onChange= {this.teamOneChange} name="teamOneName" />
           </label>
           <input type="button" onClick= {this.setTeamName}  value="Submit" />
         </form>

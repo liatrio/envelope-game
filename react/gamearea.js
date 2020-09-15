@@ -31,9 +31,10 @@ class Gamearea extends Component {
         const response = await fetch(`/api/join/${gameID}`)
         const json = await response.json();
         console.log(json);
-        this.setState({isStarted: json.is_started, seats: json.seats, team_id_1: json.team_id_1, team_id_2: json.team_id_2});
+        this.setState({isStarted: json.is_started, seats: json.seats, team_id_1: json.team_1_id, team_id_2: json.team_2_id});
         console.log(this.state.seats);
-        console.log(this.state.seats[0].team_id)
+        console.log('Team 1 id: ' + json.team_1_id)
+        console.log('Team 2 id: ' + json.team_2_id)
     }
 
     render() {
@@ -66,7 +67,7 @@ class Gamearea extends Component {
                 <ul>
                 {team2Chairs}
                 </ul>
-                <Controls facilitatorGets = {this.props.location.state.facilitatorID} team_id_1 = {this.props.location.state.team_id_1} team_id_2 = {this.props.location.state.team_id_2} />
+                <Controls facilitatorGets = {this.props.location.state.facilitatorID} team_id_1 = {this.state.team_id_1} team_id_2 = {this.state.team_id_2} />
             </div>
         )
 
