@@ -4,60 +4,72 @@ import Controls from './controls'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faChair} from '@fortawesome/free-solid-svg-icons'
 import {useParams} from 'react-router-dom'
+import './index.css'
 import {withRouter} from 'react-router'
 
 class Gamearea extends Component {
+    
     constructor(props)
     {
         super(props);
+        this.intervalID = '';
         this.state = {
-            chairColor: Array(6).fill('black'),
             isStarted: false,
             seats: [],
             team_id_1: '',
             team_id_2: '',
+            seconds: 0,
+            seatsFull: false,       
         }
     }
-    chooseSeat(index, seat_id)
+    async chooseSeat(index, seat_id)
     {
+        const gameID = this.props.match.params.gameID;
         console.log(seat_id);
+        const response = await fetch(`/api/choose-seat/${gameID}/${seat_id}`)
+        const json = await response.json();
+        console.log(json);
         // api/chooseSeat/gameID/seatID
-
     }
 
     async componentDidMount() {
+        this.joinGame();
+    }
+
+    async joinGame() {
         const gameID = this.props.match.params.gameID;
-        console.log(gameID);
         const response = await fetch(`/api/join/${gameID}`)
         const json = await response.json();
-        console.log(json);
+        this.setState({isStarted: json.is_started, seats: json.seats});
+        this.intervalID = setTimeout(this.joinGame.bind(this), 500);
+    }
+
+    async updateGame() {
+        const gameID = this.props.match.params.gameID;
+        const response = await fetch(`/api/updatestate/${gameID}`)
+        const json = await response.json();
         this.setState({isStarted: json.is_started, seats: json.seats, team_id_1: json.team_1_id, team_id_2: json.team_2_id});
-        console.log(this.state.seats);
-        console.log('Team 1 id: ' + json.team_1_id)
-        console.log('Team 2 id: ' + json.team_2_id)
+        
     }
 
     render() {
         var team1Chairs = []
         var team2Chairs = []
-        //var chairColor = this.state.chairColor;
         var chairs = this.state.seats;
         chairs.forEach((c, index) => {
-            console.log(c.seat_id);
+            console.log(c.is_taken);
             if (c.is_team_1) {
-              team1Chairs.push(<li><button onClick={() => this.chooseSeat(index, c.seat_id)}>
+              team1Chairs.push(<li><button disabled={c.is_taken ? true : false} onClick={() => this.chooseSeat(index, c.seat_id)}>
               <FontAwesomeIcon icon={faChair} size = '7x' color={c.is_taken ? 'blue' : 'black'} /><br/>
           </button></li>);
             }
             else {
-                team2Chairs.push(<li><button onClick={() => this.chooseSeat(index, c.seat_id)}>
+                team2Chairs.push(<li><button disabled={c.is_taken ? true : false} onClick={() => this.chooseSeat(index, c.seat_id)}>
               <FontAwesomeIcon icon={faChair} size = '7x' color={c.is_taken ? 'blue' : 'black'} /><br/>
           </button></li>);
             }  
         });
-        console.log(team1Chairs);
 
-        console.log(this.props.location.facilitatorID)
         return (
             <div>
                 Game Area
