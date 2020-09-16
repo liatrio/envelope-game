@@ -34,16 +34,14 @@ class Controls extends Component {
 
   async setTeamOneName() {
     console.log("Entered setTeamOneName function");
-    const requestOptions = {
+    console.log("Before Await Team one");
+    const response = await fetch('/api/set-team-name', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
       body: JSON.stringify({team_name: this.state.teamOneName, team_id: this.props.team_id_1, faciliatator_id: this.props.facilitatorGets})
-    }
-    
-    const response = await fetch('/api/set-team-name', requestOptions)
+    });
     const json = await response.json();
-    
-    this.setState( { facilitator_id: json.facilitator })
+    console.log(json);
     console.log("Finished setTeamOneName");
   }
 
@@ -52,19 +50,18 @@ class Controls extends Component {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
-      body: JSON.stringify({team_name: this.state.teamTwoName, team_id: this.props.team_id_2, faciliatator_id: this.props.facilitatorGets})
-    }
-    
-    const response = await fetch('/api/set-team-name', requestOptions)
+      body: {team_name: this.state.teamTwoName, team_id: this.props.team_id_2, faciliatator_id: this.props.facilitatorGets}
+    };
+    console.log(requestOptions); 
+    const response = await fetch('/api/set-team-name', requestOptions);
     const json = await response.json();
-    
-    this.setState( { facilitator_id: json.facilitator })
+    console.log(json);
     console.log("Finished setTeamTwoName");
   }
 
   render() {
     let ic = this.state.isGoing ? faPause : faPlay;
-    console.log(this.state.faciltatorId)
+    //console.log(this.state.faciltatorId)
 
     
     return (

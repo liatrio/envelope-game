@@ -134,6 +134,7 @@ router.get('/api/game-state/:id', (req, res) => {
 });
 
 router.post('/api/set-team-name', (req, res) => {
+    console.log(req.body.team_name);
   let sql = `UPDATE TEAMS INNER JOIN GAME on GAME.team_1_id = team_id or GAME.team_2_id = team_id
              SET team_name = '${req.body.team_name}'
              WHERE team_id = '${req.body.team_id}'

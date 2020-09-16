@@ -46,13 +46,13 @@ class Gamearea extends Component {
         const gameID = this.props.match.params.gameID;
         const response = await fetch(`/api/join/${gameID}`)
         const json = await response.json();
-        this.setState({isStarted: json.is_started, seats: json.seats});
+        this.setState({isStarted: json.is_started, seats: json.seats, team_id_1: json.team_1_id, team_id_2: json.team_2_id});
         this.intervalID = setTimeout(this.joinGame.bind(this), 500);
-        console.log(this.state.seats);
+        
         if (this.state.seats.every(s => s.is_taken === true))
         {
             //this.intervalID = setTimeout(this.updateGame.bind(this), 500);
-            console.log(this.state.seats.is_taken);
+          
             clearTimeout(this.intervalID);
             this.updateGame();
         }
@@ -86,7 +86,7 @@ class Gamearea extends Component {
 
     async updateGame() {
         const gameID = this.props.match.params.gameID;
-        const response = await fetch(`/api/updatestate/${gameID}`)
+        //const response = await fetch(`/api/updatestate/${gameID}`)
         const response = await fetch(`/api/game-state/${gameID}`)
         const json = await response.json();
         this.setState({isStarted: json.is_started, seats: json.seats, team_id_1: json.team_1_id, team_id_2: json.team_2_id});
