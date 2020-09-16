@@ -24,9 +24,6 @@ class Gamearea extends Component {
             teamName_2: 'Unnamed Team 2',      
         }
 
-        this.getTeamOneName = this.getTeamOneName.bind(this);
-        this.getTeamTwoName = this.getTeamTwoName.bind(this);
-
     }
     async chooseSeat(index, seat_id)
     {
@@ -46,7 +43,7 @@ class Gamearea extends Component {
         const gameID = this.props.match.params.gameID;
         const response = await fetch(`/api/join/${gameID}`)
         const json = await response.json();
-        this.setState({isStarted: json.is_started, seats: json.seats, team_id_1: json.team_1_id, team_id_2: json.team_2_id});
+        this.setState({isStarted: json.is_started, seats: json.seats, team_id_1: json.team_1_id, team_id_2: json.team_2_id, teamName_1: json.teamName_1, teamName_2: json.teamName_2});
         this.intervalID = setTimeout(this.joinGame.bind(this), 500);
         
         if (this.state.seats.every(s => s.is_taken === true))
@@ -56,32 +53,6 @@ class Gamearea extends Component {
             clearTimeout(this.intervalID);
             this.updateGame();
         }
-    }
-
-    async getTeamOneName() {
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', requestOptions},
-            body: JSON.stringify({team_name: this.state.teamOneName, team_id: this.props.team_id_1, faciliatator_id: this.props.location.state.facilitatorID})
-          }
-        const response = await fetch('/api/set-team-name')
-        const json = await response.json();
-        
-        this.setState( { teamName_1: json.team_name, team_id_1})
-
-    }
-
-    async getTeamTwoName() {
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', requestOptions},
-            body: JSON.stringify({team_name: this.state.teamOneName, team_id: this.props.team_id_2, faciliatator_id: this.props.location.state.facilitatorID})
-          }
-        const response = await fetch('/api/set-team-name')
-        const json = await response.json();
-        
-        this.setState( { teamName_2: json.team_name})
-
     }
 
     async updateGame() {

@@ -70,7 +70,7 @@ router.get('/api/create', (req, res) => {
 });
 
 router.get('/api/join/:game_id', (req, res) => {
-  let sql = `SELECT SEATS.seat_number, SEATS.seat_id, SEATS.is_taken, SEATS.display_name, GAME.game_id, TEAMS.team_id, TEAMS.is_team_1, GAME.start_time, GAME.team_1_id, GAME.team_2_id
+  let sql = `SELECT SEATS.seat_number, SEATS.seat_id, SEATS.is_taken, SEATS.display_name, GAME.game_id, TEAMS.team_id, TEAMS.is_team_1, TEAMS.team_name, GAME.start_time, GAME.team_1_id, GAME.team_2_id
                FROM SEATS 
                INNER JOIN GAME on GAME.game_id = SEATS.game_id 
                INNER JOIN TEAMS on TEAMS.team_id = SEATS.team_id 
@@ -89,6 +89,8 @@ router.get('/api/join/:game_id', (req, res) => {
     summary.team_1_id = result[0].team_1_id;
     summary.team_2_id = result[0].team_2_id;
     summary.seats = [];
+
+
     for (let i of result) {
       let seat = {};
       seat.seat_id = i.seat_id;
@@ -97,8 +99,17 @@ router.get('/api/join/:game_id', (req, res) => {
       seat.seat_number = i.seat_number;
       seat.team_id = i.team_id;
       seat.display_name = i.display_name;
+    if (i.is_team_1 === 1)
+    {
+        summary.teamName_1 = i.team_name;
+    }
+    else if (i.is_team_1 === 0)
+    {
+        summary.teamName_2 = i.team_name;
+    }
       summary.seats.push(seat);
     }
+
     res.send(summary);
   });
 });
@@ -134,7 +145,6 @@ router.get('/api/game-state/:id', (req, res) => {
 });
 
 router.post('/api/set-team-name', (req, res) => {
-    console.log(req.body.team_name);
   let sql = `UPDATE TEAMS INNER JOIN GAME on GAME.team_1_id = team_id or GAME.team_2_id = team_id
              SET team_name = '${req.body.team_name}'
              WHERE team_id = '${req.body.team_id}'
