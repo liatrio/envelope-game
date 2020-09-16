@@ -16,3 +16,7 @@
     flex-flow: column wrap;
     justify-content: space-between
 }
+
+.chairColumn {
+    display: inline-block;
+}
