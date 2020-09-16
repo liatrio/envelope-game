@@ -48,6 +48,14 @@ class Gamearea extends Component {
         const json = await response.json();
         this.setState({isStarted: json.is_started, seats: json.seats});
         this.intervalID = setTimeout(this.joinGame.bind(this), 500);
+        console.log(this.state.seats);
+        if (this.state.seats.every(s => s.is_taken === true))
+        {
+            //this.intervalID = setTimeout(this.updateGame.bind(this), 500);
+            console.log(this.state.seats.is_taken);
+            clearTimeout(this.intervalID);
+            this.updateGame();
+        }
     }
 
     async getTeamOneName() {
@@ -78,13 +86,10 @@ class Gamearea extends Component {
 
     async updateGame() {
         const gameID = this.props.match.params.gameID;
-        //console.log("interval begin");
-        //console.log(gameID);
         const response = await fetch(`/api/updatestate/${gameID}`)
+        const response = await fetch(`/api/game-state/${gameID}`)
         const json = await response.json();
-        //console.log(json);
         this.setState({isStarted: json.is_started, seats: json.seats, team_id_1: json.team_1_id, team_id_2: json.team_2_id});
-        //console.log(this.state.seats);
         
     }
 
@@ -95,12 +100,12 @@ class Gamearea extends Component {
         chairs.forEach((c, index) => {
             //console.log(c.is_taken);
             if (c.is_team_1) {
-              team1Chairs.push(<li><button disabled={c.is_taken ? true : false} onClick={() => this.chooseSeat(index, c.seat_id)}>
+              team1Chairs.push(<li><button className={c.is_taken ? "chairFilled" : "chairNotFilled"} disabled={c.is_taken ? true : false} onClick={() => this.chooseSeat(index, c.seat_id)}>
               <FontAwesomeIcon icon={faChair} size = '7x' color={c.is_taken ? 'blue' : 'black'} /><br/>
           </button></li>);
             }
             else {
-                team2Chairs.push(<li><button disabled={c.is_taken ? true : false} onClick={() => this.chooseSeat(index, c.seat_id)}>
+                team2Chairs.push(<li><button className={c.is_taken ? "chairFilled" : "chairNotFilled"} disabled={c.is_taken ? true : false} onClick={() => this.chooseSeat(index, c.seat_id)}>
               <FontAwesomeIcon icon={faChair} size = '7x' color={c.is_taken ? 'blue' : 'black'} /><br/>
           </button></li>);
             }  
