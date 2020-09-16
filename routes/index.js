@@ -161,6 +161,23 @@ router.post('/api/set-team-name', (req, res) => {
   });
 });
 
+router.post('api/set-player-name', (req, res) => {
+    let sql = `UPDATE SEATS
+                SET display_name = '${req.body.display_name}'
+                WHERE seat_id = ${req.body.seat_id}`;
+    db.query(sql, function (err, result) 
+    {
+        if (err) throw err;
+
+        if (result.changedRows !== 1) 
+        {
+            res.send({ success: false });
+        } else 
+        {
+            res.send({ success: true });
+        }
+    });
+});
 
 router.get('/api/choose-seat/:game_id/:seat_id', (req, res) => {
   let sql = `UPDATE SEATS SET is_taken = 1 WHERE seat_id = '${req.params.seat_id}'
