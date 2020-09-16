@@ -20,7 +20,7 @@ router.get('/api/create', (req, res) => {
   }
 
   // insert create team skeletons
-  console.log('inserting into team');
+ 
   let values = [
     [team_ids[0], 0, true],
     [team_ids[1], 0, false]
@@ -28,21 +28,21 @@ router.get('/api/create', (req, res) => {
   let sql = 'INSERT INTO TEAMS (team_id, envelopes_completed, is_team_1) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
-    console.log("Number of records inserted: " + result.affectedRows);
+
   });
 
   // create game instance
-  console.log('inserting into game');
+
   values = [
     [game_id, (seat_ids.length / 2), facilitator_id, team_ids[0], team_ids[1]]
   ];
   sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
-    console.log("Number of records inserted: " + result.affectedRows);
+
   });
 
-  console.log('inserting into seats');
+
   // create seats
   values = [];
   for (let i = 0; i < seat_ids.length; i++) {
@@ -56,10 +56,10 @@ router.get('/api/create', (req, res) => {
   sql = 'INSERT INTO SEATS (seat_id, seat_number, envelopes_completed, envelopes_ready, is_taken, game_id, team_id) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
-    console.log("Number of records inserted: " + result.affectedRows);
+
   });
 
-  console.log('inserting into envelopes');
+
   values = [];
   for (let i = 0; i < num_env; i++) {
     values[i] = [nanoid(16), 0, Math.random() * (num_env - 1) + 1, game_id, team_ids[0]]
@@ -68,13 +68,13 @@ router.get('/api/create', (req, res) => {
   sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
-    console.log("Number of records inserted: " + result.affectedRows);
+
   });
   res.send({ game: game_id, facilitator: facilitator_id });
 });
 
 router.get('/api/join/:game_id', (req, res) => {
-  console.log(req.params.game_id);
+
   let sql = `SELECT SEATS.seat_number, SEATS.seat_id, SEATS.is_taken, SEATS.display_name, GAME.game_id, TEAMS.team_id, TEAMS.is_team_1, GAME.start_time, GAME.team_1_id, GAME.team_2_id
                FROM SEATS 
                INNER JOIN GAME on GAME.game_id = SEATS.game_id 
@@ -89,7 +89,6 @@ router.get('/api/join/:game_id', (req, res) => {
       res.send({ game: null });
     }
     let summary = {};
-    console.log(result[0].game_id);
     summary.game = result[0].game_id;
     summary.is_started = (result[0].start_time === null) ? false : true;
     summary.team_1_id = result[0].team_1_id;
@@ -110,7 +109,7 @@ router.get('/api/join/:game_id', (req, res) => {
 });
 
 router.get('/api/game-state/:id', (req, res) => {
-  console.log(req.params.id);
+
   let sql = `SELECT envelope_id, envelope_state, seat_id, envelope_state, envelope_end, matching_stamp, start_time, ENVELOPES.game_id, team_id, team_1_id, team_2_id
              FROM ENVELOPES 
              INNER JOIN GAME on GAME.game_id = ENVELOPES.game_id
@@ -118,7 +117,6 @@ router.get('/api/game-state/:id', (req, res) => {
   db.query(sql, function (err, result) {
     if (err) throw err;
 
-    //console.log(result);
     let state = {
       game_id: result[0].game_id,
       start_time: null,

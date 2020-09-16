@@ -19,7 +19,8 @@ class Controls extends Component {
     this.togglePlay = this.togglePlay.bind(this);
     this.teamOneChange = this.teamOneChange.bind(this);
     this.teamTwoChange = this.teamTwoChange.bind(this);
-    this.setTeamName = this.setTeamName.bind(this);
+    this.setTeamOneName = this.setTeamOneName.bind(this);
+    this.setTeamTwoName = this.setTeamTwoName.bind(this);
   }
 
   togglePlay(val) {
@@ -31,22 +32,34 @@ class Controls extends Component {
   teamTwoChange(event){this.setState({teamTwoName: event.target.value});}
 
 
-  async setTeamName() {
-    //if(this.state.disabled) {
-    //  return;
-    //}
-    console.log("before POST")
+  async setTeamOneName() {
+    console.log("Entered setTeamOneName function");
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
       body: JSON.stringify({team_name: this.state.teamOneName, team_id: this.props.team_id_1, faciliatator_id: this.props.facilitatorGets})
     }
-    console.log(" before await fetch")
+    
     const response = await fetch('/api/set-team-name', requestOptions)
     const json = await response.json();
-    console.log("After team name await");
+    
     this.setState( { facilitator_id: json.facilitator })
+    console.log("Finished setTeamOneName");
+  }
 
+  async setTeamTwoName() {
+    console.log("Entered setTeamTwoName function")
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify({team_name: this.state.teamTwoName, team_id: this.props.team_id_2, faciliatator_id: this.props.facilitatorGets})
+    }
+    
+    const response = await fetch('/api/set-team-name', requestOptions)
+    const json = await response.json();
+    
+    this.setState( { facilitator_id: json.facilitator })
+    console.log("Finished setTeamTwoName");
   }
 
   render() {
@@ -58,11 +71,12 @@ class Controls extends Component {
       <div>
         <form>
           <label>
-           Name:
-          <input type="text" onChange= {this.teamOneChange} name="teamOneName" />
-          <input type="text" onChange= {this.teamTwoChange} name="teamTwoName" />
+          Team One Name: <input type="text" onChange= {this.teamOneChange} name="teamOneName" />
+          <input type="button" onClick= {this.setTeamOneName}  value="Submit" />
+          <br />
+          Team Two Name: <input type="text" onChange= {this.teamTwoChange} name="teamTwoName" />
+          <input type="button" onClick= {this.setTeamTwoName}  value="Submit" />
           </label>
-          <input type="button" onClick= {this.setTeamName}  value="Submit" />
         </form>
         <FontAwesomeIcon icon={ic} spin onClick={this.togglePlay} />
     
