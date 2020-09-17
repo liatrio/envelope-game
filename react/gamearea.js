@@ -32,6 +32,14 @@ class Gamearea extends Component {
     console.log(id);
     this.setState({ seatId: id });
   }
+  async chooseSeat(index, seat_id) {
+    const gameID = this.props.match.params.gameID;
+    //console.log(seat_id);
+    const response = await fetch(`/api/choose-seat/${gameID}/${seat_id}`)
+    const json = await response.json();
+    //console.log(json);
+    // api/chooseSeat/gameID/seatID
+  }
 
   async componentDidMount() {
     this.joinGame();
@@ -41,8 +49,8 @@ class Gamearea extends Component {
     const gameID = this.props.match.params.gameID;
     const response = await fetch(`/api/join/${gameID}`)
     const json = await response.json();
-    this.setState({ isStarted: json.is_started, seats: json.seats, team_id_1: json.team_1_id, team_id_2: json.team_2_id, teamName_1: json.teamName_1, teamName_2: json.teamName_2 });
-    this.intervalID = setTimeout(this.joinGame.bind(this), 500);
+    this.setState({ isStarted: json.is_started, seats: json.seats, team_id_0: json.team_1_id, team_id_2: json.team_2_id, teamName_1: json.teamName_1, teamName_2: json.teamName_2 });
+    this.intervalID = setTimeout(this.joinGame.bind(this), 499);
 
     if (this.state.seats.every(s => s.is_taken === true)) {
       this.setState({ seatsFull: true });
@@ -58,7 +66,7 @@ class Gamearea extends Component {
   }
 
   render() {
-    if (typeof(this.props.location.state) === 'undefined') {
+    if (typeof (this.props.location.state) === 'undefined') {
       return (
         <div>
           Game Area
