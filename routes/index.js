@@ -30,6 +30,10 @@ router.get('/api/create', (req, res) => {
   let sql = 'INSERT INTO TEAMS (team_id, envelopes_completed, is_team_1) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
+<<<<<<< HEAD
+
+=======
+>>>>>>> CHICO-1018
   });
 
   // create game instance
@@ -39,6 +43,10 @@ router.get('/api/create', (req, res) => {
   sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
+<<<<<<< HEAD
+
+=======
+>>>>>>> CHICO-1018
   });
 
   // create seats
@@ -54,6 +62,10 @@ router.get('/api/create', (req, res) => {
   sql = 'INSERT INTO SEATS (seat_id, seat_number, envelopes_completed, envelopes_ready, is_taken, game_id, team_id) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
+<<<<<<< HEAD
+
+=======
+>>>>>>> CHICO-1018
   });
 
   values = [];
@@ -64,6 +76,10 @@ router.get('/api/create', (req, res) => {
   sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
+<<<<<<< HEAD
+
+=======
+>>>>>>> CHICO-1018
   });
   res.send({ game: game_id, facilitator: facilitator_id });
 });
@@ -98,12 +114,14 @@ router.get('/api/join/:game_id', (req, res) => {
       seat.seat_number = i.seat_number;
       seat.team_id = i.team_id;
       seat.display_name = i.display_name;
-      if (i.is_team_1 === 1) {
+    if (i.is_team_1 === 1)
+    {
         summary.teamName_1 = i.team_name;
-      }
-      else if (i.is_team_1 === 0) {
+    }
+    else if (i.is_team_1 === 0)
+    {
         summary.teamName_2 = i.team_name;
-      }
+    }
       summary.seats.push(seat);
     }
 
@@ -158,18 +176,21 @@ router.post('/api/set-team-name', (req, res) => {
 });
 
 router.post('api/set-player-name', (req, res) => {
-  let sql = `UPDATE SEATS
+    let sql = `UPDATE SEATS
                 SET display_name = '${req.body.display_name}'
                 WHERE seat_id = ${req.body.seat_id}`;
-  db.query(sql, function (err, result) {
-    if (err) throw err;
+    db.query(sql, function (err, result) 
+    {
+        if (err) throw err;
 
-    if (result.changedRows !== 1) {
-      res.send({ success: false });
-    } else {
-      res.send({ success: true });
-    }
-  });
+        if (result.changedRows !== 1) 
+        {
+            res.send({ success: false });
+        } else 
+        {
+            res.send({ success: true });
+        }
+    });
 });
 
 router.get('/api/choose-seat/:game_id/:seat_id', (req, res) => {
