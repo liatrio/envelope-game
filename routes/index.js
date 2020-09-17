@@ -1,8 +1,11 @@
 const { nanoid } = require('nanoid/non-secure');
 const { Router } = require('express');
 const router = Router();
+const moment = require('moment');
 const db = require('../db');
+
 const num_env = 20;
+
 
 // endpoint to create a game
 router.get('/api/create', (req, res) => {
@@ -27,7 +30,6 @@ router.get('/api/create', (req, res) => {
   let sql = 'INSERT INTO TEAMS (team_id, envelopes_completed, is_team_1) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
-
   });
 
   // create game instance
@@ -37,7 +39,6 @@ router.get('/api/create', (req, res) => {
   sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
-
   });
 
   // create seats
@@ -53,7 +54,6 @@ router.get('/api/create', (req, res) => {
   sql = 'INSERT INTO SEATS (seat_id, seat_number, envelopes_completed, envelopes_ready, is_taken, game_id, team_id) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
-
   });
 
   values = [];
@@ -64,7 +64,6 @@ router.get('/api/create', (req, res) => {
   sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
-
   });
   res.send({ game: game_id, facilitator: facilitator_id });
 });
@@ -99,14 +98,12 @@ router.get('/api/join/:game_id', (req, res) => {
       seat.seat_number = i.seat_number;
       seat.team_id = i.team_id;
       seat.display_name = i.display_name;
-    if (i.is_team_1 === 1)
-    {
+      if (i.is_team_1 === 1) {
         summary.teamName_1 = i.team_name;
-    }
-    else if (i.is_team_1 === 0)
-    {
+      }
+      else if (i.is_team_1 === 0) {
         summary.teamName_2 = i.team_name;
-    }
+      }
       summary.seats.push(seat);
     }
 
@@ -115,8 +112,7 @@ router.get('/api/join/:game_id', (req, res) => {
 });
 
 router.get('/api/game-state/:id', (req, res) => {
-  console.log(req.params.id);
-  let sql = `SELECT envelope_id, envelope_state, seat_id, envelope_state, envelope_end, matching_stamp, start_time, ENVELOPES.game_id, team_id, team_1_id, team_2_id
+  let sql = `SELECT envelope_id, envelope_state, seat_id, envelope_state, envelope_end, matching_stamp, start_time, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id
              FROM ENVELOPES 
              INNER JOIN GAME on GAME.game_id = ENVELOPES.game_id
              WHERE ENVELOPES.game_id = '${req.params.id}'`;
@@ -125,7 +121,7 @@ router.get('/api/game-state/:id', (req, res) => {
 
     let state = {
       game_id: result[0].game_id,
-      start_time: null,
+      start_time: result[0].start_time,
       team_1_id: result[0].team_1_id,
       team_2_id: result[0].team_2_id,
       envelopes: []
@@ -162,21 +158,18 @@ router.post('/api/set-team-name', (req, res) => {
 });
 
 router.post('api/set-player-name', (req, res) => {
-    let sql = `UPDATE SEATS
+  let sql = `UPDATE SEATS
                 SET display_name = '${req.body.display_name}'
                 WHERE seat_id = ${req.body.seat_id}`;
-    db.query(sql, function (err, result) 
-    {
-        if (err) throw err;
+  db.query(sql, function (err, result) {
+    if (err) throw err;
 
-        if (result.changedRows !== 1) 
-        {
-            res.send({ success: false });
-        } else 
-        {
-            res.send({ success: true });
-        }
-    });
+    if (result.changedRows !== 1) {
+      res.send({ success: false });
+    } else {
+      res.send({ success: true });
+    }
+  });
 });
 
 router.get('/api/choose-seat/:game_id/:seat_id', (req, res) => {
@@ -193,6 +186,25 @@ router.get('/api/choose-seat/:game_id/:seat_id', (req, res) => {
       res.send({ sucess: true, seat_id: req.params.seat_id });
     }
   })
+});
+
+router.get('/api/start-game/:facilitator_id/:game_id', (req, res) => {
+  let timestamp = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+  let sql = `UPDATE GAME
+             SET start_time = '${timestamp}'
+             WHERE facilitator_id = '${req.params.facilitator_id}'
+             AND game_id = '${req.params.game_id}'`;
+  db.query(sql, function (err, result) {
+    if (err) throw err;
+
+    // return if query succeeded or not
+    if (result.changedRows !== 1) {
+      res.send({ sucess: false });
+    } else {
+      res.send({ sucess: true });
+    }
+  });
+
 });
 
 module.exports = router;
