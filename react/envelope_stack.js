@@ -15,7 +15,10 @@ class EnvelopeStack extends Component {
   render() {
     return (
       <div>
+        {this.props.stack_type}
+        <br></br>
         <Button
+          active={this.props.count !== 0}
         >
           <FontAwesomeIcon
             icon={faEnvelope}
@@ -23,7 +26,9 @@ class EnvelopeStack extends Component {
           >
           </FontAwesomeIcon>
         </Button>
-        <Badge pill variant="primary">{this.state.initialCount}</Badge>
+        <Badge pill variant="primary">
+          {this.props.count}
+        </Badge>
       </div>
     );
   }

@@ -188,6 +188,33 @@ router.get('/api/choose-seat/:game_id/:seat_id', (req, res) => {
   })
 });
 
+router.get('/api/update-envelope/:game_id/:envelope_id/:seat_id/:state', (req, res) => {
+  let sql;
+  if (req.params.seat_id === "finish") {
+    let timestamp = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+    sql = `UPDATE ENVELOPES
+           SET envelope_state = '${req.params.state}',
+               envelope_end = ${timestamp}
+           WHERE game_id = '${req.params.game_id}'
+           AND envelope_id = '${req.params.envelope_id}'`;
+  } else {
+    sql = `UPDATE ENVELOPES
+           SET seat_id = '${req.params.seat_id}',
+               envelope_state = '${req.params.state}'
+           WHERE game_id = '${req.params.game_id}'
+           AND envelope_id = '${req.params.envelope_id}'`;
+  }
+  db.query(sql, function (err, result) {
+    if (err) throw err;
+
+    if (result.changedRows !== 1) {
+      res.send({ success: false });
+    } else {
+      res.send({ success: true });
+    }
+  });
+});
+
 router.get('/api/start-game/:facilitator_id/:game_id', (req, res) => {
   let timestamp = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
   let sql = `UPDATE GAME

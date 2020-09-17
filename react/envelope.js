@@ -24,6 +24,10 @@ class Envelope extends Component {
     this.checkStamp = this.checkStamp.bind(this);
   }
 
+  async updateEnvelope(id, state) {
+    
+  }
+
   checkStamp(num) {
     let checked = this.state.checked;
     checked[num] = true;
@@ -66,7 +70,7 @@ class Envelope extends Component {
             Envelope number {this.state.matching_stamp}
             <br></br>
             <FontAwesomeIcon
-              icon={faEnvelope} size='5x'
+              icon={this.state.envelope_state !== 1 ? faEnvelope : faEnvelopeOpen} size='5x'
               onClick={() => this.setState({ open: !open })}
               aria-controls="collapse-stamp-bar"
               aria-expanded={open}

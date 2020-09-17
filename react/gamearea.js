@@ -34,7 +34,6 @@ class Gamearea extends Component {
   }
   async chooseSeat(index, seat_id) {
     const gameID = this.props.match.params.gameID;
-    //console.log(seat_id);
     const response = await fetch(`/api/choose-seat/${gameID}/${seat_id}`)
     const json = await response.json();
   }
@@ -78,7 +77,7 @@ class Gamearea extends Component {
           Game Area
           <EnvelopeStack></EnvelopeStack>
           <Gameprogress t1Name={'Eager Carabou'} t1Begin={4} t1End={9} t2Name={'Gothic Toads'} t2Begin={1} t2End={2} />
-          <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
+          <ChairsCollection seats={this.state.seats.sort((a, b) => a.seat_number - b.seat_number)} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
           <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} />
         </div>
       );

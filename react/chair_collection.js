@@ -26,12 +26,13 @@ class ChairsCollection extends Component {
   }
 
   render() {
-    var team1Chairs = []
-    var team2Chairs = []
+    let team1Chairs = []
+    let team2Chairs = []
     this.props.seats.forEach((c, index) => {
       if (c.is_team_1) {
         team1Chairs.push(
           <Chair
+            otherChairs={this.props.seats}
             setSeatId={(id) => this.props.setSeatId(id)}
             playerSeatId={this.props.playerSeatId}
             is_team_1={c.is_team_1}
@@ -39,7 +40,7 @@ class ChairsCollection extends Component {
             team_id={c.team_id}
             game_id={this.props.gameID}
             is_taken={c.is_taken}
-            index={index}
+            seat_number={c.seat_number}
           ></Chair>
         );
       }
@@ -53,7 +54,7 @@ class ChairsCollection extends Component {
             team_id={c.team_id}
             game_id={this.props.gameID}
             is_taken={c.is_taken}
-            index={index}
+            seat_number={c.seat_number}
           ></Chair>
         );
       }
