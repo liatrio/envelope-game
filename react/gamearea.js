@@ -37,8 +37,6 @@ class Gamearea extends Component {
     //console.log(seat_id);
     const response = await fetch(`/api/choose-seat/${gameID}/${seat_id}`)
     const json = await response.json();
-    //console.log(json);
-    // api/chooseSeat/gameID/seatID
   }
 
   async componentDidMount() {
