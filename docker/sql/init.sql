@@ -14,7 +14,7 @@ CREATE TABLE TEAMS
 CREATE TABLE GAME
 (
   game_id VARCHAR(16) NOT NULL,
-  start_time DATE,
+  start_time DATETIME,
   total_stages INT NOT NULL,
   facilitator_id VARCHAR(16) NOT NULL,
   team_1_id VARCHAR(16) NOT NULL,
@@ -46,8 +46,8 @@ CREATE TABLE ENVELOPES
   envelope_id VARCHAR(16) NOT NULL,
   envelope_state INT NOT NULL,
   matching_stamp INT NOT NULL,
-  envelope_start DATE,
-  envelope_end DATE,
+  envelope_start DATETIME,
+  envelope_end DATETIME,
   seat_id VARCHAR(16),
   team_id VARCHAR(16) NOT NULL,
   game_id VARCHAR(16) NOT NULL,
