@@ -8,7 +8,7 @@ class Controls extends Component {
     super();
     this.state = {
       isGoing: false,
-      disabled : false,
+      disabled: false,
       teamOneName: '',
       teamTwoName: '',
       facilitator_id: ''
@@ -27,9 +27,9 @@ class Controls extends Component {
     this.setState({ isGoing: !this.state.isGoing });
   }
 
-  teamOneChange(event){this.setState({teamOneName: event.target.value});}
+  teamOneChange(event) { this.setState({ teamOneName: event.target.value }); }
 
-  teamTwoChange(event){this.setState({teamTwoName: event.target.value});}
+  teamTwoChange(event) { this.setState({ teamTwoName: event.target.value }); }
 
 
   async setTeamOneName() {
@@ -37,14 +37,14 @@ class Controls extends Component {
     console.log("Before Await Team one");
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         team_name: this.state.teamOneName,
-        team_id: this.props.team_id_1, 
+        team_id: this.props.team_id_1,
         facilitator_id: this.props.facilitatorGets,
       })
     };
-    console.log(requestOptions); 
+    console.log(requestOptions);
     const response = await fetch('/api/set-team-name', requestOptions);
     const json = await response.json();
 
@@ -56,7 +56,7 @@ class Controls extends Component {
     console.log("Entered setTeamTwoName function")
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         team_name: this.state.teamTwoName,
         team_id: this.props.team_id_2,
@@ -64,10 +64,10 @@ class Controls extends Component {
       })
     };
 
-    console.log(requestOptions); 
+    console.log(requestOptions);
     const response = await fetch('/api/set-team-name', requestOptions);
     const json = await response.json();
-    
+
     console.log(json);
     console.log("Finished setTeamTwoName");
   }
@@ -76,20 +76,20 @@ class Controls extends Component {
     let ic = this.state.isGoing ? faPause : faPlay;
     //console.log(this.state.faciltatorId)
 
-    
+
     return (
       <div>
         <form>
           <label>
-          Team One Name: <input type="text" onChange= {this.teamOneChange} name="teamOneName" />
-          <input type="button" onClick= {this.setTeamOneName}  value="Submit" />
-          <br />
-          Team Two Name: <input type="text" onChange= {this.teamTwoChange} name="teamTwoName" />
-          <input type="button" onClick= {this.setTeamTwoName}  value="Submit" />
+            Team One Name: <input type="text" onChange={this.teamOneChange} name="teamOneName" />
+            <input type="button" onClick={this.setTeamOneName} value="Submit" />
+            <br />
+          Team Two Name: <input type="text" onChange={this.teamTwoChange} name="teamTwoName" />
+            <input type="button" onClick={this.setTeamTwoName} value="Submit" />
           </label>
         </form>
         <FontAwesomeIcon icon={ic} spin onClick={this.togglePlay} />
-    
+
       </div>
     )
   }
