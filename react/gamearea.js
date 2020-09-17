@@ -63,7 +63,8 @@ class Gamearea extends Component {
         
         return (
             <div>
-                Game Area
+                Game Area.
+               
                 <Gameprogress t1Name = {this.state.teamName_1} t1Begin={4} t1End={9} t2Name={this.state.teamName_2} t2Begin={1} t2End={2}/>
                 <ul>{team1Chairs}
                 </ul>
