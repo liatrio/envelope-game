@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import Gameprogress from './gameprogress';
-import Chairs from './chairs';
+import ChairsCollection from './chair_collection';
 import Controls from './controls'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChair } from '@fortawesome/free-solid-svg-icons'
 import { useParams } from 'react-router-dom'
 import './index.css'
 import { withRouter } from 'react-router'
+import EnvelopeStack from './envelope_stack'
 
 class Gamearea extends Component {
 
@@ -20,9 +21,16 @@ class Gamearea extends Component {
       team_id_2: '',
       seconds: 0,
       seatsFull: false,
+      seatId: null,
       teamName_1: 'Unnamed Team 1',
       teamName_2: 'Unnamed Team 2',
     }
+    this.setSeatId = this.setSeatId.bind(this);
+  }
+
+  setSeatId(id) {
+    console.log(id);
+    this.setState({ seatId: id });
   }
 
   async componentDidMount() {
@@ -37,6 +45,7 @@ class Gamearea extends Component {
     this.intervalID = setTimeout(this.joinGame.bind(this), 500);
 
     if (this.state.seats.every(s => s.is_taken === true)) {
+      this.setState({ seatsFull: true });
       clearTimeout(this.intervalID);
     }
   }
@@ -49,14 +58,26 @@ class Gamearea extends Component {
   }
 
   render() {
-    return (
-      <div>
-        Game Area
-        <Gameprogress t1Name={'Eager Carabou'} t1Begin={4} t1End={9} t2Name={'Gothic Toads'} t2Begin={1} t2End={2} />
-        <Chairs seats={this.state.seats} gameID={this.props.match.params.gameID} />
-        <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} />
-      </div>
-    );
+    if (typeof(this.props.location.state) === 'undefined') {
+      return (
+        <div>
+          Game Area
+          <Gameprogress t1Name={'Eager Carabou'} t1Begin={4} t1End={9} t2Name={'Gothic Toads'} t2Begin={1} t2End={2} />
+          <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          Game Area
+          <EnvelopeStack></EnvelopeStack>
+          <Gameprogress t1Name={'Eager Carabou'} t1Begin={4} t1End={9} t2Name={'Gothic Toads'} t2Begin={1} t2End={2} />
+          <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
+          <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} />
+        </div>
+      );
+    }
+
   }
 }
 

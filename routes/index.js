@@ -180,10 +180,10 @@ router.get('/api/choose-seat/:game_id/:seat_id', (req, res) => {
     // if there was not a changed row then seat is already taken
     // or invalid request
     if (result.changedRows !== 1) {
-      res.send({ sucess: false });
+      res.send({ success: false });
     } else {
       // return a confirmation of success and the seat id
-      res.send({ sucess: true, seat_id: req.params.seat_id });
+      res.send({ success: true, seat_id: req.params.seat_id });
     }
   })
 });
@@ -199,9 +199,9 @@ router.get('/api/start-game/:facilitator_id/:game_id', (req, res) => {
 
     // return if query succeeded or not
     if (result.changedRows !== 1) {
-      res.send({ sucess: false });
+      res.send({ success: false });
     } else {
-      res.send({ sucess: true });
+      res.send({ success: true });
     }
   });
 

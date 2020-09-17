@@ -23,7 +23,6 @@ class Homepage extends Component {
   }
   render() {
     if (this.state.gameID) {
-      let redirectID = `Gamearea/${this.state.gameID}`;
       return <Redirect to={{ state: { facilitatorID: this.state.facilitatorID }, pathname: "/Gamearea/" + this.state.gameID }} />
     }
     return (

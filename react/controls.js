@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 
@@ -9,10 +8,6 @@ class Controls extends Component {
     this.state = {
       isGoing: false,
       disabled: false,
-      teamOneName: '',
-      teamTwoName: '',
-      facilitator_id: ''
-
     };
 
     // bind any handlers in the constructor
@@ -64,6 +59,7 @@ class Controls extends Component {
       })
     };
 
+
     console.log(requestOptions);
     const response = await fetch('/api/set-team-name', requestOptions);
     const json = await response.json();
@@ -74,9 +70,6 @@ class Controls extends Component {
 
   render() {
     let ic = this.state.isGoing ? faPause : faPlay;
-    //console.log(this.state.faciltatorId)
-
-
     return (
       <div>
         <form>
@@ -88,8 +81,7 @@ class Controls extends Component {
             <input type="button" onClick={this.setTeamTwoName} value="Submit" />
           </label>
         </form>
-        <FontAwesomeIcon icon={ic} spin onClick={this.togglePlay} />
-
+        <FontAwesomeIcon icon={ic} size="5x" onClick={this.togglePlay} />
       </div>
     )
   }
