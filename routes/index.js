@@ -30,7 +30,6 @@ router.get('/api/create', (req, res) => {
   let sql = 'INSERT INTO TEAMS (team_id, envelopes_completed, is_team_1) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
-    console.log("Number of records inserted: " + result.affectedRows);
   });
 
   // create game instance
@@ -40,7 +39,6 @@ router.get('/api/create', (req, res) => {
   sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
-    console.log("Number of records inserted: " + result.affectedRows);
   });
 
   // create seats
@@ -56,7 +54,6 @@ router.get('/api/create', (req, res) => {
   sql = 'INSERT INTO SEATS (seat_id, seat_number, envelopes_completed, envelopes_ready, is_taken, game_id, team_id) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
-    console.log("Number of records inserted: " + result.affectedRows);
   });
 
   values = [];
@@ -67,7 +64,6 @@ router.get('/api/create', (req, res) => {
   sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
-    console.log("Number of records inserted: " + result.affectedRows);
   });
   res.send({ game: game_id, facilitator: facilitator_id });
 });
@@ -113,8 +109,6 @@ router.get('/api/game-state/:id', (req, res) => {
              WHERE ENVELOPES.game_id = '${req.params.id}'`;
   db.query(sql, function (err, result) {
     if (err) throw err;
-
-    console.log(result);
 
     let state = {
       game_id: result[0].game_id,
@@ -173,7 +167,6 @@ router.get('/api/choose-seat/:game_id/:seat_id', (req, res) => {
 
 router.get('/api/start-game/:facilitator_id/:game_id', (req, res) => {
   let timestamp = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
-  console.log(timestamp);
   let sql = `UPDATE GAME
              SET start_time = '${timestamp}'
              WHERE facilitator_id = '${req.params.facilitator_id}'
