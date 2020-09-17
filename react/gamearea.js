@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Gameprogress from './gameprogress';
+import Chairs from './chairs';
 import Controls from './controls'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faChair} from '@fortawesome/free-solid-svg-icons'
@@ -49,9 +50,8 @@ class Gamearea extends Component {
         if (this.state.seats.every(s => s.is_taken === true))
         {
             //this.intervalID = setTimeout(this.updateGame.bind(this), 500);
-          
             clearTimeout(this.intervalID);
-            this.updateGame();
+            //this.updateGame();
         }
     }
 
@@ -65,22 +65,7 @@ class Gamearea extends Component {
     }
 
     render() {
-        var team1Chairs = []
-        var team2Chairs = []
-        var chairs = this.state.seats;
-        chairs.forEach((c, index) => {
-            //console.log(c.is_taken);
-            if (c.is_team_1) {
-              team1Chairs.push(<li><button className={c.is_taken ? "chairFilled" : "chairNotFilled"} disabled={c.is_taken ? true : false} onClick={() => this.chooseSeat(index, c.seat_id)}>
-              <FontAwesomeIcon icon={faChair} size = '7x' color={c.is_taken ? 'blue' : 'black'} /><br/>
-          </button></li>);
-            }
-            else {
-                team2Chairs.push(<li><button className={c.is_taken ? "chairFilled" : "chairNotFilled"} disabled={c.is_taken ? true : false} onClick={() => this.chooseSeat(index, c.seat_id)}>
-              <FontAwesomeIcon icon={faChair} size = '7x' color={c.is_taken ? 'blue' : 'black'} /><br/>
-          </button></li>);
-            }  
-        });
+        
         return (
             <div>
                 Game Area
@@ -90,6 +75,7 @@ class Gamearea extends Component {
                 <ul>
                 {team2Chairs}
                 </ul>
+                <Chairs seats = {this.state.seats} gameID={this.props.match.params.gameID}/>
                 <Controls facilitatorGets = {this.props.location.state.facilitatorID} team_id_1 = {this.state.team_id_1} team_id_2 = {this.state.team_id_2} />
             </div>
         )

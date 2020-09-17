@@ -14,5 +14,10 @@
 
   .chairFilled {
     flex-flow: column wrap;
-    justify-content: space-between
+    justify-content: space-between;
+    background-color: blue !important
+}
+
+.chairColumn {
+    display: inline-block;
 }
