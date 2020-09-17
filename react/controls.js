@@ -44,6 +44,8 @@ class Controls extends Component {
     };
     const response = await fetch('/api/set-team-name', requestOptions);
     const json = await response.json();
+    console.log(requestOptions);
+    console.log(json);
   }
 
   async setTeamTwoName() {

@@ -47,7 +47,7 @@ class Gamearea extends Component {
     const gameID = this.props.match.params.gameID;
     const response = await fetch(`/api/join/${gameID}`)
     const json = await response.json();
-    this.setState({ isStarted: json.is_started, seats: json.seats, team_id_0: json.team_1_id, team_id_2: json.team_2_id, teamName_1: json.teamName_1, teamName_2: json.teamName_2 });
+    this.setState({ isStarted: json.is_started, seats: json.seats, team_id_1: json.team_1_id, team_id_2: json.team_2_id, teamName_1: json.teamName_1, teamName_2: json.teamName_2 });
     this.intervalID = setTimeout(this.joinGame.bind(this), 499);
 
     if (this.state.seats.every(s => s.is_taken === true)) {
@@ -68,7 +68,7 @@ class Gamearea extends Component {
       return (
         <div>
           Game Area
-          <Gameprogress t1Name={'Eager Carabou'} t1Begin={4} t1End={9} t2Name={'Gothic Toads'} t2Begin={1} t2End={2} />
+          <Gameprogress t1Name={ this.state.teamName_1 } t1Begin={4} t1End={9} t2Name={ this.state.teamName_2 } t2Begin={1} t2End={2} />
           <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
         </div>
       );
@@ -77,7 +77,7 @@ class Gamearea extends Component {
         <div>
           Game Area
           <EnvelopeStack></EnvelopeStack>
-          <Gameprogress t1Name={'Eager Carabou'} t1Begin={4} t1End={9} t2Name={'Gothic Toads'} t2Begin={1} t2End={2} />
+          <Gameprogress t1Name={ this.state.teamName_1 } t1Begin={4} t1End={9} t2Name={ this.state.teamName_2 } t2Begin={1} t2End={2} />
           <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
           <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} />
         </div>
