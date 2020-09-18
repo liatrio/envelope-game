@@ -80,7 +80,7 @@ class Envelope extends Component {
             >
               <div id="collapse-stamp-bar">
                 <ButtonGroup aria-label="collapse-stamp-bar">
-                  {stamp_buttons}
+                  <ul>{stamp_buttons}</ul>
                 </ButtonGroup>
               </div>
 
