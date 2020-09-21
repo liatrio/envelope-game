@@ -14,7 +14,6 @@ class Envelope extends Component {
     super(props);
     this.state = {
       envelope_state: 0,
-      matching_stamp: 5,
       open: false,
       waiting: false,
       complete: false,
@@ -25,7 +24,11 @@ class Envelope extends Component {
   }
 
   async updateEnvelope(id, state) {
-    
+
+  }
+
+  generateNumbers() {
+    Array.from(Array(5), (x, i) => i + this.props.active_envelope.matching_stamp).sort(() => Math.random() - 0.5);
   }
 
   checkStamp(num) {
@@ -52,47 +55,42 @@ class Envelope extends Component {
         variant = "danger";
       }
       return (
-        <li key={i} className="list-unstyled">
-          <Button
-            variant={this.state.checked[i] ? variant : "primary"}
-            disabled={this.state.waiting || this.state.checked[i]}
-            onClick={() => this.checkStamp(i)}
-          >
-            {i}
-          </Button>
-        </li>
+        <Button
+          key={i}
+          variant={this.state.checked[i] ? variant : "primary"}
+          disabled={this.state.waiting || this.state.checked[i]}
+          onClick={() => this.checkStamp(i)}
+        >
+          {i}
+        </Button>
+
       )
     });
-    switch (this.state.envelope_state) {
-      case 0: {
-        return (
-          <div>
-            Envelope number {this.state.matching_stamp}
-            <br></br>
-            <FontAwesomeIcon
-              icon={this.state.envelope_state !== 1 ? faEnvelope : faEnvelopeOpen} size='5x'
-              onClick={() => this.setState({ open: !open })}
-              aria-controls="collapse-stamp-bar"
-              aria-expanded={open}
-            />
-            <Collapse
-              in={open}
-            >
-              <div id="collapse-stamp-bar">
-                <ButtonGroup aria-label="collapse-stamp-bar">
-                  <ul>{stamp_buttons}</ul>
-                </ButtonGroup>
-              </div>
 
-            </Collapse>
+    return (
+      <div>
+        Envelope number {this.state.matching_stamp}
+        <br></br>
+        <FontAwesomeIcon
+          icon={this.state.envelope_state !== 1 ? faEnvelope : faEnvelopeOpen} size='5x'
+          onClick={() => this.setState({ open: !open })}
+          aria-controls="collapse-stamp-bar"
+          aria-expanded={open}
+        />
+        <Collapse
+          in={open}
+        >
+          <div id="collapse-stamp-bar">
+            <ButtonGroup aria-label="collapse-stamp-bar">
+              {stamp_buttons}
+            </ButtonGroup>
           </div>
-        );
-      }
-      default:
-        return (
-          'default_text'
-        );
-    }
+
+        </Collapse>
+        <br></br>
+        {this.props.active_envelope !== null ? this.props.active_envelope.envelope_id : ""}
+      </div>
+    );
   }
 }
 

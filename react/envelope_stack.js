@@ -10,25 +10,47 @@ class EnvelopeStack extends Component {
     this.state = {
       initialCount: 40
     }
+    this.updateStack = this.updateStack.bind(this);
   }
 
-  render() {
+  updateStack() {
+    if (this.props.stack_type === 0) {
+      this.props.setActiveEnvelope();
+    } else {
+      // placeholder
+    }
+  }
+
+  render() {    
+    let count;
+    if (this.props.stack_type === 0) {
+      count = this.props.count - this.props.finished_count;
+      if (this.props.active_envelope !== null) {
+        count--;
+      }
+    } else {
+      count = this.props.finished_count;
+    }
     return (
       <div>
-        {this.props.stack_type}
+        {this.props.stack_type === 0 ? "Envelopes ready" : "Finished"}
         <br></br>
         <Button
           active={this.props.count !== 0}
+          onClick={this.updateStack}
         >
-          <FontAwesomeIcon
-            icon={faEnvelope}
-            size='5x'
-          >
-          </FontAwesomeIcon>
+          <div>
+            <FontAwesomeIcon
+              icon={faEnvelope}
+              size='5x'
+            >
+            </FontAwesomeIcon>
+            <br></br>
+            <Badge pill variant="light" className="align-middle">
+              {count}
+            </Badge>
+          </div>
         </Button>
-        <Badge pill variant="primary">
-          {this.props.count}
-        </Badge>
       </div>
     );
   }

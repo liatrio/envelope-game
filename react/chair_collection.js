@@ -3,7 +3,6 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
 import Chair from './chair'
-import Team from './team'
 import './index.css'
 class ChairsCollection extends Component {
   constructor(props) {
@@ -31,31 +30,35 @@ class ChairsCollection extends Component {
     this.props.seats.forEach((c, index) => {
       if (c.is_team_1) {
         team1Chairs.push(
-          <Chair
-            otherChairs={this.props.seats}
-            setSeatId={(id) => this.props.setSeatId(id)}
-            playerSeatId={this.props.playerSeatId}
-            is_team_1={c.is_team_1}
-            seat_id={c.seat_id}
-            team_id={c.team_id}
-            game_id={this.props.gameID}
-            is_taken={c.is_taken}
-            seat_number={c.seat_number}
-          ></Chair>
+          <li key={c.seat_id}>
+            <Chair
+              otherChairs={this.props.seats}
+              setSeatId={(id) => this.props.setSeatId(id)}
+              playerSeatId={this.props.playerSeatId}
+              is_team_1={c.is_team_1}
+              seat_id={c.seat_id}
+              team_id={c.team_id}
+              game_id={this.props.gameID}
+              is_taken={c.is_taken}
+              seat_number={c.seat_number}
+            ></Chair>
+          </li>
         );
       }
       else {
         team2Chairs.push(
-          <Chair
-            setSeatId={(id) => this.props.setSeatId(id)}
-            playerSeatId={this.props.playerSeatId}
-            is_team_1={c.is_team_1}
-            seat_id={c.seat_id}
-            team_id={c.team_id}
-            game_id={this.props.gameID}
-            is_taken={c.is_taken}
-            seat_number={c.seat_number}
-          ></Chair>
+          <li key={c.seat_id}>
+            <Chair
+              setSeatId={(id) => this.props.setSeatId(id)}
+              playerSeatId={this.props.playerSeatId}
+              is_team_1={c.is_team_1}
+              seat_id={c.seat_id}
+              team_id={c.team_id}
+              game_id={this.props.gameID}
+              is_taken={c.is_taken}
+              seat_number={c.seat_number}
+            ></Chair>
+          </li>
         );
       }
     });
@@ -63,8 +66,16 @@ class ChairsCollection extends Component {
       <div>
         <Container>
           <Row>
-            <Team chairs={team1Chairs}></Team>
-            <Team chairs={team2Chairs}></Team>
+            <Col>
+              <div>
+                <ul className="chairColumn list-unstyled">{team1Chairs}</ul>
+              </div>
+            </Col>
+            <Col>
+              <div>
+                <ul className="chairColumn list-unstyled">{team2Chairs}</ul>
+              </div>
+            </Col>
           </Row>
         </Container>
       </div>
