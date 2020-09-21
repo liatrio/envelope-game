@@ -41,6 +41,7 @@ class ChairsCollection extends Component {
             game_id={this.props.gameID}
             is_taken={c.is_taken}
             seat_number={c.seat_number}
+            display_name={c.display_name}
           ></Chair>
         );
       }
@@ -55,6 +56,7 @@ class ChairsCollection extends Component {
             game_id={this.props.gameID}
             is_taken={c.is_taken}
             seat_number={c.seat_number}
+            display_name={c.display_name}
           ></Chair>
         );
       }

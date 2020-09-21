@@ -24,6 +24,7 @@ class Gamearea extends Component {
       seatId: null,
       teamName_1: 'Unnamed Team 1',
       teamName_2: 'Unnamed Team 2',
+      display_name: '',
     }
     this.setSeatId = this.setSeatId.bind(this);
   }
@@ -46,7 +47,14 @@ class Gamearea extends Component {
     const gameID = this.props.match.params.gameID;
     const response = await fetch(`/api/join/${gameID}`)
     const json = await response.json();
-    this.setState({ isStarted: json.is_started, seats: json.seats, team_id_1: json.team_1_id, team_id_2: json.team_2_id, teamName_1: json.teamName_1, teamName_2: json.teamName_2 });
+    this.setState({ isStarted: json.is_started,
+                    seats: json.seats,
+                    team_id_1: json.team_1_id,
+                    team_id_2: json.team_2_id,
+                    teamName_1: json.teamName_1,
+                    teamName_2: json.teamName_2
+                    
+                  });
     this.intervalID = setTimeout(this.joinGame.bind(this), 2000);
 
     if (this.state.seats.every(s => s.is_taken === true)) {
@@ -59,7 +67,7 @@ class Gamearea extends Component {
     const gameID = this.props.match.params.gameID;
     const response = await fetch(`/api/game-state/${gameID}`)
     const json = await response.json();
-    this.setState({ isStarted: json.is_started, seats: json.seats, team_id_1: json.team_1_id, team_id_2: json.team_2_id });
+    this.setState({ isStarted: json.is_started, seats: json.seats, team_id_1: json.team_1_id, team_id_2: json.team_2_id, display_name: json.display_name});
   }
 
   render() {
@@ -77,7 +85,7 @@ class Gamearea extends Component {
           Game Area
           <EnvelopeStack></EnvelopeStack>
           <Gameprogress t1Name={ this.state.teamName_1 } t1Begin={4} t1End={9} t2Name={ this.state.teamName_2 } t2Begin={1} t2End={2} />
-          <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
+          <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} display_name= 'me'/>
           <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} />
         </div>
       );
