@@ -23,8 +23,11 @@ class Controls extends Component {
     this.setTeamTwoName = this.setTeamTwoName.bind(this);
   }
 
-  togglePlay(val) {
+  async togglePlay(val) {
     this.setState({ isGoing: !this.state.isGoing });
+    const response = await fetch(`/api/start-game/${this.props.facilitatorGets}/${this.props.gameID}`)
+    const json = await response.json();
+    console.log(json);
   }
 
   teamOneChange(event){this.setState({teamOneName: event.target.value});}
@@ -82,7 +85,7 @@ class Controls extends Component {
           <input type="button" onClick= {this.setTeamTwoName}  value="Submit" />
           </label>
         </form>
-        <FontAwesomeIcon icon={ic} spin onClick={this.togglePlay} />
+        <FontAwesomeIcon icon={ic} spin onClick={this.props.seatsFull ? this.togglePlay : 'null'} />
     
       </div>
     )

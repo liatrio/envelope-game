@@ -3,6 +3,7 @@ import Gameprogress from './gameprogress';
 import ChairsCollection from './chair_collection';
 import Controls from './controls'
 import './index.css'
+import moment from 'moment';
 import EnvelopeStack from './envelope_stack'
 
 class Gamearea extends Component {
@@ -20,6 +21,8 @@ class Gamearea extends Component {
       seatId: null,
       teamName_1: 'Unnamed Team 1',
       teamName_2: 'Unnamed Team 2',
+      startTime: null,
+      envelope: []
     }
     this.setSeatId = this.setSeatId.bind(this);
   }
@@ -46,8 +49,10 @@ class Gamearea extends Component {
     this.intervalID = setTimeout(this.joinGame.bind(this), 2000);
 
     if (this.state.seats.every(s => s.is_taken === true)) {
+      this.setState({startTime: moment.utc()})
       this.setState({ seatsFull: true });
       clearTimeout(this.intervalID);
+      this.updateGame();
     }
   }
 
@@ -55,7 +60,9 @@ class Gamearea extends Component {
     const gameID = this.props.match.params.gameID;
     const response = await fetch(`/api/game-state/${gameID}`)
     const json = await response.json();
-    this.setState({ isStarted: json.is_started, seats: json.seats, team_id_1: json.team_1_id, team_id_2: json.team_2_id });
+    this.setState({envelope: json.envelopes, team_id_1: json.team_1_id, team_id_2: json.team_2_id });
+    this.intervalID = setTimeout(this.updateGame.bind(this), 2000);
+    //console.log(this.state.envelope);
   }
 
   render() {
@@ -74,7 +81,7 @@ class Gamearea extends Component {
           <EnvelopeStack></EnvelopeStack>
           <Gameprogress t1Name={ this.state.teamName_1 } t1Begin={4} t1End={9} t2Name={ this.state.teamName_2 } t2Begin={1} t2End={2} />
           <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
-          <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} />
+          <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} seatsFull={this.state.seatsFull} gameID={this.props.match.params.gameID}/>
         </div>
       );
     }
