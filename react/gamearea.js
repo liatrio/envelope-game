@@ -2,11 +2,7 @@ import React, { Component } from 'react'
 import Gameprogress from './gameprogress';
 import ChairsCollection from './chair_collection';
 import Controls from './controls'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChair } from '@fortawesome/free-solid-svg-icons'
-import { useParams } from 'react-router-dom'
 import './index.css'
-import { withRouter } from 'react-router'
 import EnvelopeStack from './envelope_stack'
 
 class Gamearea extends Component {
