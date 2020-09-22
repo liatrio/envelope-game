@@ -7,7 +7,7 @@ CREATE TABLE TEAMS
   envelopes_completed INT NOT NULL,
   team_name VARCHAR(32),
   is_team_1 BOOLEAN NOT NULL,
-  finish_time DATE,
+  finish_time DATETIME,
   PRIMARY KEY (team_id)
 );
 
