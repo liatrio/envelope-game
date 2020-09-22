@@ -86,15 +86,11 @@ class Gamearea extends Component {
   }
 
   render() {
-    const countdown = this.state.countdown;
     if (typeof (this.props.location.state) === 'undefined') {
       return (
         <div>
           Game Area
-          {this.state.startTime &&
-            <h3>{countdown}</h3>
-          }
-          <Gameprogress t1Name={ this.state.teamName_1 } t1Begin={4} t1End={9} t2Name={ this.state.teamName_2 } t2Begin={1} t2End={2} />
+          <Gameprogress startTime={this.state.startTime}  t1Name={ this.state.teamName_1 } t1Begin={4} t1End={9} t2Name={ this.state.teamName_2 } t2Begin={1} t2End={2} />
           <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
         </div>
       );
@@ -102,9 +98,6 @@ class Gamearea extends Component {
       return (
         <div>
           Game Area
-          {this.state.startTime &&
-            <h3>{countdown}</h3>
-          }
           <EnvelopeStack></EnvelopeStack>
           <Gameprogress startTime={this.state.startTime} t1Name={ this.state.teamName_1 } t1Begin={this.state.startTime} t1End={9} t2Name={ this.state.teamName_2 } t2Begin={this.state.startTime} t2End={2} />
           <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
