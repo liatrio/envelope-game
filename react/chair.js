@@ -11,7 +11,10 @@ class Chair extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      active_envelope: null
+      active_envelope: null,
+      seat_id: null,
+      display_name: null,
+    
     }
 
     this.chooseSeat = this.chooseSeat.bind(this);
@@ -19,15 +22,43 @@ class Chair extends Component {
   }
 
   async chooseSeat() {
+
     if (this.props.playerSeatId === null) {
       const response = await fetch(`/api/choose-seat/${this.props.game_id}/${this.props.seat_id}`)
       const json = await response.json();
       console.log(json);
       if (json.success) {
         console.log(json.seat_id);
+        this.state.seat_id = json.seat_id;
         this.props.setSeatId(json.seat_id);
       }
+    
+
+    this.state.display_name = prompt("Please enter your display name.");
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        display_name: this.state.display_name,
+        seat_id: this.state.seat_id,
+      })
+    };
+    console.log("Before set-player-name await");
+    const response1 = await fetch('/api/set-player-name', requestOptions);
+    const json1 = await response1.json();
+    
+    console.log(json1);
+
+    if (json1.success) {
+      console.log("Display Name was set.");
     }
+    else
+    {
+      console.log("Display Name was not set.")
+    }
+ 
+  }
   }
 
   // returns the id of the next seat, or "finish" if it is the last seat

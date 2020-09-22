@@ -157,10 +157,10 @@ router.post('/api/set-team-name', (req, res) => {
   });
 });
 
-router.post('api/set-player-name', (req, res) => {
+router.post('/api/set-player-name', (req, res) => {
   let sql = `UPDATE SEATS
                 SET display_name = '${req.body.display_name}'
-                WHERE seat_id = ${req.body.seat_id}`;
+                WHERE seat_id = '${req.body.seat_id}'`;
   db.query(sql, function (err, result) {
     if (err) throw err;
 

@@ -20,3 +20,47 @@
 .chairColumn {
     display: inline-block;
 }
+
+h1 {
+    text-align: center;
+    color: black;
+    max-width: 500px;
+    margin: auto;
+}
+
+p {
+    color: black;
+    text-align: center;
+    max-width: 500px;
+    margin: auto;
+}
+
+h2{
+    color: green;
+    text-align: center;
+    margin: auto;
+}
+
+div.card {
+    
+    margin: 0 auto;
+    float: none;
+    margin-bottom: 10px;
+}
+
+div.facilitatorControl {
+    color: black;
+    margin: auto;
+    border: 1px solid black;
+}
+
+div.game {
+    color: black;
+    margin: auto;
+    border: 1px solid black;
+}
+
+form {
+    color: black;
+    margin: auto;
+}
