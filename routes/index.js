@@ -206,7 +206,6 @@ router.get('/api/update-envelope/:game_id/:envelope_id/:seat_id/:state', (req, r
   }
   db.query(sql, function (err, result) {
     if (err) throw err;
-
     if (result.changedRows !== 1) {
       res.send({ success: false });
     } else {

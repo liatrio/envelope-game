@@ -13,14 +13,7 @@ class EnvelopeArea extends Component {
     super(props);
     this.state = {
       active_envelope: null,
-      finished_envelopes: new Set().add({
-        "envelope_id": "5v7cIDuymBQgrT6b",
-        "matching_stamp": 7,
-        "evelope_state": 0,
-        "team": "Fr4fu64JE-T_anM-",
-        "seat": null,
-        "envelope_finish": null
-      }),
+      finished_envelopes: new Set().add("5v7cIDuymBQgrT6b"),
       envelopes: [
         {
           "envelope_id": "-WwV6Sn8hU-9A5Iu",
@@ -39,38 +32,6 @@ class EnvelopeArea extends Component {
           "envelope_finish": null
         },
         {
-          "envelope_id": "2HL1mS2VOdX51kIV",
-          "matching_stamp": 18,
-          "evelope_state": 0,
-          "team": "Fr4fu64JE-T_anM-",
-          "seat": null,
-          "envelope_finish": null
-        },
-        {
-          "envelope_id": "3ApVODVxZV6yKW85",
-          "matching_stamp": 6,
-          "evelope_state": 0,
-          "team": "gP-b_lVFcB4kK6um",
-          "seat": null,
-          "envelope_finish": null
-        },
-        {
-          "envelope_id": "3jgFBYaLrZXKdowO",
-          "matching_stamp": 12,
-          "evelope_state": 0,
-          "team": "Fr4fu64JE-T_anM-",
-          "seat": null,
-          "envelope_finish": null
-        },
-        {
-          "envelope_id": "5eosV9KxTB5BUjGZ",
-          "matching_stamp": 10,
-          "evelope_state": 0,
-          "team": "Fr4fu64JE-T_anM-",
-          "seat": null,
-          "envelope_finish": null
-        },
-        {
           "envelope_id": "5v7cIDuymBQgrT6b",
           "matching_stamp": 7,
           "evelope_state": 0,
@@ -82,28 +43,52 @@ class EnvelopeArea extends Component {
     }
     this.setActiveEnvelope = this.setActiveEnvelope.bind(this);
     this.finishActiveEnvelope = this.finishActiveEnvelope.bind(this);
+    this.updateCheckedStamps = this.updateCheckedStamps.bind(this);
+    this.updateActiveEnvelope = this.updateActiveEnvelope.bind(this);
   }
 
   setActiveEnvelope() {
     if (this.state.active_envelope === null && this.state.envelopes.length > 0) {
       // find an envelope that is not the active envelope and is not in the finished envelope set
-      const unfinished_envelopes = this.state.envelopes.filter((e) => {
-        return !this.state.finished_envelopes.has((i) => {
-          return i.envelope_id === e.envelope_id;
-        });
+      let unfinished_envelopes = this.state.envelopes.filter((e) => {
+        return !this.state.finished_envelopes.has(e.envelope_id);
       });
+      console.log(unfinished_envelopes);
       if (unfinished_envelopes.length > 0) {
-        console.log();
+        unfinished_envelopes[0].complete = false;
+        unfinished_envelopes[0].stamped = false;
+        unfinished_envelopes[0].random = Array.from(Array(5), (x, i) => i + unfinished_envelopes[0].matching_stamp).sort(() => Math.random() - 0.5);
+        unfinished_envelopes[0].checked = Array(5).fill(false, 0, 5);
         this.setState({ active_envelope: unfinished_envelopes[0] });
+        this.updateActiveEnvelope(unfinished_envelopes[0], 1);
+      } else {
+        console.log("couldn't find envelopes to do");
       }
-
-
-      //this.setState({ active_envelope: envelope_id });
     }
   }
 
-  finishActiveEnvelope(envelope_id) {
+  async updateActiveEnvelope(envelope, state) {
+    const request = `/api/update-envelope/${this.props.game_id}/${envelope.envelope_id}/${this.props.seat_id}/${state}`;
+    const response = await fetch(request);
+    const json = await response.json();
+    console.log(json);
+    this.setState({ active_envelope: envelope });
+  }
 
+  updateCheckedStamps(checked) {
+    let envelope = this.state.active_envelope;
+    envelope.checked = checked;
+    this.setState({ active_envelope: envelope })
+  }
+
+  finishActiveEnvelope() {
+    if (this.props.is_team_1) {
+      // pass onto next person
+    } else {
+      let finished = this.state.finished_envelopes;
+      finished.add(this.state.active_envelope.envelope_id);
+      this.setState({ active_envelope: null });
+    }
   }
 
 
@@ -115,6 +100,13 @@ class EnvelopeArea extends Component {
             <div className={this.state.active_envelope === null ? "invisible" : "visible"}>
               <Envelope
                 active_envelope={this.state.active_envelope}
+                game_id={this.props.game_id}
+                seat_id={this.props.seat_id}
+                seat_number={this.props.seat_number}
+                is_team_1={this.props.is_team_1}
+                finishActiveEnvelope={this.finishActiveEnvelope}
+                updateCheckedStamps={this.updateCheckedStamps}
+                updateActiveEnvelope={this.updateActiveEnvelope}
               >
               </Envelope>
             </div>
@@ -142,6 +134,13 @@ class EnvelopeArea extends Component {
             <div className={this.state.active_envelope === null ? "invisible" : "visible"}>
               <Envelope
                 active_envelope={this.state.active_envelope}
+                game_id={this.props.game_id}
+                seat_id={this.props.seat_id}
+                seat_number={this.props.seat_number}
+                is_team_1={this.props.is_team_1}
+                finishActiveEnvelope={this.finishActiveEnvelope}
+                updateCheckedStamps={this.updateCheckedStamps}
+                updateActiveEnvelope={this.updateActiveEnvelope}
               >
               </Envelope>
             </div>

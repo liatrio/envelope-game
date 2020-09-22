@@ -17,7 +17,7 @@ class EnvelopeStack extends Component {
     if (this.props.stack_type === 0) {
       this.props.setActiveEnvelope();
     } else {
-      // placeholder
+      // placeholder for passing onto the next seat
     }
   }
 
@@ -36,7 +36,8 @@ class EnvelopeStack extends Component {
         {this.props.stack_type === 0 ? "Envelopes ready" : "Finished"}
         <br></br>
         <Button
-          active={this.props.count !== 0}
+          variant={count === 0 ? "secondary" : "primary"}
+          active={count !== 0}
           onClick={this.updateStack}
         >
           <div>

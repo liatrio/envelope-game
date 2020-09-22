@@ -21,7 +21,5 @@ services:
     restart: always
     expose:
       - "3306"
-#     volumes: 
-#       - ./initdb/:/docker-entrypoint-initdb.d/
-# volumes:
-#   game-data:
+    volumes: 
+      - ./initdb/:/docker-entrypoint-initdb.d/
