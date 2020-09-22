@@ -5,52 +5,53 @@ import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 import { Modal, Button } from "react-bootstrap";
 
 
-function MyVerticallyCenteredModal(props) {
-  return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Modal heading
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <form>
-          <label>
-            Team One Name: <input type="text" onChange={props.teamOneChange} name="teamOneName" />
-            <input type="button" onClick={props.setTeamOneName} value="Submit" />
-            <br />
-            Team Two Name: <input type="text" onChange={props.teamTwoChange} name="teamTwoName" />
-            <input type="button" onClick={props.setTeamTwoName} value="Submit" />
-          </label>
-        </form>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
-    </Modal>
-  );
-}
 
-function App() {
-  const [modalShow, setModalShow] = React.useState(false);
-
-  return (
-    <div>
-      <Button variant="primary" onClick={() => setModalShow(true)}>
-        Facilitator Controls
-      </Button>
-
-      <MyVerticallyCenteredModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-      />
-    </div>
-  );
+class MyVerticallyCenteredModal extends Component {
+  constructor(props) {
+    super(props);
+    this.state= {
+      disabled: false,
+    }
+    this.setTeamNames = this.setTeamNames.bind(this);
+  }
+  async setTeamNames(){
+    if (this.state.disabled) {
+      return;
+    }
+    this.setState({ disabled: true });
+    await this.props.setTeamOneName();
+    await this.props.setTeamTwoName();
+    this.props.onHide();
+  }
+  
+  render() {
+    return (
+      <Modal
+        {...this.props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Choose Team Names
+              </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form>
+            <label>
+              Team One Name: <input type="text" onChange={this.props.teamOneChange} name="teamOneName" />
+              <br />
+              Team Two Name: <input type="text" onChange={this.props.teamTwoChange} name="teamTwoName" />
+            </label>
+          </form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={this.setTeamNames}>Submit</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
 }
 
 
@@ -62,8 +63,8 @@ class Controls extends Component {
       disabled: false,
       teamOneName: '',
       teamTwoName: '',
-      facilitator_id: ''
-
+      facilitator_id: '',
+      modalShow: false,
     };
 
     // bind any handlers in the constructor
@@ -118,9 +119,27 @@ class Controls extends Component {
 
   render() {
     let ic = this.state.isGoing ? faPause : faPlay;
-
+    let modalClose = () => this.setState({ modalShow: false });
     return (
-      <App setTeamOneName={this.setTeamOneName} setTeamTwoName={this.setTeamTwoName} teamOneChange={this.teamOneChange} teamTwoChange={this.teamTwoChange} />
+      <div>
+
+          <Button
+            variant="primary"
+            onClick={() => this.setState({ modalShow: true })}
+          >
+            Facilitator Controls
+      </Button>
+
+          <MyVerticallyCenteredModal
+            setTeamOneName={this.setTeamOneName}
+            setTeamTwoName={this.setTeamTwoName}
+            teamOneChange={this.teamOneChange}
+            teamTwoChange={this.teamTwoChange}
+            show={this.state.modalShow}
+            onHide={modalClose}
+          />
+
+      </div>
     )
   }
 }
