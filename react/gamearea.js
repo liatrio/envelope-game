@@ -89,7 +89,7 @@ class Gamearea extends Component {
     const countdown = this.state.countdown;
     if (typeof (this.props.location.state) === 'undefined') {
       return (
-        <div>
+        <div >
           Game Area
           {this.state.startTime &&
             <h3>{countdown}</h3>
@@ -100,15 +100,22 @@ class Gamearea extends Component {
       );
     } else {
       return (
-        <div>
+        <div >
           Game Area
           {this.state.startTime &&
             <h3>{countdown}</h3>
           }
           <EnvelopeStack></EnvelopeStack>
+<<<<<<< HEAD
           <Gameprogress t1Name={ this.state.teamName_1 } t1Begin={this.state.startTime} t1End={9} t2Name={ this.state.teamName_2 } t2Begin={this.state.startTime} t2End={2} />
           <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
           <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} seatsFull={this.state.seatsFull} gameID={this.props.match.params.gameID}/>
+=======
+          <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} />
+          <Gameprogress t1Name={ this.state.teamName_1 } t1Begin={4} t1End={9} t2Name={ this.state.teamName_2 } t2Begin={1} t2End={2} />
+          <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId}/>
+          
+>>>>>>> CHICO-1031
         </div>
       );
     }
