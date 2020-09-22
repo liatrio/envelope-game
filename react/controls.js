@@ -75,8 +75,11 @@ class Controls extends Component {
     this.setTeamTwoName = this.setTeamTwoName.bind(this);
   }
 
-  togglePlay(val) {
+  async togglePlay(val) {
     this.setState({ isGoing: !this.state.isGoing });
+    const response = await fetch(`/api/start-game/${this.props.facilitatorGets}/${this.props.gameID}`)
+    const json = await response.json();
+    console.log(json);
   }
 
   teamOneChange(event) { this.setState({ teamOneName: event.target.value }); }
@@ -122,6 +125,7 @@ class Controls extends Component {
     let modalClose = () => this.setState({ modalShow: false });
     return (
       <div>
+<<<<<<< HEAD
 
           <Button
             variant="primary"
@@ -139,6 +143,19 @@ class Controls extends Component {
             onHide={modalClose}
           />
 
+=======
+        <form>
+          <label>
+          Team One Name: <input type="text" onChange= {this.teamOneChange} name="teamOneName" />
+          <input type="button" onClick= {this.setTeamOneName}  value="Submit" />
+          <br />
+          Team Two Name: <input type="text" onChange= {this.teamTwoChange} name="teamTwoName" />
+          <input type="button" onClick= {this.setTeamTwoName}  value="Submit" />
+          </label>
+        </form>
+        <FontAwesomeIcon icon={ic} spin onClick={this.props.seatsFull ? this.togglePlay : 'null'} />
+    
+>>>>>>> CHICO-1030
       </div>
     )
   }
