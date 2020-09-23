@@ -9,12 +9,12 @@ import { Modal, Button } from "react-bootstrap";
 class MyVerticallyCenteredModal extends Component {
   constructor(props) {
     super(props);
-    this.state= {
+    this.state = {
       disabled: false,
     }
     this.setTeamNames = this.setTeamNames.bind(this);
   }
-  async setTeamNames(){
+  async setTeamNames() {
     if (this.state.disabled) {
       return;
     }
@@ -23,7 +23,7 @@ class MyVerticallyCenteredModal extends Component {
     await this.props.setTeamTwoName();
     this.props.onHide();
   }
-  
+
   render() {
     return (
       <Modal
@@ -125,37 +125,23 @@ class Controls extends Component {
     let modalClose = () => this.setState({ modalShow: false });
     return (
       <div>
-<<<<<<< HEAD
 
-          <Button
-            variant="primary"
-            onClick={() => this.setState({ modalShow: true })}
-          >
-            Facilitator Controls
+        <Button
+          variant="primary"
+          onClick={() => this.setState({ modalShow: true })}
+        >
+          Facilitator Controls
       </Button>
 
-          <MyVerticallyCenteredModal
-            setTeamOneName={this.setTeamOneName}
-            setTeamTwoName={this.setTeamTwoName}
-            teamOneChange={this.teamOneChange}
-            teamTwoChange={this.teamTwoChange}
-            show={this.state.modalShow}
-            onHide={modalClose}
-          />
+        <MyVerticallyCenteredModal
+          setTeamOneName={this.setTeamOneName}
+          setTeamTwoName={this.setTeamTwoName}
+          teamOneChange={this.teamOneChange}
+          teamTwoChange={this.teamTwoChange}
+          show={this.state.modalShow}
+          onHide={modalClose}
+        />
 
-=======
-        <form>
-          <label>
-          Team One Name: <input type="text" onChange= {this.teamOneChange} name="teamOneName" />
-          <input type="button" onClick= {this.setTeamOneName}  value="Submit" />
-          <br />
-          Team Two Name: <input type="text" onChange= {this.teamTwoChange} name="teamTwoName" />
-          <input type="button" onClick= {this.setTeamTwoName}  value="Submit" />
-          </label>
-        </form>
-        <FontAwesomeIcon icon={ic} spin onClick={this.props.seatsFull ? this.togglePlay : 'null'} />
-    
->>>>>>> CHICO-1030
       </div>
     )
   }
