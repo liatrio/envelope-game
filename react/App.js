@@ -12,7 +12,7 @@ class App extends Component {
         <Router>
           <Switch>
             <Route path="/" component={Homepage} exact />
-            <Route path="/GameArea/:gameID" component={GameArea} />
+            <Route path="/gamearea/:gameID" component={GameArea} />
           </Switch>
         </Router>
       </div>
