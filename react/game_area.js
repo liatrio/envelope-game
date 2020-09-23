@@ -4,8 +4,6 @@ import ChairsCollection from './chair_collection';
 import Controls from './controls'
 
 import './index.css'
-import moment from 'moment';
-import EnvelopeStack from './envelope_stack'
 
 class GameArea extends Component {
 
