@@ -32,6 +32,7 @@ class Envelope extends Component {
   async updateEnvelope(id, state) {
     const request = `/api/update-envelope/${this.props.game_id}/${id}/${this.props.seat_id}/${state}`;
     console.log(request);
+    // make request to update envelope(s)
     // const response = await fetch();
     // const json = await response.json();
   }

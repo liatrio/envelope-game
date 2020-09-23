@@ -8,7 +8,7 @@ function doMath(end, begin) {
 
 
 
-class Gameprogress extends Component {
+class GameProgress extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,8 +31,6 @@ doTime() {
   render() {
     const t1TimeSpent = doMath(this.props.t1End, this.props.t1Begin);
     const t2TimeSpent = doMath(this.props.t2End, this.props.t2Begin);
-    //console
-    //var countdown = this.doTime(this.props.startTime);
     const profitPerEnvelope = 22;
     return (
       <div >
@@ -57,4 +55,4 @@ doTime() {
   }
 }
 
-export default Gameprogress;
+export default GameProgress;

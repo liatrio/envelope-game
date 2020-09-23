@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Gameprogress from './gameprogress';
+import GameProgress from './game_progress';
 import ChairsCollection from './chair_collection';
 import Controls from './controls'
 
@@ -7,7 +7,7 @@ import './index.css'
 import moment from 'moment';
 import EnvelopeStack from './envelope_stack'
 
-class Gamearea extends Component {
+class GameArea extends Component {
 
   constructor(props) {
     super(props);
@@ -49,18 +49,18 @@ class Gamearea extends Component {
     const gameID = this.props.match.params.gameID;
     const response = await fetch(`/api/join/${gameID}`)
     const json = await response.json();
-    this.setState({ isStarted: json.is_started,
-                    seats: json.seats,
-                    team_id_1: json.team_1_id,
-                    team_id_2: json.team_2_id,
-                    teamName_1: json.teamName_1,
-                    teamName_2: json.teamName_2
-                    
-                  });
+    this.setState({
+      isStarted: json.is_started,
+      seats: json.seats,
+      team_id_1: json.team_1_id,
+      team_id_2: json.team_2_id,
+      teamName_1: json.teamName_1,
+      teamName_2: json.teamName_2
+
+    });
     this.intervalID = setTimeout(this.joinGame.bind(this), 2000);
 
     if (this.state.seats.every(s => s.is_taken === true)) {
-      //this.setState({startTime: moment.utc().format('YYYY-MM-DD HH:mm:ss')});
       this.setState({ seatsFull: true });
       clearTimeout(this.intervalID);
       this.updateGame();
@@ -71,17 +71,13 @@ class Gamearea extends Component {
     const gameID = this.props.match.params.gameID;
     const response = await fetch(`/api/game-state/${gameID}`)
     const json = await response.json();
-    this.setState({envelope: json.envelopes, 
-      team_id_1: json.team_1_id, 
-      team_id_2: json.team_2_id, 
+    this.setState({
+      envelope: json.envelopes,
+      team_id_1: json.team_1_id,
+      team_id_2: json.team_2_id,
       display_name: json.display_name,
-      startTime: json.start_time });
-    /* console.log(this.state.startTime);
-    var now = moment.utc(Date.now());
-    console.log(now);
-    let countdown = moment.duration(now.diff(this.state.startTime));
-    console.log(countdown._milliseconds);
-    this.setState({countdown: countdown._milliseconds}); */
+      startTime: json.start_time
+    });
     this.intervalID = setTimeout(this.updateGame.bind(this), 1000);
   }
 
@@ -90,7 +86,7 @@ class Gamearea extends Component {
       return (
         <div>
           Game Area
-          <Gameprogress startTime={this.state.startTime}  t1Name={ this.state.teamName_1 } t1Begin={4} t1End={9} t2Name={ this.state.teamName_2 } t2Begin={1} t2End={2} />
+          <GameProgress startTime={this.state.startTime} t1Name={this.state.teamName_1} t1Begin={4} t1End={9} t2Name={this.state.teamName_2} t2Begin={1} t2End={2} />
           <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
         </div>
       );
@@ -98,10 +94,9 @@ class Gamearea extends Component {
       return (
         <div>
           Game Area
-          <EnvelopeStack></EnvelopeStack>
-          <Gameprogress startTime={this.state.startTime} t1Name={ this.state.teamName_1 } t1Begin={this.state.startTime} t1End={9} t2Name={ this.state.teamName_2 } t2Begin={this.state.startTime} t2End={2} />
+          <GameProgress startTime={this.state.startTime} t1Name={this.state.teamName_1} t1Begin={this.state.startTime} t1End={9} t2Name={this.state.teamName_2} t2Begin={this.state.startTime} t2End={2} />
           <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
-          <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} seatsFull={this.state.seatsFull} gameID={this.props.match.params.gameID}/>
+          <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} seatsFull={this.state.seatsFull} gameID={this.props.match.params.gameID} />
         </div>
       );
     }
@@ -109,4 +104,4 @@ class Gamearea extends Component {
   }
 }
 
-export default Gamearea
+export default GameArea
