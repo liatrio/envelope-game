@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import { useParams } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 import { Modal, Button } from "react-bootstrap";
 
 
@@ -59,7 +57,6 @@ class Controls extends Component {
   constructor() {
     super();
     this.state = {
-      isGoing: false,
       disabled: false,
       teamOneName: '',
       teamTwoName: '',
@@ -68,19 +65,14 @@ class Controls extends Component {
     };
 
     // bind any handlers in the constructor
-    this.togglePlay = this.togglePlay.bind(this);
+    
     this.teamOneChange = this.teamOneChange.bind(this);
     this.teamTwoChange = this.teamTwoChange.bind(this);
     this.setTeamOneName = this.setTeamOneName.bind(this);
     this.setTeamTwoName = this.setTeamTwoName.bind(this);
   }
 
-  async togglePlay(val) {
-    this.setState({ isGoing: !this.state.isGoing });
-    const response = await fetch(`/api/start-game/${this.props.facilitatorGets}/${this.props.gameID}`)
-    const json = await response.json();
-    console.log(json);
-  }
+
 
   teamOneChange(event) { this.setState({ teamOneName: event.target.value }); }
 
@@ -121,7 +113,7 @@ class Controls extends Component {
 
 
   render() {
-    let ic = this.state.isGoing ? faPause : faPlay;
+    
     let modalClose = () => this.setState({ modalShow: false });
     return (
       <div>
