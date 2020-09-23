@@ -11,9 +11,11 @@ class Gameprogress extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isGoing: false
+      isGoing: false,
+      seatsFullError: false
     }
     this.togglePlay = this.togglePlay.bind(this);
+    this.seatsNotFull = this.seatsNotFull.bind(this);
   }
 
 doTime() {
@@ -29,10 +31,15 @@ doTime() {
 }
 
 async togglePlay(val) {
+  this.setState({seatsFullError: false});
   this.setState({ isGoing: !this.state.isGoing });
   const response = await fetch(`/api/start-game/${this.props.facilitatorGets}/${this.props.gameID}`)
   const json = await response.json();
   console.log(json);
+}
+
+seatsNotFull() {
+  this.setState({seatsFullError: true});
 }
   
   render() {
@@ -47,7 +54,10 @@ async togglePlay(val) {
           
             <h1>Money Earned</h1>
             {facilID && 
-              <FontAwesomeIcon icon={ic} spin onClick={this.props.seatsFull ? this.togglePlay : 'null'}/>
+              <FontAwesomeIcon icon={ic} spin onClick={this.props.seatsFull ? this.togglePlay : this.seatsNotFull}/>
+            }
+            {facilID && this.state.seatsFullError && 
+              <h5>Error: Seats are not Full yet</h5>
             }
             <p> {this.props.t1Name} --- VS --- {this.props.t2Name}</p>
             <h2 >
