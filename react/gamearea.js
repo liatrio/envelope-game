@@ -42,7 +42,11 @@ class Gamearea extends Component {
   }
 
   async componentDidMount() {
-    this.joinGame();
+    this.intervalID = setInterval(this.joinGame.bind(this), 2000);
+  }
+
+  async componentWillUnmount() {
+    clearInterval(this.intervalID); 
   }
 
   async joinGame() {
@@ -57,13 +61,9 @@ class Gamearea extends Component {
                     teamName_2: json.teamName_2
                     
                   });
-    this.intervalID = setTimeout(this.joinGame.bind(this), 2000);
-
     if (this.state.seats.every(s => s.is_taken === true)) {
-      //this.setState({startTime: moment.utc().format('YYYY-MM-DD HH:mm:ss')});
       this.setState({ seatsFull: true });
-      clearTimeout(this.intervalID);
-      this.updateGame();
+      this.intervalID = setInterval(this.joinGame.bind(this), 2000);
     }
   }
 
@@ -76,7 +76,6 @@ class Gamearea extends Component {
       team_id_2: json.team_2_id, 
       display_name: json.display_name,
       startTime: json.start_time });
-    this.intervalID = setTimeout(this.updateGame.bind(this), 1000);
   }
 
   render() {
