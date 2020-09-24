@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import { useParams } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 import { Modal, Button } from "react-bootstrap";
 
 
@@ -9,7 +7,7 @@ import { Modal, Button } from "react-bootstrap";
 class MyVerticallyCenteredModal extends Component {
   constructor(props) {
     super(props);
-    this.state= {
+    this.state = {
       disabled: false,
       show: true,
       teamOneName: '',
