@@ -58,10 +58,10 @@ router.get('/api/create', (req, res) => {
 
   values = [];
   for (let i = 0; i < num_env; i++) {
-    values[i] = [nanoid(16), 0, Math.random() * (num_env - 1) + 1, game_id, team_ids[0]]
-    values[i + num_env] = [nanoid(16), 0, Math.random() * (num_env - 1) + 1, game_id, team_ids[1]]
+    values[i] = [nanoid(16), 0, Math.random() * (num_env - 1) + 1, game_id, team_ids[0], 0];
+    values[i + num_env] = [nanoid(16), 0, Math.random() * (num_env - 1) + 1, game_id, team_ids[1], 0];
   }
-  sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id) VALUES ?';
+  sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id, seat_number) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
   });
@@ -130,7 +130,7 @@ router.get('/api/game-state/:id', (req, res) => {
       state.envelopes.push({
         envelope_id: result[i].envelope_id,
         matching_stamp: result[i].matching_stamp,
-        evelope_state: result[i].envelope_state,
+        envelope_state: result[i].envelope_state,
         team: result[i].team_id,
         seat: result[i].seat_id,
         envelope_finish: result[i].envelope_end
@@ -188,7 +188,7 @@ router.get('/api/choose-seat/:game_id/:seat_id', (req, res) => {
   })
 });
 
-router.get('/api/update-envelope/:game_id/:envelope_id/:seat_id/:state', (req, res) => {
+router.get('/api/update-envelope/:game_id/:envelope_id/:seat_number/:state', (req, res) => {
   let sql;
   if (req.params.seat_id === "finish") {
     let timestamp = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
@@ -199,7 +199,7 @@ router.get('/api/update-envelope/:game_id/:envelope_id/:seat_id/:state', (req, r
            AND envelope_id = '${req.params.envelope_id}'`;
   } else {
     sql = `UPDATE ENVELOPES
-           SET seat_id = '${req.params.seat_id}',
+           SET seat_number = '${req.params.seat_number}',
                envelope_state = '${req.params.state}'
            WHERE game_id = '${req.params.game_id}'
            AND envelope_id = '${req.params.envelope_id}'`;
@@ -230,6 +230,7 @@ router.get('/api/start-game/:facilitator_id/:game_id', (req, res) => {
       res.send({ success: true });
     }
   });
+  sql = ``
 
 });
 
