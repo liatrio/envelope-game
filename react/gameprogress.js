@@ -6,8 +6,6 @@ function doMath(end, begin) {
   return end - begin;
 }
 
-
-
 class Gameprogress extends Component {
   constructor(props) {
     super(props);
