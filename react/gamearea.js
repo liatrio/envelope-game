@@ -63,7 +63,8 @@ class Gamearea extends Component {
                   });
     if (this.state.seats.every(s => s.is_taken === true)) {
       this.setState({ seatsFull: true });
-      this.intervalID = setInterval(this.joinGame.bind(this), 2000);
+      clearInterval(this.intervalID);
+      this.intervalID = setInterval(this.updateGame.bind(this), 2000);
     }
   }
 
