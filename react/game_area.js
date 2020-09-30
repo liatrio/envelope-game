@@ -18,13 +18,14 @@ class GameArea extends Component {
       seconds: 0,
       seatsFull: false,
       seatId: null,
+      mySeatNumber: null,
       teamName_1: 'Unnamed Team 1',
       teamName_2: 'Unnamed Team 2',
-      startTime: null,
-      envelope: [],
+      envelopes: [],
       display_name: '',
       now: '',
-      countdown: ''
+      countdown: '',
+      start_time: null
     }
     this.setSeatId = this.setSeatId.bind(this);
   }
@@ -70,11 +71,11 @@ class GameArea extends Component {
     const response = await fetch(`/api/game-state/${gameID}`)
     const json = await response.json();
     this.setState({
-      envelope: json.envelopes,
+      envelopes: json.envelopes,
       team_id_1: json.team_1_id,
       team_id_2: json.team_2_id,
       display_name: json.display_name,
-      startTime: json.start_time
+      start_time: json.start_time
     });
     this.intervalID = setTimeout(this.updateGame.bind(this), 1000);
   }
@@ -84,17 +85,55 @@ class GameArea extends Component {
       return (
         <div>
           Game Area
-          <GameProgress startTime={this.state.startTime} t1Name={this.state.teamName_1} t1Begin={4} t1End={9} t2Name={this.state.teamName_2} t2Begin={1} t2End={2} />
-          <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
+          <GameProgress
+            start_time={this.state.start_time}
+            t1Name={this.state.teamName_1}
+            t1Begin={4} t1End={9}
+            t2Name={this.state.teamName_2}
+            t2Begin={1}
+            t2End={2}
+          />
+          <ChairsCollection
+            envelopes={this.state.envelopes}
+            mySeatNumber={this.state.mySeatNumber}
+            start_time={this.state.start_time}
+            seats={this.state.seats.sort((a, b) => {
+              return a.seat_number - b.seat_number
+            })}
+            gameID={this.props.match.params.gameID}
+            setSeatId={(id) => this.setSeatId(id)}
+            playerSeatId={this.state.seatId}
+          />
         </div>
       );
     } else {
       return (
         <div>
           Game Area
-          <GameProgress startTime={this.state.startTime} t1Name={this.state.teamName_1} t1Begin={this.state.startTime} t1End={9} t2Name={this.state.teamName_2} t2Begin={this.state.startTime} t2End={2} />
-          <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
-          <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} seatsFull={this.state.seatsFull} gameID={this.props.match.params.gameID} />
+          <GameProgress
+            start_time={this.state.start_time}
+            t1Name={this.state.teamName_1}
+            t1Begin={this.state.startTime}
+            t1End={9} t2Name={this.state.teamName_2}
+            t2Begin={this.state.startTime}
+            t2End={2}
+          />
+          <ChairsCollection
+            envelopes={this.state.envelopes}
+            start_time={this.state.start_time}
+            mySeatNumber={this.state.mySeatNumber}
+            seats={this.state.seats}
+            gameID={this.props.match.params.gameID}
+            setSeatId={(id) => this.setSeatId(id)}
+            playerSeatId={this.state.seatId}
+          />
+          <Controls
+            facilitatorGets={this.props.location.state.facilitatorID}
+            team_id_1={this.state.team_id_1}
+            team_id_2={this.state.team_id_2}
+            seatsFull={this.state.seatsFull}
+            gameID={this.props.match.params.gameID}
+          />
         </div>
       );
     }

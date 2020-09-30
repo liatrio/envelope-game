@@ -57,7 +57,7 @@ class Envelope extends Component {
       } else {
         this.setState({ waiting: false });
       }
-    }, 2000);
+    }, 500);
   }
 
   async toggleOpen() {
