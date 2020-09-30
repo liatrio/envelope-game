@@ -13,34 +13,9 @@ class EnvelopeArea extends Component {
     super(props);
     this.state = {
       active_envelope: null,
-      finished_envelopes: new Set().add("5v7cIDuymBQgrT6b"),
-      envelopes: [
-        {
-          "envelope_id": "-WwV6Sn8hU-9A5Iu",
-          "matching_stamp": 1,
-          "evelope_state": 0,
-          "team": "Fr4fu64JE-T_anM-",
-          "seat": null,
-          "envelope_finish": null
-        },
-        {
-          "envelope_id": "-XoIwECmkEiJ7ZXw",
-          "matching_stamp": 18,
-          "evelope_state": 0,
-          "team": "Fr4fu64JE-T_anM-",
-          "seat": null,
-          "envelope_finish": null
-        },
-        {
-          "envelope_id": "5v7cIDuymBQgrT6b",
-          "matching_stamp": 7,
-          "evelope_state": 0,
-          "team": "Fr4fu64JE-T_anM-",
-          "seat": null,
-          "envelope_finish": null
-        }
-      ]
+      finished_envelopes: new Set(),
     }
+    this.advanceEnvelopeSeat = this.advanceEnvelopeSeat.bind(this);
     this.setActiveEnvelope = this.setActiveEnvelope.bind(this);
     this.finishActiveEnvelope = this.finishActiveEnvelope.bind(this);
     this.updateCheckedStamps = this.updateCheckedStamps.bind(this);
@@ -48,15 +23,16 @@ class EnvelopeArea extends Component {
   }
 
   setActiveEnvelope() {
-    if (this.state.active_envelope === null && this.state.envelopes.length > 0) {
+    if (this.props.envelopes && this.state.active_envelope === null && this.props.envelopes.length > 0) {
       // find an envelope that is not the active envelope and is not in the finished envelope set
-      let unfinished_envelopes = this.state.envelopes.filter((e) => {
+      let unfinished_envelopes = this.props.envelopes.filter((e) => {
         return !this.state.finished_envelopes.has(e.envelope_id);
       });
       console.log(unfinished_envelopes);
       if (unfinished_envelopes.length > 0) {
         unfinished_envelopes[0].complete = false;
         unfinished_envelopes[0].stamped = false;
+        unfinished_envelopes[0].envelope_state = 1;
         unfinished_envelopes[0].random = Array.from(Array(5), (x, i) => i + unfinished_envelopes[0].matching_stamp).sort(() => Math.random() - 0.5);
         unfinished_envelopes[0].checked = Array(5).fill(false, 0, 5);
         this.setState({ active_envelope: unfinished_envelopes[0] });
@@ -67,8 +43,15 @@ class EnvelopeArea extends Component {
     }
   }
 
-  async updateActiveEnvelope(envelope, state) {
-    const request = `/api/update-envelope/${this.props.game_id}/${envelope.envelope_id}/${this.props.seat_id}/${state}`;
+  // updates the active envelope's states
+  // 0 is on todo stack
+  // 1 is closed, active envelope
+  // 2 is open active envelope
+  // 3 stamped open envelope
+  // 4 is stamped closed envelope
+  // 5 is completed for that person
+  async updateActiveEnvelope(envelope) {
+    const request = `/api/update-envelope/${this.props.game_id}/${envelope.envelope_id}/${this.props.seat_number}/${envelope.envelope_state}`;
     const response = await fetch(request);
     const json = await response.json();
     console.log(json);
@@ -82,40 +65,54 @@ class EnvelopeArea extends Component {
   }
 
   finishActiveEnvelope() {
+    let finished = this.state.finished_envelopes;
+    finished.add(this.state.active_envelope.envelope_id);
     if (this.props.is_team_1) {
-      // pass onto next person
+      this.advanceEnvelopeSeat([this.state.active_envelope.envelope_id]);
+      this.setState({ active_envelope: null, finished_envelopes: finished });
     } else {
-      let finished = this.state.finished_envelopes;
-      finished.add(this.state.active_envelope.envelope_id);
-      this.setState({ active_envelope: null });
+      this.setState({ active_envelope: null, finished_envelopes: finished });
     }
   }
 
+  async advanceEnvelopeSeat(envelopes) {
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        envelopes: envelopes,
+        game_id: this.props.game_id,
+        team_id: this.props.team_id,
+        next_seat: this.props.seat_number + 1,
+      })
+    };
+    await fetch('/api/move-envelope', requestOptions);
+  }
 
   render() {
     if (this.props.is_team_1) {
       return (
         <Container>
           <Row>
-            <div className={this.state.active_envelope === null ? "invisible" : "visible"}>
-              <Envelope
-                active_envelope={this.state.active_envelope}
-                game_id={this.props.game_id}
-                seat_id={this.props.seat_id}
-                seat_number={this.props.seat_number}
-                is_team_1={this.props.is_team_1}
-                finishActiveEnvelope={this.finishActiveEnvelope}
-                updateCheckedStamps={this.updateCheckedStamps}
-                updateActiveEnvelope={this.updateActiveEnvelope}
-              >
-              </Envelope>
-            </div>
+            <Envelope
+              active_envelope={this.state.active_envelope}
+              game_id={this.props.game_id}
+              seat_id={this.props.seat_id}
+              seat_number={this.props.seat_number}
+              is_team_1={this.props.is_team_1}
+              finishActiveEnvelope={this.finishActiveEnvelope}
+              updateCheckedStamps={this.updateCheckedStamps}
+              updateActiveEnvelope={this.updateActiveEnvelope}
+            >
+            </Envelope>
             <EnvelopeStack
               stack_type={0}
               setActiveEnvelope={this.setActiveEnvelope}
-              finished_count={this.state.finished_envelopes.size}
-              count={this.state.envelopes.length}
+              finished_envelopes={Array.from(this.state.finished_envelopes)}
+              envelopes={this.props.envelopes}
               active_envelope={this.state.active_envelope}
+              advanceEnvelopeSeat={this.advanceEnvelopeSeat}
             ></EnvelopeStack>
           </Row>
         </Container>
@@ -127,29 +124,29 @@ class EnvelopeArea extends Component {
             <EnvelopeStack
               stack_type={1}
               setActiveEnvelope={this.setActiveEnvelope}
-              count={this.state.envelopes.length}
-              finished_count={this.state.finished_envelopes.size}
+              envelopes={this.props.envelopes}
+              finished_envelopes={Array.from(this.state.finished_envelopes)}
               active_envelope={this.state.active_envelope}
+              advanceEnvelopeSeat={this.advanceEnvelopeSeat}
             ></EnvelopeStack>
-            <div className={this.state.active_envelope === null ? "invisible" : "visible"}>
-              <Envelope
-                active_envelope={this.state.active_envelope}
-                game_id={this.props.game_id}
-                seat_id={this.props.seat_id}
-                seat_number={this.props.seat_number}
-                is_team_1={this.props.is_team_1}
-                finishActiveEnvelope={this.finishActiveEnvelope}
-                updateCheckedStamps={this.updateCheckedStamps}
-                updateActiveEnvelope={this.updateActiveEnvelope}
-              >
-              </Envelope>
-            </div>
+            <Envelope
+              active_envelope={this.state.active_envelope}
+              game_id={this.props.game_id}
+              seat_id={this.props.seat_id}
+              seat_number={this.props.seat_number}
+              is_team_1={this.props.is_team_1}
+              finishActiveEnvelope={this.finishActiveEnvelope}
+              updateCheckedStamps={this.updateCheckedStamps}
+              updateActiveEnvelope={this.updateActiveEnvelope}
+            >
+            </Envelope>
             <EnvelopeStack
               stack_type={0}
-              count={this.state.envelopes.length}
-              finished_count={this.state.finished_envelopes.size}
+              envelopes={this.props.envelopes}
+              finished_envelopes={Array.from(this.state.finished_envelopes)}
               setActiveEnvelope={this.setActiveEnvelope}
               active_envelope={this.state.active_envelope}
+              advanceEnvelopeSeat={this.advanceEnvelopeSeat}
             ></EnvelopeStack>
           </Row>
         </Container>

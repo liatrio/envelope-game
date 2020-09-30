@@ -7,7 +7,7 @@ import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 
 
 
-class Gameprogress extends Component {
+class GameProgress extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,8 +40,7 @@ async togglePlay(val) {
     const profitPerEnvelope = 22;
     const facilID = this.props.facilitatorGets;
     return (
-      <div >
-        
+      <div > 
         <Card style={{ width: '25em' }}>
           <Card.Body>
           
@@ -65,4 +64,4 @@ async togglePlay(val) {
   }
 }
 
-export default Gameprogress;
+export default GameProgress;

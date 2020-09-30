@@ -14,11 +14,10 @@ class Chair extends Component {
       active_envelope: null,
       seat_id: null,
       display_name: null,
-    
+
     }
 
     this.chooseSeat = this.chooseSeat.bind(this);
-    this.nextChair = this.nextSeat.bind(this);
   }
 
   async chooseSeat() {
@@ -32,45 +31,19 @@ class Chair extends Component {
         this.state.seat_id = json.seat_id;
         this.props.setSeatId(json.seat_id);
       }
-    
 
-    this.state.display_name = prompt("Please enter your display name.");
+      this.state.display_name = prompt("Please enter your display name.");
 
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        display_name: this.state.display_name,
-        seat_id: this.state.seat_id,
-      })
-    };
-    console.log("Before set-player-name await");
-    const response1 = await fetch('/api/set-player-name', requestOptions);
-    const json1 = await response1.json();
-    
-    console.log(json1);
-
-    if (json1.success) {
-      console.log("Display Name was set.");
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          display_name: this.state.display_name,
+          seat_id: this.state.seat_id,
+        })
+      };
+      await fetch('/api/set-player-name', requestOptions);
     }
-    else
-    {
-      console.log("Display Name was not set.")
-    }
- 
-  }
-  }
-
-  // returns the id of the next seat, or "finish" if it is the last seat
-  nextSeat() {
-    if (this.props.seat_number === 3) {
-      return "finish";
-    }
-    return this.props.otherChairs.filter((c) => {
-      return c.is_team_1 === this.props.is_team_1;
-    }).find((c) => {
-      return c.seat_number === this.props.seat_number + 1;
-    }).seat_id;
   }
 
   render() {
@@ -88,11 +61,14 @@ class Chair extends Component {
           />
         </Button>
         <EnvelopeArea
+          envelopes={this.props.envelopes.filter((i) => {
+            return i.seat_number === this.props.seat_number
+          })}
+          team_id={this.props.team_id}
           is_team_1={this.props.is_team_1}
           game_id={this.props.game_id}
           seat_id={this.props.seat_id}
           seat_number={this.props.seat_number}
-          next_seat={this.nextSeat}
         ></EnvelopeArea>
       </div>
     );

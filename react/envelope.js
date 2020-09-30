@@ -2,9 +2,12 @@ import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { faEnvelope, faEnvelopeOpen, faEnvelopeOpenText, faEnvelopeSquare } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope as faEnvelopeClear } from '@fortawesome/free-regular-svg-icons'
+
 import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
-import Collapse from 'react-bootstrap/Collapse'
+import Fade from 'react-bootstrap/Fade'
+
 
 
 
@@ -32,6 +35,7 @@ class Envelope extends Component {
   async updateEnvelope(id, state) {
     const request = `/api/update-envelope/${this.props.game_id}/${id}/${this.props.seat_id}/${state}`;
     console.log(request);
+    // make request to update envelope(s)
     // const response = await fetch();
     // const json = await response.json();
   }
@@ -53,7 +57,7 @@ class Envelope extends Component {
       } else {
         this.setState({ waiting: false });
       }
-    }, 2000);
+    }, 500);
   }
 
   async toggleOpen() {
@@ -73,7 +77,7 @@ class Envelope extends Component {
     }
     switch (this.props.active_envelope.envelope_state) {
       case 0:
-        return faEnvelope;
+        return faEnvelopeClear;
       case 1:
         return faEnvelope;
       case 2:
@@ -93,7 +97,7 @@ class Envelope extends Component {
     const open = this.state.open;
     return (
       <div>
-        {this.props.active_envelope && `Stamp ${this.props.active_envelope.matching_stamp}`}
+        {this.props.active_envelope ? `Stamp ${this.props.active_envelope.matching_stamp}` : "No envelope"}
         <br></br>
         <FontAwesomeIcon
           icon={this.getIcon()}
@@ -102,12 +106,12 @@ class Envelope extends Component {
           aria-controls="collapse-stamp-bar"
           aria-expanded={open}
         />
-        <Collapse
+        <Fade
           in={open}
         >
           <div id="collapse-stamp-bar">
             <ButtonGroup aria-label="collapse-stamp-bar">
-              {this.props.active_envelope && this.props.active_envelope.random.map((i) => {
+              {this.props.active_envelope ? this.props.active_envelope.random.map((i) => {
                 const variant = i === this.props.active_envelope.matching_stamp ? "success" : "danger";
                 return (
                   <Button
@@ -119,27 +123,26 @@ class Envelope extends Component {
                     {i}
                   </Button>
                 )
-              })}
+              }) :
+                <Button key={0}>1</Button>
+              }
             </ButtonGroup>
           </div>
 
-        </Collapse>
-        <br></br>
+        </Fade>
         {this.props.active_envelope && this.props.active_envelope.envelope_id}
         <br></br>
-        {
-          this.props.active_envelope && this.props.active_envelope.stamped && !this.state.open &&
-          <Button
-            onClick={this.props.finishActiveEnvelope}
-          >
-            {
-              this.props.is_team_1 ?
-                "Send to next person" :
-                "Finish envelope"
-            }
-          </Button>
-
-        }
+        <Button
+          variant={this.props.active_envelope && this.props.active_envelope.stamped && !this.state.open ? "primary" : "secondary"}
+          disabled={!(this.props.active_envelope && this.props.active_envelope.stamped && !this.state.open)}
+          onClick={this.props.finishActiveEnvelope}
+        >
+          {
+            this.props.is_team_1 ?
+              "Send to next person" :
+              "Finish envelope"
+          }
+        </Button>
       </div>
     );
   }
