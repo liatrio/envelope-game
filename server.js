@@ -21,7 +21,7 @@ if (webpackConfig.mode === 'production') {
   require('node-hot')
     .configure({
       exclude: [
-        /[\/\\]node_modules[\/\\]/,
+        /[/\\]node_modules[/\\]/,
       ],
     });
 

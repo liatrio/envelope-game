@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { useParams } from 'react-router-dom'
 import { Modal, Button } from "react-bootstrap";
 
 
@@ -18,7 +17,7 @@ class MyVerticallyCenteredModal extends Component {
     }
     this.setState({ disabled: true });
     await this.props.setTeamOneName();
-    await this.props.setTeamTwoName();
+    await this.props.setTeam2Name();
     this.props.onHide();
   }
 
@@ -40,7 +39,7 @@ class MyVerticallyCenteredModal extends Component {
             <label>
               Team One Name: <input type="text" onChange={this.props.teamOneChange} name="teamOneName" />
               <br />
-              Team Two Name: <input type="text" onChange={this.props.teamTwoChange} name="teamTwoName" />
+              Team Two Name: <input type="text" onChange={this.props.teamTwoChange} name="team2Name" />
             </label>
           </form>
         </Modal.Body>
@@ -59,24 +58,27 @@ class Controls extends Component {
     this.state = {
       disabled: false,
       teamOneName: '',
-      teamTwoName: '',
-      facilitator_id: '',
+      team2Name: '',
+      facilitatorId: '',
       modalShow: false,
     };
 
     // bind any handlers in the constructor
-    
     this.teamOneChange = this.teamOneChange.bind(this);
     this.teamTwoChange = this.teamTwoChange.bind(this);
     this.setTeamOneName = this.setTeamOneName.bind(this);
-    this.setTeamTwoName = this.setTeamTwoName.bind(this);
+    this.setTeam2Name = this.setTeam2Name.bind(this);
   }
 
 
 
-  teamOneChange(event) { this.setState({ teamOneName: event.target.value }); }
+  teamOneChange(event) {
+    this.setState({ teamOneName: event.target.value });
+  }
 
-  teamTwoChange(event) { this.setState({ teamTwoName: event.target.value }); }
+  teamTwoChange(event) {
+    this.setState({ team2Name: event.target.value });
+  }
 
 
   async setTeamOneName() {
@@ -84,9 +86,9 @@ class Controls extends Component {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        team_name: this.state.teamOneName,
-        team_id: this.props.team_id_1,
-        facilitator_id: this.props.facilitatorGets,
+        teamName: this.state.teamOneName,
+        teamId: this.props.teamId_1,
+        facilitatorId: this.props.facilitatorId,
       })
     };
     const response = await fetch('/api/set-team-name', requestOptions);
@@ -95,25 +97,23 @@ class Controls extends Component {
     console.log(json);
   }
 
-  async setTeamTwoName() {
+  async setTeam2Name() {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        team_name: this.state.teamTwoName,
-        team_id: this.props.team_id_2,
-        facilitator_id: this.props.facilitatorGets,
+        teamName: this.state.team2Name,
+        teamId: this.props.teamId_2,
+        facilitatorId: this.props.facilitatorId,
       })
     };
-    const response = await fetch('/api/set-team-name', requestOptions);
-    const json = await response.json();
-
+    await fetch('/api/set-team-name', requestOptions);
   }
 
 
 
   render() {
-    
+
     let modalClose = () => this.setState({ modalShow: false });
     return (
       <div>
@@ -126,8 +126,8 @@ class Controls extends Component {
       </Button>
 
         <MyVerticallyCenteredModal
-          setTeamOneName={this.setTeamOneName}
-          setTeamTwoName={this.setTeamTwoName}
+          setteamOneName={this.setteamOneName}
+          setteam2Name={this.setteam2Name}
           teamOneChange={this.teamOneChange}
           teamTwoChange={this.teamTwoChange}
           show={this.state.modalShow}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faEnvelopeOpen, faEnvelopeOpenText, far, fas } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import Button from 'react-bootstrap/Button'
 import Badge from 'react-bootstrap/Badge'
 
@@ -30,9 +30,9 @@ class EnvelopeStack extends Component {
   // queue of envelopes
   // returns array of envelope ids
   getFinishedEnvelopes() {
-    return this.props.finished_envelopes.filter((e) => {
+    return this.props.finishedEnvelopes.filter((e) => {
       return this.props.envelopes.some((i) => {
-        return e === i.envelope_id
+        return e === i.envelopeId
       });
     });
   }
