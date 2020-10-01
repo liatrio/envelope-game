@@ -82,6 +82,7 @@ class GameArea extends Component {
         <div>
           Game Area
           <GameProgress
+            envelopes={this.state.envelopes}
             startTime={this.state.startTime}
             t1Name={this.state.team1Name}
             t1Begin={4} t1End={9}
@@ -105,8 +106,8 @@ class GameArea extends Component {
     } else {
       return (
         <div>
-          Game Area
           <GameProgress
+            envelopes={this.state.envelopes}
             startTime={this.state.startTime}
             t1Name={this.state.team1Name}
             t1Begin={this.state.startTime}

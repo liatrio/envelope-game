@@ -22,23 +22,9 @@ class Envelope extends Component {
     this.checkStamp = this.checkStamp.bind(this);
     this.toggleOpen = this.toggleOpen.bind(this);
     this.getIcon = this.getIcon.bind(this);
-    this.updateEnvelope = this.updateEnvelope.bind(this);
   }
 
-  // updates envelope states
-  // 0 is on todo stack
-  // 1 is closed, active envelope
-  // 2 is open active envelope
-  // 3 stamped open envelope
-  // 4 is stamped closed envelope
-  // 5 is completed for that person
-  async updateEnvelope(id, state) {
-    const request = `/api/update-envelope/${this.props.gameId}/${id}/${this.props.seatId}/${state}`;
-    console.log(request);
-    // make request to update envelope(s)
-    // const response = await fetch();
-    // const json = await response.json();
-  }
+
 
   // handles checking the stamp to see if its correct
   // has a two second cooldown on clicking a button before it can be completed
@@ -50,7 +36,8 @@ class Envelope extends Component {
     this.setState({ waiting: true });
     setTimeout(() => {
       if (num === envelope.matchingStamp) {
-        // envelope stamp should become 3 here
+        envelope.clientState = 3;
+        this.props.updateEnvelope(envelope);
         envelope.stamped = true;
         this.setState({ waiting: false });
         this.props.updateActiveEnvelope(envelope, 3);
@@ -60,12 +47,16 @@ class Envelope extends Component {
     }, 500);
   }
 
-  async toggleOpen() {
+  toggleOpen() {
     const open = this.state.open;
-    if (open && this.props.activeEnvelope.stamped) {
+    let envelope = this.props.activeEnvelope;
+    if (open && envelope.stamped) {
+      envelope.clientState = 4;
+      this.props.updateEnvelope(envelope);
       this.setState({ open: !open });
     } else if (!open && !this.props.activeEnvelope.stamped) {
-      await this.updateEnvelope(this.props.activeEnvelope.envelopeId, 1);
+      envelope.clientState = 2;
+      this.props.updateEnvelope(envelope);
       this.setState({ open: !open });
     }
   }

@@ -57,10 +57,10 @@ router.get('/api/create', (req, res) => {
 
   values = [];
   for (let i = 0; i < numEnvelopes; i++) {
-    values[i] = [nanoid(16), 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[0], 0];
-    values[i + numEnvelopes] = [nanoid(16), 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[1], 0];
+    values[i] = [nanoid(16), 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[0], 0, true];
+    values[i + numEnvelopes] = [nanoid(16), 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[1], 0, false];
   }
-  sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id, seat_number) VALUES ?';
+  sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id, seat_number, is_team_1) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
   });
@@ -109,7 +109,7 @@ router.get('/api/join/:gameId', (req, res) => {
 });
 
 router.get('/api/game-state/:id', (req, res) => {
-  let sql = `SELECT envelope_id, envelope_state, seat_number, envelope_state, envelope_end, matching_stamp, start_time, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id
+  let sql = `SELECT envelope_id, envelope_state, seat_number, envelope_state, envelope_end, matching_stamp, is_team_1, start_time, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id
              FROM ENVELOPES 
              INNER JOIN GAME on GAME.game_id = ENVELOPES.game_id
              WHERE ENVELOPES.game_id = '${req.params.id}'`;
@@ -127,6 +127,7 @@ router.get('/api/game-state/:id', (req, res) => {
           matchingStamp: i.matching_stamp,
           envelopeState: i.envelope_state,
           team: i.team_id,
+          isTeam1: i.is_team_1,
           seatNumber: i.seat_number,
           envelopeFinish: i.envelope_end
         });
@@ -185,20 +186,18 @@ router.get('/api/choose-seat/:gameId/:seatId', (req, res) => {
   })
 });
 
-router.get('/api/update-envelope/:gameId/:envelopeId/:seatNumber/:state', (req, res) => {
+router.get('/api/update-envelope/:gameId/:envelopeId/:state', (req, res) => {
   let sql = `UPDATE ENVELOPES
-             SET seat_number = '${req.params.seatNumber}',
-                 envelope_state = '${req.params.state}'
+             SET envelope_state = '${req.params.state}'
              WHERE game_id = '${req.params.gameId}'
              AND envelope_id = '${req.params.envelopeId}'`;
+  console.log(sql);
   db.query(sql, function (err, result) {
     if (err) throw err;
-    if (result.changedRows !== 1) {
-      res.send({ success: false });
-    } else {
-      res.send({ success: true });
-    }
+    res.json({ success: true });
+    console.log('after send');
   });
+  
 });
 
 // used to advance an envelope to the next seat

@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 
-
+import Minimap from './minimap'
 
 
 class GameProgress extends Component {
@@ -55,7 +55,10 @@ async togglePlay(val) {
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     ${profitPerEnvelope * 0}
             </h2>
-            
+            <Minimap
+              envelopes={this.props.envelopes}
+            >
+            </Minimap>
           </Card.Body>
         </Card>
       </div>
