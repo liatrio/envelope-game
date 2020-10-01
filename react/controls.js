@@ -11,96 +11,46 @@ class MyVerticallyCenteredModal extends Component {
       show: true,
       teamOneName: '',
       teamTwoName: '',
-      facilitator_id: '',
-    }
-    this.setTeamNames = this.setTeamNames.bind(this);
-  }
-  async setTeamNames() {
-    if (this.state.disabled) {
-      return;
-    }
-    this.setState({ disabled: true });
-    await this.props.setTeamOneName();
-    await this.props.setTeam2Name();
-    this.props.onHide();
-  }
-
-  render() {
-    return (
-      <Modal
-        {...this.props}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Choose Team Names
-              </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <form>
-            <label>
-              Team One Name: <input type="text" onChange={this.props.teamOneChange} name="teamOneName" />
-              <br />
-              Team Two Name: <input type="text" onChange={this.props.teamTwoChange} name="team2Name" />
-            </label>
-          </form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={this.setTeamNames}>Submit</Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  }
-}
-
-
-class Controls extends Component {
-  constructor() {
-    super();
-    this.state = {
-      disabled: false,
-      teamOneName: '',
-      team2Name: '',
       facilitatorId: '',
-      modalShow: false,
-    };
+    }
+        // bind any handlers in the constructor
+        this.teamOneChange = this.teamOneChange.bind(this);
+        this.teamTwoChange = this.teamTwoChange.bind(this);
+        this.setTeam1Name = this.setTeam1Name.bind(this);
+        this.setTeam2Name = this.setTeam2Name.bind(this);
+        this.setTeamNames = this.setTeamNames.bind(this);
+  }
 
-    // bind any handlers in the constructor
-    this.teamOneChange = this.teamOneChange.bind(this);
-    this.teamTwoChange = this.teamTwoChange.bind(this);
-    this.setTeamOneName = this.setTeamOneName.bind(this);
-    this.setTeam2Name = this.setTeam2Name.bind(this);
-  }
-  async setTeamNames(){
-    //if (this.state.disabled) {
-    //  return;
-    //}
-    //this.setState({ disabled: true });
-    await this.setTeamOneName();
-    await this.setTeamTwoName();
-    
-    this.props.onHide();
-    this.setState({show: false});
-  }
+
 
   teamOneChange(event) {
     this.setState({ teamOneName: event.target.value });
   }
 
   teamTwoChange(event) {
-    this.setState({ team2Name: event.target.value });
+    this.setState({ teamTwoName: event.target.value });
   }
 
+  async setTeamNames(){
+    //if (this.state.disabled) {
+    //  return;
+    //}
+    //this.setState({ disabled: true });
+    await this.setTeam1Name();
+    await this.setTeam2Name();
+    
+    this.props.onHide();
+    this.setState({show: false});
+    this.setState({modalShow: false});
+  }
 
-  async setTeamOneName() {
+  async setTeam1Name() {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         teamName: this.state.teamOneName,
-        teamId: this.props.teamId_1,
+        teamId: this.props.team1,
         facilitatorId: this.props.facilitatorId,
       })
     };
@@ -115,12 +65,15 @@ class Controls extends Component {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        teamName: this.state.team2Name,
-        teamId: this.props.teamId_2,
+        teamName: this.state.teamTwoName,
+        teamId: this.props.team2,
         facilitatorId: this.props.facilitatorId,
       })
     };
-    await fetch('/api/set-team-name', requestOptions);
+    const response = await fetch('/api/set-team-name', requestOptions);
+    const json = await response.json();
+    console.log(requestOptions);
+    console.log(json);
   }
 
   render() {
@@ -130,7 +83,6 @@ class Controls extends Component {
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
-        
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
@@ -140,9 +92,9 @@ class Controls extends Component {
         <Modal.Body>
           <form>
             <label>
-              Team One Name: <input type="text" onChange={this.teamOneChange} name="teamOneName" />
+              Team One Name: <input type="text" onChange={this.teamOneChange} name="team1Name" />
               <br />
-              Team Two Name: <input type="text" onChange={this.teamTwoChange} name="teamTwoName" />
+              Team Two Name: <input type="text" onChange={this.teamTwoChange} name="team2Name" />
             </label>
           </form>
         </Modal.Body>
@@ -154,13 +106,13 @@ class Controls extends Component {
   }
 }
 
-
 class Controls extends Component {
   constructor() {
     super();
     this.state = {
       isGoing: false,
       disabled: false,
+      facilitatorId: '',
       modalShow: true,
     };
   }
@@ -171,9 +123,9 @@ class Controls extends Component {
       <div>
 
           <MyVerticallyCenteredModal
-            facilitatorGets={this.props.facilitatorGets}
-            team_id_1={this.props.team_id_1}
-            team_id_2={this.props.team_id_2}
+            facilitatorId={this.props.facilitatorId}
+            team1={this.props.team1}
+            team2={this.props.team2}
             show={this.state.modalShow}
             onHide={modalClose}
           />

@@ -46,10 +46,10 @@ class GameArea extends Component {
     this.setState({
       isStarted: json.is_started,
       seats: json.seats,
-      team1: json.team_1_id,
-      team2: json.team_2_id,
-      team1Name: json.teamName_1,
-      team2Name: json.teamName_2
+      team1: json.team1,
+      team2: json.team2,
+      team1Name: json.team1Name,
+      team2Name: json.team2Name
 
     });
     this.intervalID = setTimeout(this.joinGame.bind(this), 2000);
@@ -108,9 +108,10 @@ class GameArea extends Component {
           Game Area
           <GameProgress
             startTime={this.state.startTime}
-            t1Name={this.state.team1Name}
+            team1Name={this.state.team1Name}
             t1Begin={this.state.startTime}
-            t1End={9} t2Name={this.state.team2Name}
+            t1End={9} 
+            team2Name={this.state.team2Name}
             t2Begin={this.state.startTime}
             t2End={2}
           />
