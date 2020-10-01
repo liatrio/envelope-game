@@ -50,7 +50,7 @@ class Chair extends Component {
     return (
       <div>
         <Button
-          className={this.props.is_taken ? "chairFilled" : "chairNotFilled"}
+          className={this.props.isTaken ? "chairFilled" : "chairNotFilled"}
           variant="secondary"
           active={this.props.isTaken || this.props.playerSeatId !== null ? 'false' : 'true'}
           onClick={() => this.chooseSeat(this.props.index, this.props.seatId, this.props.gameId)}>

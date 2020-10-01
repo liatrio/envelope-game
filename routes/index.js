@@ -119,8 +119,8 @@ router.get('/api/game-state/:id', (req, res) => {
     res.send({
       gameId: result[0].gameId,
       startTime: result[0].start_time,
-      team1: result[0].team1,
-      team2: result[0].team2,
+      team1: result[0].team_1_id,
+      team2: result[0].team_2_id,
       envelopes: result.map((i) => {
         return ({
           envelopeId: i.envelope_id,
@@ -172,12 +172,10 @@ router.get('/api/choose-seat/:gameId/:seatId', (req, res) => {
   let sql = `UPDATE SEATS SET is_taken = 1 WHERE seat_id = '${req.params.seatId}'
              AND game_id = '${req.params.gameId}' and is_taken = 0`;
 
-  console.log(sql);
   db.query(sql, function (err, result) {
     if (err) throw err;
     // if there was not a changed row then seat is already taken
     // or invalid request
-    console.log(result);
     if (result.changedRows !== 1) {
       res.send({ success: false });
     } else {

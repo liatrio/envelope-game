@@ -44,17 +44,17 @@ class GameArea extends Component {
     const response = await fetch(`/api/join/${gameId}`)
     const json = await response.json();
     this.setState({
-      isStarted: json.is_started,
+      isStarted: json.isStarted,
       seats: json.seats,
-      team1: json.team_1_id,
-      team2: json.team_2_id,
-      team1Name: json.teamName_1,
-      team2Name: json.teamName_2
+      team1: json.team1,
+      team2: json.team1,
+      team1Name: json.team1Name,
+      team2Name: json.team2Name
 
     });
     this.intervalID = setTimeout(this.joinGame.bind(this), 2000);
 
-    if (this.state.seats.every(s => s.is_taken === true)) {
+    if (this.state.seats.every(s => s.isTaken === true)) {
       this.setState({ seatsFull: true });
       clearTimeout(this.intervalID);
       this.updateGame();
