@@ -17,6 +17,8 @@ class Gamearea extends Component {
       seats: [],
       team_id_1: '',
       team_id_2: '',
+      team1Score: 0,
+      team2Score: 0,
       seconds: 0,
       seatsFull: false,
       seatId: null,
@@ -78,7 +80,11 @@ class Gamearea extends Component {
       team_id_1: json.team_1_id, 
       team_id_2: json.team_2_id, 
       display_name: json.display_name,
-      isStarted: json.is_started });
+      isStarted: json.is_started,
+      team1Score: json.score1,
+      team2Score: json.score2
+    });
+    console.log("87" + this.state.team1Score);
   }
 
   render() {
@@ -86,7 +92,7 @@ class Gamearea extends Component {
       return (
         <div>
           Game Area
-          <Gameprogress is_started={this.state.isStarted} t1Name={ this.state.teamName_1 } t1Begin={4} t1End={9} seatsFull={this.state.seatsFull} t2Name={ this.state.teamName_2 } t2Begin={1} t2End={2} />
+          <Gameprogress is_started={this.state.isStarted} t1Name={ this.state.teamName_1 } team1Score={this.state.team1Score} team2Score={this.state.team2Score} seatsFull={this.state.seatsFull} t2Name={ this.state.teamName_2 }/>
           <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
         </div>
       );
@@ -95,7 +101,7 @@ class Gamearea extends Component {
         <div>
           Game Area
           <EnvelopeStack></EnvelopeStack>
-          <Gameprogress facilitatorGets={this.props.location.state.facilitatorID} gameID={this.props.match.params.gameID} is_started={this.state.isStarted} t1Name={ this.state.teamName_1 } t1Begin={this.state.startTime} t1End={9} seatsFull={this.state.seatsFull} t2Name={ this.state.teamName_2 } t2Begin={this.state.startTime} t2End={2} />
+          <Gameprogress facilitatorGets={this.props.location.state.facilitatorID} gameID={this.props.match.params.gameID} is_started={this.state.isStarted} team1Score={this.state.team1Score} team2Score={this.state.team2Score} t1Name={ this.state.teamName_1 } seatsFull={this.state.seatsFull} t2Name={ this.state.teamName_2 } />
           <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
           <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} seatsFull={this.state.seatsFull} gameID={this.props.match.params.gameID}/>
         </div>

@@ -20,7 +20,6 @@ async togglePlay(val) {
 
   this.setState({disabled : true});
   this.setState({seatsFullError: false});
-  console.log(this.props.is_started);
   if (!this.props.is_started) {
     console.log("in toggle");
     const response = await fetch(`/api/start-game/${this.props.facilitatorGets}/${this.props.gameID}`)
@@ -44,6 +43,8 @@ seatsNotFull() {
   render() {
     let ic = this.props.is_started ? faPause : faPlay;
     const profitPerEnvelope = 22;
+    console.log("team 1 " + this.props.team1Score);
+
     const facilID = this.props.facilitatorGets;
     return (
       <div >
@@ -53,18 +54,18 @@ seatsNotFull() {
           
             <h1>Money Earned</h1>
             {facilID && 
-              <FontAwesomeIcon icon={ic} spin onClick={this.props.seatsFull ? this.togglePlay : this.togglePlay} disabled={this.state.disabled}/>
+              <FontAwesomeIcon icon={ic} spin onClick={this.props.seatsFull ? this.togglePlay : this.seatsNotFull} disabled={this.state.disabled}/>
             }
             {facilID && this.state.seatsFullError && 
               <h5>Error: Seats are not Full yet</h5>
             }
             <p> {this.props.t1Name} --- VS --- {this.props.t2Name}</p>
             <h2 >
-              ${profitPerEnvelope * 0}
+              ${this.props.team1Score}
                     &nbsp;&nbsp;&nbsp;&nbsp;
                       
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    ${profitPerEnvelope * 0}
+                    ${this.props.team2Score}
             </h2>
             
           </Card.Body>

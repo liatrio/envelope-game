@@ -13,7 +13,6 @@ console.log(timer);
 // endpoint to create a game
 router.get('/api/create', (req, res) => {
   
-  console.log("Hello"); 
   // generate a game and facilitator id
   let game_id = nanoid(16);
   let facilitator_id = nanoid(16);
@@ -121,7 +120,7 @@ router.get('/api/join/:game_id', (req, res) => {
 });
 
 router.get('/api/game-state/:id', (req, res) => {
-  let sql = `SELECT envelope_id, envelope_state, seat_id, envelope_state, envelope_end, matching_stamp, is_started, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id
+  let sql = `SELECT GAME.score_1, GAME.score_2, envelope_id, envelope_state, seat_id, envelope_state, envelope_end, matching_stamp, is_started, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id
              FROM ENVELOPES 
              INNER JOIN GAME on GAME.game_id = ENVELOPES.game_id
              WHERE ENVELOPES.game_id = '${req.params.id}'`;
@@ -131,6 +130,8 @@ router.get('/api/game-state/:id', (req, res) => {
 
     let state = {
       game_id: result[0].game_id,
+      score1: result[0].score_1,
+      score2: result[0].score_2,
       is_started: result[0].is_started,
       team_1_id: result[0].team_1_id,
       team_2_id: result[0].team_2_id,
