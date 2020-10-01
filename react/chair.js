@@ -11,9 +11,9 @@ class Chair extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      active_envelope: null,
-      seat_id: null,
-      display_name: null,
+      activeEnvelopes: null,
+      seatId: null,
+      displayName: null,
 
     }
 
@@ -23,23 +23,23 @@ class Chair extends Component {
   async chooseSeat() {
 
     if (this.props.playerSeatId === null) {
-      const response = await fetch(`/api/choose-seat/${this.props.game_id}/${this.props.seat_id}`)
+      const response = await fetch(`/api/choose-seat/${this.props.gameId}/${this.props.seatId}`)
       const json = await response.json();
       console.log(json);
       if (json.success) {
-        console.log(json.seat_id);
-        this.state.seat_id = json.seat_id;
-        this.props.setSeatId(json.seat_id);
+        console.log(json.seatId);
+        this.state.seatId = json.seatId;
+        this.props.setSeatId(json.seatId);
       }
 
-      this.state.display_name = prompt("Please enter your display name.");
+      this.state.displayName = prompt("Please enter your display name.");
 
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          display_name: this.state.display_name,
-          seat_id: this.state.seat_id,
+          displayName: this.state.displayName,
+          seatId: this.state.seatId,
         })
       };
       await fetch('/api/set-player-name', requestOptions);
@@ -50,25 +50,25 @@ class Chair extends Component {
     return (
       <div>
         <Button
-          className={this.props.is_taken ? "chairFilled" : "chairNotFilled"}
+          className={this.props.isTaken ? "chairFilled" : "chairNotFilled"}
           variant="secondary"
-          active={this.props.is_taken || this.props.playerSeatId !== null ? 'false' : 'true'}
-          onClick={() => this.chooseSeat(this.props.index, this.props.seat_id, this.props.game_id)}>
+          active={this.props.isTaken || this.props.playerSeatId !== null ? 'false' : 'true'}
+          onClick={() => this.chooseSeat(this.props.index, this.props.seatId, this.props.gameId)}>
           <FontAwesomeIcon
             icon={faChair}
             size='7x'
-            color={this.props.seat_id === this.props.playerSeatId ? 'blue' : this.props.is_taken ? 'red' : 'black'}
+            color={this.props.seatId === this.props.playerSeatId ? 'blue' : this.props.isTaken ? 'red' : 'black'}
           />
         </Button>
         <EnvelopeArea
           envelopes={this.props.envelopes.filter((i) => {
-            return i.seat_number === this.props.seat_number
+            return i.seatNumber === this.props.seatNumber
           })}
-          team_id={this.props.team_id}
-          is_team_1={this.props.is_team_1}
-          game_id={this.props.game_id}
-          seat_id={this.props.seat_id}
-          seat_number={this.props.seat_number}
+          teamId={this.props.teamId}
+          isTeam1={this.props.isTeam1}
+          gameId={this.props.gameId}
+          seatId={this.props.seatId}
+          seatNumber={this.props.seatNumber}
         ></EnvelopeArea>
       </div>
     );

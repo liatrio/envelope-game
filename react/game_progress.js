@@ -19,15 +19,14 @@ doTime() {
     let countdown = moment.duration(now.diff(this.props.startTime));
     //return countdown._data.seconds;
     return (<p>{countdown._data.minutes}:{countdown._data.seconds}</p>);
-  }
-  else {
+  } else {
     return '';
   }
 }
 
 async togglePlay(val) {
   this.setState({ isGoing: !this.state.isGoing });
-  const response = await fetch(`/api/start-game/${this.props.facilitatorGets}/${this.props.gameID}`)
+  const response = await fetch(`/api/start-game/${this.props.facilitatorId}/${this.props.gameId}`)
   const json = await response.json();
   console.log(json);
 }
@@ -35,7 +34,7 @@ async togglePlay(val) {
   render() {
     let ic = this.state.isGoing ? faPause : faPlay;
     const profitPerEnvelope = 22;
-    const facilID = this.props.facilitatorGets;
+    const facilID = this.props.facilitatorId;
     return (
       <div > 
         <Card style={{ width: '25em' }}>

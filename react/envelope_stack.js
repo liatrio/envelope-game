@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faEnvelopeOpen, faEnvelopeOpenText, far, fas } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import Button from 'react-bootstrap/Button'
 import Badge from 'react-bootstrap/Badge'
 
@@ -17,10 +17,10 @@ class EnvelopeStack extends Component {
   }
 
   updateStack() {
-    if (this.props.stack_type === 0) {
+    if (this.props.stackType === 0) {
+      console.log('setting active env');
       this.props.setActiveEnvelope();
     } else {
-
       // advance the envelopes to the next seat
       this.props.advanceEnvelopeSeat(this.getFinishedEnvelopes());
     }
@@ -30,19 +30,19 @@ class EnvelopeStack extends Component {
   // queue of envelopes
   // returns array of envelope ids
   getFinishedEnvelopes() {
-    return this.props.finished_envelopes.filter((e) => {
+    return this.props.finishedEnvelopes.filter((e) => {
       return this.props.envelopes.some((i) => {
-        return e === i.envelope_id
+        return e === i.envelopeId
       });
     });
   }
 
   buttonVariant() {
     if (!this.props.envelopes) return "secondary";
-    if (this.props.stack_type === 0 && this.props.envelopes.length > 0) {
+    if (this.props.stackType === 0 && this.props.envelopes.length > 0) {
       return "primary";
     }
-    if (this.getFinishedEnvelopes.length > 4) {
+    if (this.getFinishedEnvelopes().length > 4) {
       return "success";
     }
     return "secondary";
@@ -50,13 +50,13 @@ class EnvelopeStack extends Component {
 
   isDisabled() {
     if (!this.props.envelopes) return true;
-    if (this.props.stack_type === 0 && this.props.envelopes.length > 0) {
+    if (this.props.stackType === 0 && this.props.envelopes.length > 0) {
       // disable until they pass envelopes on
       if (this.getFinishedEnvelopes().length === 5) {
         return true;
       }
       return false;
-    } else if (this.props.stack_type === 1 && this.getFinishedEnvelopes().length > 4) {
+    } else if (this.props.stackType === 1 && this.getFinishedEnvelopes().length > 4) {
       return false;
     }
     return true;
@@ -64,9 +64,9 @@ class EnvelopeStack extends Component {
 
   render() {
     let count;
-    if (this.props.stack_type === 0 && this.props.envelopes) {
+    if (this.props.stackType === 0 && this.props.envelopes) {
       count = this.props.envelopes.length - this.getFinishedEnvelopes().length;
-      if (this.props.active_envelope !== null) {
+      if (this.props.activeEnvelope !== null) {
         count--;
       }
     } else {
@@ -74,7 +74,7 @@ class EnvelopeStack extends Component {
     }
     return (
       <div>
-        {this.props.stack_type === 0 ? "Envelopes ready" : "Finished"}
+        {this.props.stackType === 0 ? "Envelopes ready" : "Finished"}
         <br></br>
         <Button
           variant={this.buttonVariant()}
@@ -89,7 +89,7 @@ class EnvelopeStack extends Component {
             </FontAwesomeIcon>
             <br></br>
             <Badge pill variant="light" className="align-middle">
-              {this.props.stack_type === 0 ? count : this.getFinishedEnvelopes().length}
+              {this.props.stackType === 0 ? count : this.getFinishedEnvelopes().length}
             </Badge>
           </div>
         </Button>
