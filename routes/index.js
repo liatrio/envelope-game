@@ -58,10 +58,10 @@ router.get('/api/create', (req, res) => {
 
   values = [];
   for (let i = 0; i < num_env; i++) {
-    values[i] = [nanoid(16), 0, Math.random() * (num_env - 1) + 1, game_id, team_ids[0]]
-    values[i + num_env] = [nanoid(16), 0, Math.random() * (num_env - 1) + 1, game_id, team_ids[1]]
+    values[i] = [nanoid(16), 0, Math.random() * (num_env - 1) + 1, game_id, team_ids[0], 0];
+    values[i + num_env] = [nanoid(16), 0, Math.random() * (num_env - 1) + 1, game_id, team_ids[1], 0];
   }
-  sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id) VALUES ?';
+  sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id, seat_number) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
   });
@@ -112,31 +112,29 @@ router.get('/api/join/:game_id', (req, res) => {
 });
 
 router.get('/api/game-state/:id', (req, res) => {
-  let sql = `SELECT envelope_id, envelope_state, seat_id, envelope_state, envelope_end, matching_stamp, start_time, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id
+  let sql = `SELECT envelope_id, envelope_state, seat_number, envelope_state, envelope_end, matching_stamp, start_time, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id
              FROM ENVELOPES 
              INNER JOIN GAME on GAME.game_id = ENVELOPES.game_id
              WHERE ENVELOPES.game_id = '${req.params.id}'`;
   db.query(sql, function (err, result) {
     if (err) throw err;
 
-    let state = {
+    res.send({
       game_id: result[0].game_id,
       start_time: result[0].start_time,
       team_1_id: result[0].team_1_id,
       team_2_id: result[0].team_2_id,
-      envelopes: []
-    }
-    for (let i in result) {
-      state.envelopes.push({
-        envelope_id: result[i].envelope_id,
-        matching_stamp: result[i].matching_stamp,
-        evelope_state: result[i].envelope_state,
-        team: result[i].team_id,
-        seat: result[i].seat_id,
-        envelope_finish: result[i].envelope_end
-      });
-    }
-    res.send(state);
+      envelopes: result.map((i) => {
+        return ({
+          envelope_id: i.envelope_id,
+          matching_stamp: i.matching_stamp,
+          envelope_state: i.envelope_state,
+          team: i.team_id,
+          seat_number: i.seat_number,
+          envelope_finish: i.envelope_end
+        });
+      })
+    });
   });
 });
 
@@ -161,6 +159,7 @@ router.post('/api/set-player-name', (req, res) => {
   let sql = `UPDATE SEATS
                 SET display_name = '${req.body.display_name}'
                 WHERE seat_id = '${req.body.seat_id}'`;
+
   db.query(sql, function (err, result) {
     if (err) throw err;
 
@@ -188,25 +187,32 @@ router.get('/api/choose-seat/:game_id/:seat_id', (req, res) => {
   })
 });
 
-router.get('/api/update-envelope/:game_id/:envelope_id/:seat_id/:state', (req, res) => {
-  let sql;
-  if (req.params.seat_id === "finish") {
-    let timestamp = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
-    sql = `UPDATE ENVELOPES
-           SET envelope_state = '${req.params.state}',
-               envelope_end = ${timestamp}
-           WHERE game_id = '${req.params.game_id}'
-           AND envelope_id = '${req.params.envelope_id}'`;
-  } else {
-    sql = `UPDATE ENVELOPES
-           SET seat_id = '${req.params.seat_id}',
-               envelope_state = '${req.params.state}'
-           WHERE game_id = '${req.params.game_id}'
-           AND envelope_id = '${req.params.envelope_id}'`;
-  }
+router.get('/api/update-envelope/:game_id/:envelope_id/:seat_number/:state', (req, res) => {
+  let sql = `UPDATE ENVELOPES
+             SET seat_number = '${req.params.seat_number}',
+                 envelope_state = '${req.params.state}'
+             WHERE game_id = '${req.params.game_id}'
+             AND envelope_id = '${req.params.envelope_id}'`;
   db.query(sql, function (err, result) {
     if (err) throw err;
     if (result.changedRows !== 1) {
+      res.send({ success: false });
+    } else {
+      res.send({ success: true });
+    }
+  });
+});
+
+// used to advance an envelope to the next seat
+router.post('/api/move-envelope', (req, res) => {
+  let sql = `UPDATE ENVELOPES 
+             SET seat_number = ${req.body.next_seat}, 
+                 envelope_state = 0 
+             WHERE envelope_id IN (?)`;
+
+  db.query(sql, [req.body.envelopes], function (err, result) {
+    if (err) throw err;
+    if (result.changedRows !== req.body.envelopes.length) {
       res.send({ success: false });
     } else {
       res.send({ success: true });
@@ -222,15 +228,12 @@ router.get('/api/start-game/:facilitator_id/:game_id', (req, res) => {
              AND game_id = '${req.params.game_id}'`;
   db.query(sql, function (err, result) {
     if (err) throw err;
-
-    // return if query succeeded or not
     if (result.changedRows !== 1) {
       res.send({ success: false });
     } else {
       res.send({ success: true });
     }
   });
-
 });
 
 module.exports = router;

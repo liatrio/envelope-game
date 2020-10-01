@@ -32,6 +32,9 @@ class ChairsCollection extends Component {
         team1Chairs.push(
           <li key={c.seat_id}>
             <Chair
+              envelopes={this.props.envelopes.filter((i) => {
+                return i.team === c.team_id
+              })}
               otherChairs={this.props.seats}
               setSeatId={(id) => this.props.setSeatId(id)}
               playerSeatId={this.props.playerSeatId}
@@ -49,6 +52,9 @@ class ChairsCollection extends Component {
         team2Chairs.push(
           <li key={c.seat_id}>
             <Chair
+              envelopes={this.props.envelopes.filter((i) => {
+                return i.team === c.team_id
+              })}
               setSeatId={(id) => this.props.setSeatId(id)}
               playerSeatId={this.props.playerSeatId}
               is_team_1={c.is_team_1}
