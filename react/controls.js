@@ -100,7 +100,7 @@ class Controls extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         teamName: this.state.teamOneName,
-        teamId: this.props.team1,
+        teamId: this.props.teamId_1,
         facilitatorId: this.props.facilitatorId,
       })
     };
@@ -116,7 +116,7 @@ class Controls extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         teamName: this.state.team2Name,
-        teamId: this.props.team2,
+        teamId: this.props.teamId_2,
         facilitatorId: this.props.facilitatorId,
       })
     };

@@ -17,10 +17,10 @@ class EnvelopeStack extends Component {
   }
 
   updateStack() {
-    if (this.props.stackType === 0) {
-      console.log('setting active env');
+    if (this.props.stack_type === 0) {
       this.props.setActiveEnvelope();
     } else {
+
       // advance the envelopes to the next seat
       this.props.advanceEnvelopeSeat(this.getFinishedEnvelopes());
     }
@@ -39,10 +39,10 @@ class EnvelopeStack extends Component {
 
   buttonVariant() {
     if (!this.props.envelopes) return "secondary";
-    if (this.props.stackType === 0 && this.props.envelopes.length > 0) {
+    if (this.props.stack_type === 0 && this.props.envelopes.length > 0) {
       return "primary";
     }
-    if (this.getFinishedEnvelopes().length > 4) {
+    if (this.getFinishedEnvelopes.length > 4) {
       return "success";
     }
     return "secondary";
@@ -50,13 +50,13 @@ class EnvelopeStack extends Component {
 
   isDisabled() {
     if (!this.props.envelopes) return true;
-    if (this.props.stackType === 0 && this.props.envelopes.length > 0) {
+    if (this.props.stack_type === 0 && this.props.envelopes.length > 0) {
       // disable until they pass envelopes on
       if (this.getFinishedEnvelopes().length === 5) {
         return true;
       }
       return false;
-    } else if (this.props.stackType === 1 && this.getFinishedEnvelopes().length > 4) {
+    } else if (this.props.stack_type === 1 && this.getFinishedEnvelopes().length > 4) {
       return false;
     }
     return true;
@@ -64,9 +64,9 @@ class EnvelopeStack extends Component {
 
   render() {
     let count;
-    if (this.props.stackType === 0 && this.props.envelopes) {
+    if (this.props.stack_type === 0 && this.props.envelopes) {
       count = this.props.envelopes.length - this.getFinishedEnvelopes().length;
-      if (this.props.activeEnvelope !== null) {
+      if (this.props.active_envelope !== null) {
         count--;
       }
     } else {
@@ -74,7 +74,7 @@ class EnvelopeStack extends Component {
     }
     return (
       <div>
-        {this.props.stackType === 0 ? "Envelopes ready" : "Finished"}
+        {this.props.stack_type === 0 ? "Envelopes ready" : "Finished"}
         <br></br>
         <Button
           variant={this.buttonVariant()}
@@ -89,7 +89,7 @@ class EnvelopeStack extends Component {
             </FontAwesomeIcon>
             <br></br>
             <Badge pill variant="light" className="align-middle">
-              {this.props.stackType === 0 ? count : this.getFinishedEnvelopes().length}
+              {this.props.stack_type === 0 ? count : this.getFinishedEnvelopes().length}
             </Badge>
           </div>
         </Button>
