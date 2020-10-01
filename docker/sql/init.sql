@@ -14,11 +14,13 @@ CREATE TABLE TEAMS
 CREATE TABLE GAME
 (
   game_id VARCHAR(16) NOT NULL,
-  start_time DATETIME,
+  is_started BOOLEAN,
   total_stages INT NOT NULL,
   facilitator_id VARCHAR(16) NOT NULL,
   team_1_id VARCHAR(16) NOT NULL,
   team_2_id VARCHAR(16) NOT NULL,
+  score_1 INT NOT NULL,
+  score_2 INT NOT NULL,
   PRIMARY KEY (game_id),
   FOREIGN KEY (team_1_id) REFERENCES TEAMS(team_id),
   FOREIGN KEY (team_2_id) REFERENCES TEAMS(team_id),
@@ -43,6 +45,7 @@ CREATE TABLE SEATS
 
 CREATE TABLE ENVELOPES
 (
+  seat_number INT NOT NULL,
   envelope_id VARCHAR(16) NOT NULL,
   envelope_state INT NOT NULL,
   matching_stamp INT NOT NULL,

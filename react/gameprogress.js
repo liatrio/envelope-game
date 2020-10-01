@@ -4,38 +4,37 @@ import Card from 'react-bootstrap/Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 
-
-
-
 class Gameprogress extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isGoing: false,
-      seatsFullError: false
+      seatsFullError: false,
+      disabled: false
     }
     this.togglePlay = this.togglePlay.bind(this);
     this.seatsNotFull = this.seatsNotFull.bind(this);
   }
 
-doTime() {
-  if (this.props.startTime)  {
-    let now = moment.utc(Date.now());
-    let countdown = moment.duration(now.diff(this.props.startTime));
-    //return countdown._data.seconds;
-    return (<p>{countdown._data.minutes}:{countdown._data.seconds}</p>);
-  }
-  else {
-    return '';
-  }
-}
 
 async togglePlay(val) {
+
+  this.setState({disabled : true});
   this.setState({seatsFullError: false});
-  this.setState({ isGoing: !this.state.isGoing });
-  const response = await fetch(`/api/start-game/${this.props.facilitatorGets}/${this.props.gameID}`)
-  const json = await response.json();
-  console.log(json);
+  console.log(this.props.is_started);
+  if (!this.props.is_started) {
+    console.log("in toggle");
+    const response = await fetch(`/api/start-game/${this.props.facilitatorGets}/${this.props.gameID}`)
+    const json = await response.json();
+    console.log(json);
+  }
+  else {
+    console.log("in else");
+    const response = await fetch(`/api/stop-game/${this.props.facilitatorGets}/${this.props.gameID}`)
+    const json = await response.json();
+    console.log(json);
+  }
+  this.setState({disabled: false});
+
 }
 
 seatsNotFull() {
@@ -43,7 +42,7 @@ seatsNotFull() {
 }
   
   render() {
-    let ic = this.state.isGoing ? faPause : faPlay;
+    let ic = this.props.is_started ? faPause : faPlay;
     const profitPerEnvelope = 22;
     const facilID = this.props.facilitatorGets;
     return (
@@ -54,7 +53,7 @@ seatsNotFull() {
           
             <h1>Money Earned</h1>
             {facilID && 
-              <FontAwesomeIcon icon={ic} spin onClick={this.props.seatsFull ? this.togglePlay : this.seatsNotFull}/>
+              <FontAwesomeIcon icon={ic} spin onClick={this.props.seatsFull ? this.togglePlay : this.togglePlay} disabled={this.state.disabled}/>
             }
             {facilID && this.state.seatsFullError && 
               <h5>Error: Seats are not Full yet</h5>
@@ -63,7 +62,7 @@ seatsNotFull() {
             <h2 >
               ${profitPerEnvelope * 0}
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                      {this.doTime()}
+                      
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     ${profitPerEnvelope * 0}
             </h2>

@@ -23,6 +23,8 @@ class Homepage extends Component {
   }
   render() {
     if (this.state.gameID) {
+      console.log(this.state.gameID);
+      //console.log(this.state.facilitatorID)
       return <Redirect to={{ state: { facilitatorID: this.state.facilitatorID }, pathname: "/Gamearea/" + this.state.gameID }} />
     }
     return (
