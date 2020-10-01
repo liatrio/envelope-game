@@ -59,6 +59,7 @@ class Chair extends Component {
             size='7x'
             color={this.props.seatId === this.props.playerSeatId ? 'blue' : this.props.isTaken ? 'red' : 'black'}
           />
+           <span class="badge">{this.props.displayName}</span>
         </Button>
         <EnvelopeArea
           envelopes={this.props.envelopes.filter((i) => {

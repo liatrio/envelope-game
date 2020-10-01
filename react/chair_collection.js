@@ -25,6 +25,7 @@ class ChairsCollection extends Component {
               gameId={this.props.gameId}
               isTaken={c.isTaken}
               seatNumber={c.seatNumber}
+              displayName={c.displayName}
             ></Chair>
           </li>
         );
@@ -43,6 +44,7 @@ class ChairsCollection extends Component {
               gameId={this.props.gameId}
               isTaken={c.isTaken}
               seatNumber={c.seatNumber}
+              displayName={c.displayName}
             ></Chair>
           </li>
         );
