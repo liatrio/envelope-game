@@ -40,14 +40,17 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": ["react-app", "eslint:recommended"],
+    "extends": [
+      "react-app",
+      "eslint:recommended"
+    ],
     "rules": {
       "camelcase": 1,
-      "brace-style": [1, "1tbs"]
-
-
+      "brace-style": [
+        1,
+        "1tbs"
+      ]
     }
-
   },
   "browserslist": {
     "production": [

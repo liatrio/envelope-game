@@ -8,14 +8,10 @@ class MyVerticallyCenteredModal extends Component {
     super(props);
     this.state = {
       disabled: false,
-<<<<<<< HEAD
       show: true,
       teamOneName: '',
       teamTwoName: '',
       facilitator_id: '',
-    }
-    this.setTeamNames = this.setTeamNames.bind(this);
-=======
     }
     this.setTeamNames = this.setTeamNames.bind(this);
   }
@@ -72,7 +68,6 @@ class Controls extends Component {
     };
 
     // bind any handlers in the constructor
->>>>>>> d00497cc246a66158d74620fe642db9bf51317c2
     this.teamOneChange = this.teamOneChange.bind(this);
     this.teamTwoChange = this.teamTwoChange.bind(this);
     this.setTeamOneName = this.setTeamOneName.bind(this);
@@ -171,7 +166,6 @@ class Controls extends Component {
   }
 
   render() {
-<<<<<<< HEAD
     let modalClose = () => this.setState({ modalShow: false});
     return (
       <div>
@@ -183,29 +177,6 @@ class Controls extends Component {
             show={this.state.modalShow}
             onHide={modalClose}
           />
-=======
-
-    let modalClose = () => this.setState({ modalShow: false });
-    return (
-      <div>
-
-        <Button
-          variant="primary"
-          onClick={() => this.setState({ modalShow: true })}
-        >
-          Facilitator Controls
-      </Button>
-
-        <MyVerticallyCenteredModal
-          setteamOneName={this.setteamOneName}
-          setteam2Name={this.setteam2Name}
-          teamOneChange={this.teamOneChange}
-          teamTwoChange={this.teamTwoChange}
-          show={this.state.modalShow}
-          onHide={modalClose}
-        />
-
->>>>>>> d00497cc246a66158d74620fe642db9bf51317c2
       </div>
     )
   }
