@@ -5,64 +5,44 @@ import Container from 'react-bootstrap/Container'
 import Chair from './chair'
 import './index.css'
 class ChairsCollection extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      seatID: '',
-    }
-  }
-  async chooseSeat(index, seat_id, gameID) {
-    if (!this.props.seatId) {
-      const response = await fetch(`/api/choose-seat/${gameID}/${seat_id}`)
-      const json = await response.json();
-      console.log(json);
-      console.log(this.state.seatID);
-      if (json.success) {
-        console.log(json.seat_id);
-        this.props.setSeatId(json.seat_id);
-      }
-    }
-  }
-
   render() {
     let team1Chairs = []
     let team2Chairs = []
     this.props.seats.forEach((c, index) => {
-      if (c.is_team_1) {
+      if (c.isTeam1) {
         team1Chairs.push(
-          <li key={c.seat_id}>
+          <li key={c.seatId}>
             <Chair
               envelopes={this.props.envelopes.filter((i) => {
-                return i.team === c.team_id
+                return i.team === c.teamId
               })}
               otherChairs={this.props.seats}
               setSeatId={(id) => this.props.setSeatId(id)}
               playerSeatId={this.props.playerSeatId}
-              is_team_1={c.is_team_1}
-              seat_id={c.seat_id}
-              team_id={c.team_id}
-              game_id={this.props.gameID}
-              is_taken={c.is_taken}
-              seat_number={c.seat_number}
+              isTeam1={c.isTeam1}
+              seatId={c.seatId}
+              teamId={c.teamId}
+              gameId={this.props.gameId}
+              isTaken={c.isTaken}
+              seatNumber={c.seatNumber}
             ></Chair>
           </li>
         );
-      }
-      else {
+      } else {
         team2Chairs.push(
-          <li key={c.seat_id}>
+          <li key={c.seatId}>
             <Chair
               envelopes={this.props.envelopes.filter((i) => {
-                return i.team === c.team_id
+                return i.team === c.teamId
               })}
               setSeatId={(id) => this.props.setSeatId(id)}
               playerSeatId={this.props.playerSeatId}
-              is_team_1={c.is_team_1}
-              seat_id={c.seat_id}
-              team_id={c.team_id}
-              game_id={this.props.gameID}
-              is_taken={c.is_taken}
-              seat_number={c.seat_number}
+              isTeam1={c.isTeam1}
+              seatId={c.seatId}
+              teamId={c.teamId}
+              gameId={this.props.gameId}
+              isTaken={c.isTaken}
+              seatNumber={c.seatNumber}
             ></Chair>
           </li>
         );
