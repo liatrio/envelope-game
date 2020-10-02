@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faEnvelopeOpen, faEnvelopeOpenText, far, fas } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import Button from 'react-bootstrap/Button'
 import Badge from 'react-bootstrap/Badge'
 
@@ -11,33 +11,74 @@ class EnvelopeStack extends Component {
       initialCount: 40
     }
     this.updateStack = this.updateStack.bind(this);
+    this.getFinishedEnvelopes = this.getFinishedEnvelopes.bind(this);
+    this.buttonVariant = this.buttonVariant.bind(this);
+    this.isDisabled = this.isDisabled.bind(this);
   }
 
   updateStack() {
-    if (this.props.stack_type === 0) {
+    if (this.props.stackType === 0) {
+      console.log('setting active env');
       this.props.setActiveEnvelope();
     } else {
-      // placeholder for passing onto the next seat
+      // advance the envelopes to the next seat
+      this.props.advanceEnvelopeSeat(this.getFinishedEnvelopes());
     }
   }
 
-  render() {    
+  // filter the finished envelopes based on if they are in current 
+  // queue of envelopes
+  // returns array of envelope ids
+  getFinishedEnvelopes() {
+    return this.props.finishedEnvelopes.filter((e) => {
+      return this.props.envelopes.some((i) => {
+        return e === i.envelopeId
+      });
+    });
+  }
+
+  buttonVariant() {
+    if (!this.props.envelopes) return "secondary";
+    if (this.props.stackType === 0 && this.props.envelopes.length > 0) {
+      return "primary";
+    }
+    if (this.getFinishedEnvelopes().length > 4) {
+      return "success";
+    }
+    return "secondary";
+  }
+
+  isDisabled() {
+    if (!this.props.envelopes) return true;
+    if (this.props.stackType === 0 && this.props.envelopes.length > 0) {
+      // disable until they pass envelopes on
+      if (this.getFinishedEnvelopes().length === 5) {
+        return true;
+      }
+      return false;
+    } else if (this.props.stackType === 1 && this.getFinishedEnvelopes().length > 4) {
+      return false;
+    }
+    return true;
+  }
+
+  render() {
     let count;
-    if (this.props.stack_type === 0) {
-      count = this.props.count - this.props.finished_count;
-      if (this.props.active_envelope !== null) {
+    if (this.props.stackType === 0 && this.props.envelopes) {
+      count = this.props.envelopes.length - this.getFinishedEnvelopes().length;
+      if (this.props.activeEnvelope !== null) {
         count--;
       }
     } else {
-      count = this.props.finished_count;
+      count = 0;
     }
     return (
       <div>
-        {this.props.stack_type === 0 ? "Envelopes ready" : "Finished"}
+        {this.props.stackType === 0 ? "Envelopes ready" : "Finished"}
         <br></br>
         <Button
-          variant={count === 0 ? "secondary" : "primary"}
-          active={count !== 0}
+          variant={this.buttonVariant()}
+          disabled={this.isDisabled()}
           onClick={this.updateStack}
         >
           <div>
@@ -48,7 +89,7 @@ class EnvelopeStack extends Component {
             </FontAwesomeIcon>
             <br></br>
             <Badge pill variant="light" className="align-middle">
-              {count}
+              {this.props.stackType === 0 ? count : this.getFinishedEnvelopes().length}
             </Badge>
           </div>
         </Button>

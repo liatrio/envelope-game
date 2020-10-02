@@ -8,6 +8,7 @@
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.10.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "@fortawesome/free-regular-svg-icons": "^5.14.0",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",
     "babel-loader": "^8.1.0",
@@ -40,7 +41,17 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "eslint:recommended"
+    ],
+    "rules": {
+      "camelcase": 1,
+      "brace-style": [
+        1,
+        "1tbs"
+      ]
+    }
   },
   "browserslist": {
     "production": [

@@ -52,11 +52,9 @@ CREATE TABLE ENVELOPES
   matching_stamp INT NOT NULL,
   envelope_start DATETIME,
   envelope_end DATETIME,
-  seat_id VARCHAR(16),
   team_id VARCHAR(16) NOT NULL,
   game_id VARCHAR(16) NOT NULL,
   PRIMARY KEY (envelope_id),
-  FOREIGN KEY (seat_id) REFERENCES SEATS(seat_id),
   FOREIGN KEY (team_id) REFERENCES TEAMS(team_id),
   FOREIGN KEY (game_id) REFERENCES GAME(game_id)
 );

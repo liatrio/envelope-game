@@ -2,9 +2,12 @@ import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { faEnvelope, faEnvelopeOpen, faEnvelopeOpenText, faEnvelopeSquare } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope as faEnvelopeClear } from '@fortawesome/free-regular-svg-icons'
+
 import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
-import Collapse from 'react-bootstrap/Collapse'
+import Fade from 'react-bootstrap/Fade'
+
 
 
 
@@ -30,8 +33,9 @@ class Envelope extends Component {
   // 4 is stamped closed envelope
   // 5 is completed for that person
   async updateEnvelope(id, state) {
-    const request = `/api/update-envelope/${this.props.game_id}/${id}/${this.props.seat_id}/${state}`;
+    const request = `/api/update-envelope/${this.props.gameId}/${id}/${this.props.seatId}/${state}`;
     console.log(request);
+    // make request to update envelope(s)
     // const response = await fetch();
     // const json = await response.json();
   }
@@ -39,13 +43,13 @@ class Envelope extends Component {
   // handles checking the stamp to see if its correct
   // has a two second cooldown on clicking a button before it can be completed
   checkStamp(num) {
-    let envelope = this.props.active_envelope;
+    let envelope = this.props.activeEnvelope;
     // update which stamps have been checked
     envelope.checked[num] = true;
     this.props.updateActiveEnvelope(envelope);
     this.setState({ waiting: true });
     setTimeout(() => {
-      if (num === envelope.matching_stamp) {
+      if (num === envelope.matchingStamp) {
         // envelope stamp should become 3 here
         envelope.stamped = true;
         this.setState({ waiting: false });
@@ -53,27 +57,27 @@ class Envelope extends Component {
       } else {
         this.setState({ waiting: false });
       }
-    }, 2000);
+    }, 500);
   }
 
   async toggleOpen() {
     const open = this.state.open;
-    if (open && this.props.active_envelope.stamped) {
+    if (open && this.props.activeEnvelope.stamped) {
       this.setState({ open: !open });
-    } else if (!open && !this.props.active_envelope.stamped) {
-      await this.updateEnvelope(this.props.active_envelope.envelope_id, 1);
+    } else if (!open && !this.props.activeEnvelope.stamped) {
+      await this.updateEnvelope(this.props.activeEnvelope.envelopeId, 1);
       this.setState({ open: !open });
     }
   }
 
   // helper function to return the right icon based on state
   getIcon() {
-    if (!this.props.active_envelope) {
+    if (!this.props.activeEnvelope) {
       return faEnvelope;
     }
-    switch (this.props.active_envelope.envelope_state) {
+    switch (this.props.activeEnvelope.envelopeState) {
       case 0:
-        return faEnvelope;
+        return faEnvelopeClear;
       case 1:
         return faEnvelope;
       case 2:
@@ -93,7 +97,7 @@ class Envelope extends Component {
     const open = this.state.open;
     return (
       <div>
-        {this.props.active_envelope && `Stamp ${this.props.active_envelope.matching_stamp}`}
+        {this.props.activeEnvelope ? `Stamp ${this.props.activeEnvelope.matchingStamp}` : "No envelope"}
         <br></br>
         <FontAwesomeIcon
           icon={this.getIcon()}
@@ -102,44 +106,43 @@ class Envelope extends Component {
           aria-controls="collapse-stamp-bar"
           aria-expanded={open}
         />
-        <Collapse
+        <Fade
           in={open}
         >
           <div id="collapse-stamp-bar">
             <ButtonGroup aria-label="collapse-stamp-bar">
-              {this.props.active_envelope && this.props.active_envelope.random.map((i) => {
-                const variant = i === this.props.active_envelope.matching_stamp ? "success" : "danger";
+              {this.props.activeEnvelope ? this.props.activeEnvelope.random.map((i) => {
+                const variant = i === this.props.activeEnvelope.matchingStamp ? "success" : "danger";
                 return (
                   <Button
                     key={i}
-                    variant={this.props.active_envelope.checked[i] ? variant : "primary"}
-                    disabled={this.state.waiting || this.props.active_envelope.checked[i]}
+                    variant={this.props.activeEnvelope.checked[i] ? variant : "primary"}
+                    disabled={this.state.waiting || this.props.activeEnvelope.checked[i]}
                     onClick={() => this.checkStamp(i)}
                   >
                     {i}
                   </Button>
                 )
-              })}
+              }) :
+                <Button key={0}>1</Button>
+              }
             </ButtonGroup>
           </div>
 
-        </Collapse>
+        </Fade>
+        {this.props.activeEnvelope && this.props.activeEnvelope.envelopeId}
         <br></br>
-        {this.props.active_envelope && this.props.active_envelope.envelope_id}
-        <br></br>
-        {
-          this.props.active_envelope && this.props.active_envelope.stamped && !this.state.open &&
-          <Button
-            onClick={this.props.finishActiveEnvelope}
-          >
-            {
-              this.props.is_team_1 ?
-                "Send to next person" :
-                "Finish envelope"
-            }
-          </Button>
-
-        }
+        <Button
+          variant={this.props.activeEnvelope && this.props.activeEnvelope.stamped && !this.state.open ? "primary" : "secondary"}
+          disabled={!(this.props.activeEnvelope && this.props.activeEnvelope.stamped && !this.state.open)}
+          onClick={this.props.finishActiveEnvelope}
+        >
+          {
+            this.props.is_team_1 ?
+              "Send to next person" :
+              "Finish envelope"
+          }
+        </Button>
       </div>
     );
   }
