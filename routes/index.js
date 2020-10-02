@@ -9,7 +9,6 @@ const timer = require('../lib/timers');
 
 const num_env = 20;
 //const timer = new Timers();
-console.log(timer);
 // endpoint to create a game
 router.get('/api/create', (req, res) => {
   
@@ -71,7 +70,6 @@ router.get('/api/create', (req, res) => {
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
   });
-  console.log("team 1:" + team_ids[0]);
   timer.addGame(game_id, team_ids[0], team_ids[1]);
   res.send({ game: game_id, facilitator: facilitator_id });
 });
@@ -126,7 +124,6 @@ router.get('/api/game-state/:id', (req, res) => {
              WHERE ENVELOPES.game_id = '${req.params.id}'`;
   db.query(sql, function (err, result) {
     if (err) throw err;
-    console.log(result);
 
     let state = {
       game_id: result[0].game_id,

@@ -34,7 +34,6 @@ class Gamearea extends Component {
   }
 
   setSeatId(id) {
-    console.log(id);
     this.setState({ seatId: id });
   }
   async chooseSeat(index, seat_id) {
@@ -72,8 +71,6 @@ class Gamearea extends Component {
 
   async updateGame() {
     const gameID = this.props.match.params.gameID;
-    console.log("72" + gameID);
-    console.log("73" + this.props.match.params.gameID);
     const response = await fetch(`/api/game-state/${gameID}`)
     const json = await response.json();
     
@@ -86,7 +83,6 @@ class Gamearea extends Component {
       team2Score: json.score2,
       gameTick: json.gameTick
     });
-    console.log("87" + this.state.team1Score);
   }
 
   render() {
