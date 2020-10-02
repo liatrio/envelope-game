@@ -21,16 +21,12 @@ async togglePlay(val) {
   this.setState({disabled : true});
   this.setState({seatsFullError: false});
   if (!this.props.is_started) {
-    console.log("in toggle");
     const response = await fetch(`/api/start-game/${this.props.facilitatorGets}/${this.props.gameID}`)
     const json = await response.json();
-    console.log(json);
   }
   else {
-    console.log("in else");
     const response = await fetch(`/api/stop-game/${this.props.facilitatorGets}/${this.props.gameID}`)
     const json = await response.json();
-    console.log(json);
   }
   this.setState({disabled: false});
 
@@ -42,9 +38,6 @@ seatsNotFull() {
   
   render() {
     let ic = this.props.is_started ? faPause : faPlay;
-    const profitPerEnvelope = 22;
-    console.log("team 1 " + this.props.team1Score);
-
     const facilID = this.props.facilitatorGets;
     return (
       <div >
@@ -63,7 +56,7 @@ seatsNotFull() {
             <h2 >
               ${this.props.team1Score}
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                      
+                    {this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick ? this.props.gameTick % 60 : '0'}  
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     ${this.props.team2Score}
             </h2>

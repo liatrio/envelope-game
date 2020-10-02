@@ -17,6 +17,7 @@ class Gamearea extends Component {
       seats: [],
       team_id_1: '',
       team_id_2: '',
+      currentTime: 0,
       team1Score: 0,
       team2Score: 0,
       seconds: 0,
@@ -43,7 +44,7 @@ class Gamearea extends Component {
   }
 
   async componentDidMount() {
-    this.intervalID = setInterval(this.joinGame.bind(this), 2000);
+    this.intervalID = setInterval(this.joinGame.bind(this), 1000);
   }
 
   async componentWillUnmount() {
@@ -65,7 +66,7 @@ class Gamearea extends Component {
     if (this.state.seats.every(s => s.is_taken === true)) {
       this.setState({ seatsFull: true });
       clearInterval(this.intervalID);
-      this.intervalID = setInterval(this.updateGame.bind(this), 2000);
+      this.intervalID = setInterval(this.updateGame.bind(this), 1000);
     }
   }
 
@@ -82,7 +83,8 @@ class Gamearea extends Component {
       display_name: json.display_name,
       isStarted: json.is_started,
       team1Score: json.score1,
-      team2Score: json.score2
+      team2Score: json.score2,
+      gameTick: json.gameTick
     });
     console.log("87" + this.state.team1Score);
   }
@@ -92,7 +94,7 @@ class Gamearea extends Component {
       return (
         <div>
           Game Area
-          <Gameprogress is_started={this.state.isStarted} t1Name={ this.state.teamName_1 } team1Score={this.state.team1Score} team2Score={this.state.team2Score} seatsFull={this.state.seatsFull} t2Name={ this.state.teamName_2 }/>
+          <Gameprogress gameTick={this.state.gameTick} is_started={this.state.isStarted} t1Name={ this.state.teamName_1 } team1Score={this.state.team1Score} team2Score={this.state.team2Score} seatsFull={this.state.seatsFull} t2Name={ this.state.teamName_2 }/>
           <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
         </div>
       );
@@ -101,7 +103,7 @@ class Gamearea extends Component {
         <div>
           Game Area
           <EnvelopeStack></EnvelopeStack>
-          <Gameprogress facilitatorGets={this.props.location.state.facilitatorID} gameID={this.props.match.params.gameID} is_started={this.state.isStarted} team1Score={this.state.team1Score} team2Score={this.state.team2Score} t1Name={ this.state.teamName_1 } seatsFull={this.state.seatsFull} t2Name={ this.state.teamName_2 } />
+          <Gameprogress gameTick={this.state.gameTick} facilitatorGets={this.props.location.state.facilitatorID} gameID={this.props.match.params.gameID} is_started={this.state.isStarted} team1Score={this.state.team1Score} team2Score={this.state.team2Score} t1Name={ this.state.teamName_1 } seatsFull={this.state.seatsFull} t2Name={ this.state.teamName_2 } />
           <ChairsCollection seats={this.state.seats} gameID={this.props.match.params.gameID} setSeatId={(id) => this.setSeatId(id)} playerSeatId={this.state.seatId} />
           <Controls facilitatorGets={this.props.location.state.facilitatorID} team_id_1={this.state.team_id_1} team_id_2={this.state.team_id_2} seatsFull={this.state.seatsFull} gameID={this.props.match.params.gameID}/>
         </div>
