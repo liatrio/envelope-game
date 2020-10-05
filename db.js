@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 var db;
 
 function getDb() {
@@ -8,17 +8,6 @@ function getDb() {
       user: 'root',
       password: 'root',
       database: 'envelope-game'
-    });
-
-    db.connect(function (err) {
-      if (err) {
-        throw (err)
-      }
-      else {
-        console.log('Error connecting to database');
-
-      }
-
     });
   }
   return db;

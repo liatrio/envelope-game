@@ -1,20 +1,23 @@
+//import Timers from '../lib/timers';
 const { nanoid } = require('nanoid/non-secure');
 const { Router } = require('express');
 const router = Router();
-const moment = require('moment');
 const db = require('../db');
+const timer = require('../lib/timers');
+
 
 const numEnvelopes = 20;
-
-
+//const timer = new Timers();
 // endpoint to create a game
 router.get('/api/create', (req, res) => {
+
   // generate a game and facilitator id
   let gameId = nanoid(16);
   let facilitatorId = nanoid(16);
 
   // generate team ids
   let teamIds = [nanoid(16), nanoid(16)];
+
 
   // generate ids for seats
   let seatIds = []
@@ -34,9 +37,9 @@ router.get('/api/create', (req, res) => {
 
   // create game instance
   values = [
-    [gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1]]
+    [gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0]
   ];
-  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id) VALUES ?';
+  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
   });
@@ -57,18 +60,19 @@ router.get('/api/create', (req, res) => {
 
   values = [];
   for (let i = 0; i < numEnvelopes; i++) {
-    values[i] = [nanoid(16), 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[0], 0];
-    values[i + numEnvelopes] = [nanoid(16), 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[1], 0];
+    values[i] = [nanoid(16), 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[0], 0, true];
+    values[i + numEnvelopes] = [nanoid(16), 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[1], 0, false];
   }
-  sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id, seat_number) VALUES ?';
+  sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id, seat_number, is_team_1) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
   });
+  timer.addGame(gameId, teamIds[0], teamIds[1]);
   res.send({ game: gameId, facilitator: facilitatorId });
 });
 
 router.get('/api/join/:gameId', (req, res) => {
-  let sql = `SELECT SEATS.seat_number, SEATS.seat_id, SEATS.is_taken, SEATS.display_name, GAME.game_id, TEAMS.team_id, TEAMS.is_team_1, TEAMS.team_name, GAME.start_time, GAME.team_1_id, GAME.team_2_id
+  let sql = `SELECT SEATS.seat_number, SEATS.seat_id, SEATS.is_taken, SEATS.display_name, GAME.game_id, TEAMS.team_id, TEAMS.is_team_1, TEAMS.team_name, GAME.is_started, GAME.team_1_id, GAME.team_2_id
                FROM SEATS 
                INNER JOIN GAME on GAME.game_id = SEATS.game_id 
                INNER JOIN TEAMS on TEAMS.team_id = SEATS.team_id 
@@ -76,14 +80,13 @@ router.get('/api/join/:gameId', (req, res) => {
 
   db.query(sql, function (err, result) {
     if (err) throw err;
-
     // if result from query is of length 0 then query was invalid
     if (result.length === 0) {
       res.send({ game: null });
     }
     let summary = {};
     summary.game = result[0].game_id;
-    summary.isStarted = (result[0].start_time === null) ? false : true;
+    summary.isStarted = result[0].is_started;
     summary.team1 = result[0].team_1_id;
     summary.team2 = result[0].team_2_id;
     summary.seats = [];
@@ -109,7 +112,7 @@ router.get('/api/join/:gameId', (req, res) => {
 });
 
 router.get('/api/game-state/:id', (req, res) => {
-  let sql = `SELECT envelope_id, envelope_state, seat_number, envelope_state, envelope_end, matching_stamp, start_time, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id
+  let sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, is_started, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick
              FROM ENVELOPES 
              INNER JOIN GAME on GAME.game_id = ENVELOPES.game_id
              WHERE ENVELOPES.game_id = '${req.params.id}'`;
@@ -119,16 +122,20 @@ router.get('/api/game-state/:id', (req, res) => {
     res.send({
       gameId: result[0].gameId,
       startTime: result[0].start_time,
+      isStarted: result[0].is_started,
       team1: result[0].team_1_id,
       team2: result[0].team_2_id,
+      score1: result[0].score_1,
+      score2: result[0].score_2,
+      gameTick: result[0].game_tick,
       envelopes: result.map((i) => {
         return ({
           envelopeId: i.envelope_id,
           matchingStamp: i.matching_stamp,
           envelopeState: i.envelope_state,
           team: i.team_id,
-          seatNumber: i.seat_number,
-          envelopeFinish: i.envelope_end
+          isTeam1: i.is_team_1,
+          seatNumber: i.seat_number
         });
       })
     });
@@ -185,20 +192,16 @@ router.get('/api/choose-seat/:gameId/:seatId', (req, res) => {
   })
 });
 
-router.get('/api/update-envelope/:gameId/:envelopeId/:seatNumber/:state', (req, res) => {
+router.get('/api/update-envelope/:gameId/:envelopeId/:state', (req, res) => {
   let sql = `UPDATE ENVELOPES
-             SET seat_number = '${req.params.seatNumber}',
-                 envelope_state = '${req.params.state}'
+             SET envelope_state = '${req.params.state}'
              WHERE game_id = '${req.params.gameId}'
              AND envelope_id = '${req.params.envelopeId}'`;
   db.query(sql, function (err, result) {
     if (err) throw err;
-    if (result.changedRows !== 1) {
-      res.send({ success: false });
-    } else {
-      res.send({ success: true });
-    }
+    res.json({ success: true });
   });
+
 });
 
 // used to advance an envelope to the next seat
@@ -219,13 +222,33 @@ router.post('/api/move-envelope', (req, res) => {
 });
 
 router.get('/api/start-game/:facilitatorId/:gameId', (req, res) => {
-  let timestamp = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
   let sql = `UPDATE GAME
-             SET start_time = '${timestamp}'
+             SET is_started = ${true}
              WHERE facilitator_id = '${req.params.facilitatorId}'
              AND game_id = '${req.params.gameId}'`;
   db.query(sql, function (err, result) {
     if (err) throw err;
+    timer.startTimer(req.params.gameId);
+    db.query(sql, function (err, result) {
+      if (err) throw err;
+      if (result.changedRows !== 1) {
+        res.send({ success: false });
+      } else {
+        res.send({ success: true });
+      }
+    });
+  });
+});
+
+router.get('/api/stop-game/:facilitatorId/:gameId', (req, res) => {
+  let sql = `UPDATE GAME
+             SET is_started = ${false}
+             WHERE facilitator_id = '${req.params.facilitatorId}'
+             AND game_id = '${req.params.gameId}'`;
+  db.query(sql, function (err, result) {
+    if (err) throw err;
+    timer.stopTimer(req.params.gameId);
+    // return if query succeeded or not
     if (result.changedRows !== 1) {
       res.send({ success: false });
     } else {

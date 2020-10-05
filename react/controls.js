@@ -95,7 +95,6 @@ class MyVerticallyCenteredModal extends Component {
   }
 }
 
-
 class Controls extends Component {
   constructor() {
     super();
@@ -106,6 +105,41 @@ class Controls extends Component {
       facilitatorId: '',
       modalShow: true,
     };
+  }
+
+  teamOneChange(event) {
+    this.setState({ teamOneName: event.target.value });
+  }
+
+  teamTwoChange(event) {
+    this.setState({ team2Name: event.target.value });
+  }
+
+
+  async setTeamOneName() {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        teamName: this.state.teamOneName,
+        teamId: this.props.team1,
+        facilitatorId: this.props.facilitatorId,
+      })
+    };
+    await fetch('/api/set-team-name', requestOptions);
+  }
+
+  async setTeam2Name() {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        teamName: this.state.team2Name,
+        teamId: this.props.team2,
+        facilitatorId: this.props.facilitatorId,
+      })
+    };
+    await fetch('/api/set-team-name', requestOptions);
   }
 
   render() {

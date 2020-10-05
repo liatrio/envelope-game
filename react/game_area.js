@@ -9,7 +9,7 @@ class GameArea extends Component {
 
   constructor(props) {
     super(props);
-    this.intervalID = '';
+    this.intervalId = '';
     this.state = {
       isStarted: false,
       seats: [],
@@ -25,19 +25,26 @@ class GameArea extends Component {
       displayName: '',
       now: '',
       countdown: '',
-      startTime: null
+      startTime: null,
+      gameTick: 0,
+      team1Score: 0,
+      team2Score: 0
     }
     this.setSeatId = this.setSeatId.bind(this);
   }
 
   setSeatId(id) {
-    console.log(id);
     this.setState({ seatId: id });
   }
 
-  async componentDidMount() {
-    this.joinGame();
+  componentDidMount() {
+    this.intervalId = setInterval(this.joinGame.bind(this), 1000);
   }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalID);
+  }
+
 
   async joinGame() {
     const gameId = this.props.match.params.gameId;
@@ -50,14 +57,11 @@ class GameArea extends Component {
       team2: json.team2,
       team1Name: json.team1Name,
       team2Name: json.team2Name
-
     });
-    this.intervalID = setTimeout(this.joinGame.bind(this), 2000);
-
     if (this.state.seats.every(s => s.isTaken === true)) {
       this.setState({ seatsFull: true });
-      clearTimeout(this.intervalID);
-      this.updateGame();
+      clearInterval(this.intervalId);
+      this.intervalId = setInterval(this.updateGame.bind(this), 1000);
     }
   }
 
@@ -71,9 +75,11 @@ class GameArea extends Component {
       team1: json.team1,
       team2: json.team2,
       displayName: json.displayName,
-      startTime: json.startTime
+      isStarted: json.isStarted,
+      team1Score: json.score1,
+      team2Score: json.score2,
+      gameTick: json.gameTick
     });
-    this.intervalID = setTimeout(this.updateGame.bind(this), 1000);
   }
 
   render() {
@@ -82,12 +88,15 @@ class GameArea extends Component {
         <div>
           Game Area
           <GameProgress
+            gameTick={this.state.gameTick}
+            gameID={this.props.match.params.gameId}
+            team1Score={this.state.team1Score}
+            team2Score={this.state.team2Score}
+            envelopes={this.state.envelopes}
             startTime={this.state.startTime}
             t1Name={this.state.team1Name}
-            t1Begin={4} t1End={9}
-            t2Name={this.state.team2Name}
-            t2Begin={1}
-            t2End={2}
+            isStarted={this.state.isStarted}
+            seatsFull={this.state.seatsFull}
           />
           <ChairsCollection
             envelopes={this.state.envelopes}
@@ -105,14 +114,17 @@ class GameArea extends Component {
     } else {
       return (
         <div>
-          Game Area
           <GameProgress
+            facilitatorId={this.props.location.state.facilitatorId}
+            gameID={this.props.match.params.gameId}
+            gameTick={this.state.gameTick}
+            team1Score={this.state.team1Score}
+            team2Score={this.state.team2Score}
+            envelopes={this.state.envelopes}
             startTime={this.state.startTime}
             t1Name={this.state.team1Name}
-            t1Begin={this.state.startTime}
-            t1End={9} t2Name={this.state.team2Name}
-            t2Begin={this.state.startTime}
-            t2End={2}
+            isStarted={this.state.isStarted}
+            seatsFull={this.state.seatsFull}
           />
           <ChairsCollection
             envelopes={this.state.envelopes}

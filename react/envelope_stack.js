@@ -18,7 +18,6 @@ class EnvelopeStack extends Component {
 
   updateStack() {
     if (this.props.stackType === 0) {
-      console.log('setting active env');
       this.props.setActiveEnvelope();
     } else {
       // advance the envelopes to the next seat
