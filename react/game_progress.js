@@ -3,7 +3,7 @@ import Card from 'react-bootstrap/Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 
-
+import Minimap from './minimap'
 
 
 class GameProgress extends Component {
@@ -18,8 +18,7 @@ class GameProgress extends Component {
   }
 
 
-  async togglePlay(val) {
-
+  async togglePlay() {
     this.setState({ disabled: true });
     this.setState({ seatsFullError: false });
     if (!this.props.isStarted) {
@@ -61,7 +60,10 @@ class GameProgress extends Component {
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     ${this.props.team2Score}
             </h2>
-
+            <Minimap
+              envelopes={this.props.envelopes}
+            >
+            </Minimap>
           </Card.Body>
         </Card>
       </div>

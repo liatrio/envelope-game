@@ -20,6 +20,20 @@ class EnvelopeArea extends Component {
     this.finishActiveEnvelope = this.finishActiveEnvelope.bind(this);
     this.updateCheckedStamps = this.updateCheckedStamps.bind(this);
     this.updateActiveEnvelope = this.updateActiveEnvelope.bind(this);
+    this.updateEnvelope = this.updateEnvelope.bind(this);
+  }
+
+  // updates envelope states
+  // 0 is on todo stack
+  // 1 is closed, active envelope
+  // 2 is open active envelope
+  // 3 stamped open envelope
+  // 4 is stamped closed envelope
+  // 5 is completed for that person
+  async updateEnvelope(envelope) {
+    const request = `/api/update-envelope/${this.props.gameId}/${envelope.envelopeId}/${envelope.clientState}`;
+    console.log(request);
+    await (await fetch(request)).json();
   }
 
   setActiveEnvelope() {
@@ -35,10 +49,10 @@ class EnvelopeArea extends Component {
         unfinishedEnvelopes[0].envelopeState = 1;
         unfinishedEnvelopes[0].random = Array.from(Array(5), (x, i) => i + unfinishedEnvelopes[0].matchingStamp).sort(() => Math.random() - 0.5);
         unfinishedEnvelopes[0].checked = Array(5).fill(false, 0, 5);
+        unfinishedEnvelopes[0].clientState = 1;
         this.setState({ activeEnvelope: unfinishedEnvelopes[0] });
         this.updateActiveEnvelope(unfinishedEnvelopes[0]);
-      } else {
-        console.log("couldn't find envelopes to do");
+        this.updateEnvelope(unfinishedEnvelopes[0]);
       }
     }
   }
@@ -51,10 +65,8 @@ class EnvelopeArea extends Component {
   // 4 is stamped closed envelope
   // 5 is completed for that person
   async updateActiveEnvelope(envelope) {
-    const request = `/api/update-envelope/${this.props.gameId}/${envelope.envelopeId}/${this.props.seatNumber}/${envelope.envelopeState}`;
-    const response = await fetch(request);
-    const json = await response.json();
-    console.log(json);
+    const request = `/api/update-envelope/${this.props.gameId}/${envelope.envelopeId}/${envelope.clientState}`;
+    await fetch(request);
     this.setState({ activeEnvelope: envelope });
   }
 
@@ -67,16 +79,17 @@ class EnvelopeArea extends Component {
   finishActiveEnvelope() {
     let finished = this.state.finishedEnvelopes;
     finished.add(this.state.activeEnvelope.envelopeId);
-    if (this.props.isTeam1) {
-      this.advanceEnvelopeSeat([this.state.activeEnvelope.envelopeId]);
-      this.setState({ activeEnvelope: null, finishedEnvelopes: finished });
+    if (this.props.isTeam1 === 1) {
+      this.advanceEnvelopeSeat([this.state.activeEnvelope.envelopeId]); 
     } else {
-      this.setState({ activeEnvelope: null, finishedEnvelopes: finished });
+      let envelope = this.state.activeEnvelope;
+      envelope.clientState = 5;
+      this.updateActiveEnvelope(envelope);
     }
+    this.setState({ activeEnvelope: null });
   }
 
   async advanceEnvelopeSeat(envelopes) {
-
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -96,6 +109,7 @@ class EnvelopeArea extends Component {
         <Container>
           <Row>
             <Envelope
+              updateEnvelope={this.updateEnvelope}
               activeEnvelope={this.state.activeEnvelope}
               gameId={this.props.gameId}
               seatId={this.props.seatId}
@@ -130,6 +144,7 @@ class EnvelopeArea extends Component {
               advanceEnvelopeSeat={this.advanceEnvelopeSeat}
             ></EnvelopeStack>
             <Envelope
+              updateEnvelope={this.updateEnvelope}
               activeEnvelope={this.state.activeEnvelope}
               gameId={this.props.gameId}
               seatId={this.props.seatId}

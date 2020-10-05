@@ -93,6 +93,8 @@ class GameArea extends Component {
             gameID={this.props.match.params.gameId}
             team1Score={this.state.team1Score}
             team2Score={this.state.team2Score}
+            envelopes={this.state.envelopes}
+            startTime={this.state.startTime}
             t1Name={this.state.team1Name}
             isStarted={this.state.isStarted}
             seatsFull={this.state.seatsFull}
@@ -113,13 +115,14 @@ class GameArea extends Component {
     } else {
       return (
         <div>
-          Game Area
           <GameProgress
             facilitatorId={this.props.location.state.facilitatorId}
             gameID={this.props.match.params.gameId}
             gameTick={this.state.gameTick}
             team1Score={this.state.team1Score}
             team2Score={this.state.team2Score}
+            envelopes={this.state.envelopes}
+            startTime={this.state.startTime}
             t1Name={this.state.team1Name}
             isStarted={this.state.isStarted}
             seatsFull={this.state.seatsFull}
