@@ -54,7 +54,7 @@ class GameArea extends Component {
       isStarted: json.isStarted,
       seats: json.seats,
       team1: json.team1,
-      team2: json.team1,
+      team2: json.team2,
       team1Name: json.team1Name,
       team2Name: json.team2Name
     });

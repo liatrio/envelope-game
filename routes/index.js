@@ -99,9 +99,9 @@ router.get('/api/join/:gameId', (req, res) => {
       seat.seatNumber = i.seat_number;
       seat.teamId = i.team_id;
       seat.displayName = i.display_name;
-      if (i.isTeam1 === 1) {
+      if (i.is_team_1 === 1) {
         summary.team1Name = i.team_name;
-      } else if (i.isTeam1 === 0) {
+      } else if (i.is_team_1 === 0) {
         summary.team2Name = i.team_name;
       }
       summary.seats.push(seat);
