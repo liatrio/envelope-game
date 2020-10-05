@@ -123,6 +123,7 @@ class GameArea extends Component {
             envelopes={this.state.envelopes}
             startTime={this.state.startTime}
             t1Name={this.state.team1Name}
+            t2Name={this.state.team2Name}
             isStarted={this.state.isStarted}
             seatsFull={this.state.seatsFull}
           />
