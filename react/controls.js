@@ -8,69 +8,24 @@ class MyVerticallyCenteredModal extends Component {
     super(props);
     this.state = {
       disabled: false,
+      show: true,
+      showModal: true,
     }
-    this.setTeamNames = this.setTeamNames.bind(this);
+    
+        // bind any handlers in the constructor
+        this.teamOneChange = this.teamOneChange.bind(this);
+        this.teamTwoChange = this.teamTwoChange.bind(this);
+        this.setTeamOneName = this.setTeamOneName.bind(this);
+        this.setTeam2Name = this.setTeam2Name.bind(this);
+        this.setTeamNames = this.setTeamNames.bind(this);
   }
   async setTeamNames() {
-    if (this.state.disabled) {
-      return;
-    }
-    this.setState({ disabled: true });
-    await this.props.setTeamOneName();
-    await this.props.setTeam2Name();
+    await this.setTeamOneName();
+    await this.setTeam2Name();
     this.props.onHide();
+    this.setState({show: false});
+    this.setState({showModal: false});
   }
-
-  render() {
-    return (
-      <Modal
-        {...this.props}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Choose Team Names
-              </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <form>
-            <label>
-              Team One Name: <input type="text" onChange={this.props.teamOneChange} name="teamOneName" />
-              <br />
-              Team Two Name: <input type="text" onChange={this.props.teamTwoChange} name="team2Name" />
-            </label>
-          </form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={this.setTeamNames}>Submit</Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  }
-}
-
-
-class Controls extends Component {
-  constructor() {
-    super();
-    this.state = {
-      disabled: false,
-      teamOneName: '',
-      team2Name: '',
-      facilitatorId: '',
-      modalShow: false,
-    };
-
-    // bind any handlers in the constructor
-    this.teamOneChange = this.teamOneChange.bind(this);
-    this.teamTwoChange = this.teamTwoChange.bind(this);
-    this.setTeamOneName = this.setTeamOneName.bind(this);
-    this.setTeam2Name = this.setTeam2Name.bind(this);
-  }
-
-
 
   teamOneChange(event) {
     this.setState({ teamOneName: event.target.value });
@@ -79,7 +34,6 @@ class Controls extends Component {
   teamTwoChange(event) {
     this.setState({ team2Name: event.target.value });
   }
-
 
   async setTeamOneName() {
     const requestOptions = {
@@ -111,6 +65,48 @@ class Controls extends Component {
   }
 
 
+  render() {
+    return (
+      <Modal
+        {...this.props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Choose Team Names
+              </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form>
+            <label>
+              Team One Name: <input type="text" onChange={this.teamOneChange} name="teamOneName" />
+              <br />
+              Team Two Name: <input type="text" onChange={this.teamTwoChange} name="team2Name" />
+            </label>
+          </form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={this.setTeamNames}>Submit</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+}
+
+
+class Controls extends Component {
+  constructor() {
+    super();
+    this.state = {
+      disabled: false,
+      teamOneName: '',
+      team2Name: '',
+      facilitatorId: '',
+      modalShow: true,
+    };
+  }
 
   render() {
 
@@ -118,19 +114,11 @@ class Controls extends Component {
     return (
       <div>
 
-        <Button
-          variant="primary"
-          onClick={() => this.setState({ modalShow: true })}
-        >
-          Facilitator Controls
-      </Button>
-
         <MyVerticallyCenteredModal
-          setteamOneName={this.setteamOneName}
-          setteam2Name={this.setteam2Name}
-          teamOneChange={this.teamOneChange}
-          teamTwoChange={this.teamTwoChange}
-          show={this.state.modalShow}
+          facilitatorId = {this.props.facilitatorId}
+          team1 = {this.props.team1}
+          team2 = {this.props.team2}
+          show = {this.state.modalShow}
           onHide={modalClose}
         />
 
