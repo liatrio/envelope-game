@@ -91,10 +91,7 @@ class Controls extends Component {
         facilitatorId: this.props.facilitatorId,
       })
     };
-    const response = await fetch('/api/set-team-name', requestOptions);
-    const json = await response.json();
-    console.log(requestOptions);
-    console.log(json);
+    await fetch('/api/set-team-name', requestOptions);
   }
 
   async setTeam2Name() {

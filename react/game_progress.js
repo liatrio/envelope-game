@@ -22,8 +22,6 @@ class GameProgress extends Component {
     this.setState({ disabled: true });
     this.setState({ seatsFullError: false });
     if (!this.props.isStarted) {
-      console.log(this.props.gameID);
-      console.log(this.props.facilitatorId);
       await fetch(`/api/start-game/${this.props.facilitatorId}/${this.props.gameID}`)
 
     } else {

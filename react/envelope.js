@@ -37,10 +37,9 @@ class Envelope extends Component {
     setTimeout(() => {
       if (num === envelope.matchingStamp) {
         envelope.clientState = 3;
-        this.props.updateEnvelope(envelope);
         envelope.stamped = true;
         this.setState({ waiting: false });
-        this.props.updateActiveEnvelope(envelope, 3);
+        this.props.updateActiveEnvelope(envelope);
       } else {
         this.setState({ waiting: false });
       }
@@ -52,11 +51,11 @@ class Envelope extends Component {
     let envelope = this.props.activeEnvelope;
     if (open && envelope.stamped) {
       envelope.clientState = 4;
-      this.props.updateEnvelope(envelope);
+      this.props.updateActiveEnvelope(envelope);
       this.setState({ open: !open });
     } else if (!open && !this.props.activeEnvelope.stamped) {
       envelope.clientState = 2;
-      this.props.updateEnvelope(envelope);
+      this.props.updateActiveEnvelope(envelope);
       this.setState({ open: !open });
     }
   }

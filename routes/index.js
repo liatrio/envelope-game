@@ -42,7 +42,6 @@ router.get('/api/create', (req, res) => {
   sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
-    console.log(result);
   });
 
   // create seats

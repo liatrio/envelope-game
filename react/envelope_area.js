@@ -18,22 +18,7 @@ class EnvelopeArea extends Component {
     this.advanceEnvelopeSeat = this.advanceEnvelopeSeat.bind(this);
     this.setActiveEnvelope = this.setActiveEnvelope.bind(this);
     this.finishActiveEnvelope = this.finishActiveEnvelope.bind(this);
-    this.updateCheckedStamps = this.updateCheckedStamps.bind(this);
     this.updateActiveEnvelope = this.updateActiveEnvelope.bind(this);
-    this.updateEnvelope = this.updateEnvelope.bind(this);
-  }
-
-  // updates envelope states
-  // 0 is on todo stack
-  // 1 is closed, active envelope
-  // 2 is open active envelope
-  // 3 stamped open envelope
-  // 4 is stamped closed envelope
-  // 5 is completed for that person
-  async updateEnvelope(envelope) {
-    const request = `/api/update-envelope/${this.props.gameId}/${envelope.envelopeId}/${envelope.clientState}`;
-    console.log(request);
-    await (await fetch(request)).json();
   }
 
   setActiveEnvelope() {
@@ -42,7 +27,6 @@ class EnvelopeArea extends Component {
       let unfinishedEnvelopes = this.props.envelopes.filter((e) => {
         return !this.state.finishedEnvelopes.has(e.envelopeId);
       });
-      console.log(unfinishedEnvelopes);
       if (unfinishedEnvelopes.length > 0) {
         unfinishedEnvelopes[0].complete = false;
         unfinishedEnvelopes[0].stamped = false;
@@ -52,7 +36,6 @@ class EnvelopeArea extends Component {
         unfinishedEnvelopes[0].clientState = 1;
         this.setState({ activeEnvelope: unfinishedEnvelopes[0] });
         this.updateActiveEnvelope(unfinishedEnvelopes[0]);
-        this.updateEnvelope(unfinishedEnvelopes[0]);
       }
     }
   }
@@ -65,31 +48,25 @@ class EnvelopeArea extends Component {
   // 4 is stamped closed envelope
   // 5 is completed for that person
   async updateActiveEnvelope(envelope) {
-    const request = `/api/update-envelope/${this.props.gameId}/${envelope.envelopeId}/${envelope.clientState}`;
-    await fetch(request);
     this.setState({ activeEnvelope: envelope });
+    const request = `/api/update-envelope/${this.props.gameId}/${envelope.envelopeId}/${envelope.clientState}`;
+    fetch(request);
   }
 
-  updateCheckedStamps(checked) {
-    let envelope = this.state.activeEnvelope;
-    envelope.checked = checked;
-    this.setState({ activeEnvelope: envelope })
-  }
-
-  finishActiveEnvelope() {
+  async finishActiveEnvelope() {
     let finished = this.state.finishedEnvelopes;
     finished.add(this.state.activeEnvelope.envelopeId);
-    if (this.props.isTeam1 === 1) {
-      this.advanceEnvelopeSeat([this.state.activeEnvelope.envelopeId]); 
+    if (this.props.isTeam1) {
+      this.advanceEnvelopeSeat([this.state.activeEnvelope.envelopeId]);
     } else {
       let envelope = this.state.activeEnvelope;
       envelope.clientState = 5;
-      this.updateActiveEnvelope(envelope);
+      await this.updateActiveEnvelope(envelope);
     }
-    this.setState({ activeEnvelope: null });
+    this.setState({ activeEnvelope: null, finishedEnvelopes: finished });
   }
 
-  async advanceEnvelopeSeat(envelopes) {
+  advanceEnvelopeSeat(envelopes) {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -100,7 +77,7 @@ class EnvelopeArea extends Component {
         nextSeat: this.props.seatNumber + 1,
       })
     };
-    await fetch('/api/move-envelope', requestOptions);
+    fetch('/api/move-envelope', requestOptions);
   }
 
   render() {
@@ -116,7 +93,6 @@ class EnvelopeArea extends Component {
               seatNumber={this.props.seatNumber}
               isTeam1={this.props.isTeam1}
               finishActiveEnvelope={this.finishActiveEnvelope}
-              updateCheckedStamps={this.updateCheckedStamps}
               updateActiveEnvelope={this.updateActiveEnvelope}
             >
             </Envelope>
@@ -151,7 +127,6 @@ class EnvelopeArea extends Component {
               seatNumber={this.props.seatNumber}
               isTeam1={this.props.isTeam1}
               finishActiveEnvelope={this.finishActiveEnvelope}
-              updateCheckedStamps={this.updateCheckedStamps}
               updateActiveEnvelope={this.updateActiveEnvelope}
             >
             </Envelope>

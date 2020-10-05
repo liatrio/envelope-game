@@ -34,7 +34,6 @@ class GameArea extends Component {
   }
 
   setSeatId(id) {
-    console.log(id);
     this.setState({ seatId: id });
   }
 
