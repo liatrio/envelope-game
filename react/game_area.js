@@ -90,6 +90,7 @@ class GameArea extends Component {
           Game Area
           <GameProgress
             gameTick={this.state.gameTick}
+            gameID={this.props.match.params.gameId}
             team1Score={this.state.team1Score}
             team2Score={this.state.team2Score}
             t1Name={this.state.team1Name}
@@ -114,6 +115,8 @@ class GameArea extends Component {
         <div>
           Game Area
           <GameProgress
+            facilitatorId={this.props.location.state.facilitatorId}
+            gameID={this.props.match.params.gameId}
             gameTick={this.state.gameTick}
             team1Score={this.state.team1Score}
             team2Score={this.state.team2Score}

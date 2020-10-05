@@ -22,11 +22,13 @@ class GameProgress extends Component {
 
     this.setState({ disabled: true });
     this.setState({ seatsFullError: false });
-    if (!this.props.is_started) {
-      await fetch(`/api/start-game/${this.props.facilitatorGets}/${this.props.gameID}`)
+    if (!this.props.isStarted) {
+      console.log(this.props.gameID);
+      console.log(this.props.facilitatorId);
+      await fetch(`/api/start-game/${this.props.facilitatorId}/${this.props.gameID}`)
 
     } else {
-      await fetch(`/api/stop-game/${this.props.facilitatorGets}/${this.props.gameID}`)
+      await fetch(`/api/stop-game/${this.props.facilitatorId}/${this.props.gameID}`)
     }
     this.setState({ disabled: false });
 
@@ -37,8 +39,8 @@ class GameProgress extends Component {
   }
 
   render() {
-    let ic = this.props.is_started ? faPause : faPlay;
-    const facilID = this.props.facilitatorGets;
+    let ic = this.props.isStarted ? faPause : faPlay;
+    const facilID = this.props.facilitatorId;
     return (
       <div >
         <Card style={{ width: '25em' }}>

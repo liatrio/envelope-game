@@ -123,6 +123,7 @@ router.get('/api/game-state/:id', (req, res) => {
     res.send({
       gameId: result[0].gameId,
       startTime: result[0].start_time,
+      isStarted: result[0].is_started,
       team1: result[0].team_1_id,
       team2: result[0].team_2_id,
       score1: result[0].score_1,
@@ -270,5 +271,3 @@ module.exports = router;
 if (module.hot) {
   module.hot.accept();
 }
-
-
