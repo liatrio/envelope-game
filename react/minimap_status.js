@@ -85,7 +85,7 @@ class MinimapStatus extends Component {
           >
           </FontAwesomeIcon>
           <Badge>
-
+            {this.props.envelopes ? this.getFinishedEnvelopes() : 0}
           </Badge>
         </Col>
       </Row>

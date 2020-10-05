@@ -191,11 +191,9 @@ router.get('/api/update-envelope/:gameId/:envelopeId/:state', (req, res) => {
              SET envelope_state = '${req.params.state}'
              WHERE game_id = '${req.params.gameId}'
              AND envelope_id = '${req.params.envelopeId}'`;
-  console.log(sql);
   db.query(sql, function (err, result) {
     if (err) throw err;
     res.json({ success: true });
-    console.log('after send');
   });
   
 });
