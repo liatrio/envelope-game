@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import GameProgress from './game_progress';
 import ChairsCollection from './chair_collection';
 import Controls from './controls'
+import Table from './assets/table.svg';
 
 import './index.css'
 
@@ -86,7 +87,6 @@ class GameArea extends Component {
     if (typeof (this.props.location.state) === 'undefined') {
       return (
         <div>
-          Game Area
           <GameProgress
             gameTick={this.state.gameTick}
             gameID={this.props.match.params.gameId}
