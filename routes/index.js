@@ -240,6 +240,7 @@ router.get('/api/start-game/:facilitatorId/:gameId', (req, res) => {
   });
 });
 
+
 router.get('/api/stop-game/:facilitatorId/:gameId', (req, res) => {
   let sql = `UPDATE GAME
              SET is_started = ${false}
@@ -257,8 +258,9 @@ router.get('/api/stop-game/:facilitatorId/:gameId', (req, res) => {
   });
 });
 
-module.exports = router;
-
 if (module.hot) {
   module.hot.accept();
 }
+
+module.exports = router;
+
