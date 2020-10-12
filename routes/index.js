@@ -175,9 +175,11 @@ router.post('/api/set-player-name', (req, res) => {
   });
 });
 
-router.get('/api/choose-seat/:gameId/:seatId', (req, res) => {
-  let sql = `UPDATE SEATS SET is_taken = 1 WHERE seat_id = '${req.params.seatId}'
-             AND game_id = '${req.params.gameId}' and is_taken = 0`;
+router.get('/api/choose-seat/:gameId/:teamId/:seatNumber', (req, res) => {
+  let sql = `UPDATE SEATS SET is_taken = 1 WHERE seat_id = '${req.params.teamId}'
+             AND seat_number = '${req.params.seatNumber}'
+             AND game_id = '${req.params.gameId}' 
+             AND is_taken = 0`;
 
   db.query(sql, function (err, result) {
     if (err) throw err;

@@ -34,8 +34,14 @@ class GameArea extends Component {
     this.setSeatId = this.setSeatId.bind(this);
   }
 
-  setSeatId(id) {
-    this.setState({ seatId: id });
+  setSeatId(seatNumber, isTeamOne) {
+    let seat = this.state.seats.find(i => {
+      return i.isTeamOne === isTeamOne && i.seatNumber === seatNumber;
+    });
+    this.setState({
+      seatId: seat.seatId,
+      mySeatNumber: seatNumber,
+    });
   }
 
   componentDidMount() {
@@ -133,11 +139,14 @@ class GameArea extends Component {
             mySeatNumber={this.state.mySeatNumber}
             seats={this.state.seats}
             gameId={this.props.match.params.gameId}
-            setSeatId={(id) => this.setSeatId(id)}
+            setSeatId={(num, isTeamOne) => this.setSeatId(num, isTeamOne)}
             playerSeatId={this.state.seatId}
           />
           <Controls
             facilitatorId={this.props.location.state.facilitatorId}
+            playerSeatId={this.state.seatId}
+            setSeatId={(num, isTeamOne) => this.setSeatId(num, isTeamOne)}
+            seats={this.state.seats}
             team1={this.state.team1}
             team2={this.state.team2}
             seatsFull={this.state.seatsFull}
