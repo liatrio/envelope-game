@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Card from 'react-bootstrap/Card';
+import Container from 'react-bootstrap/Container';
+import Corkboard from './assets/corkboard.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 
@@ -39,13 +41,13 @@ class GameProgress extends Component {
     let ic = this.props.isStarted ? faPause : faPlay;
     const facilID = this.props.facilitatorId;
     return (
-      <div >
-        <Card style={{ width: '25em' }}>
-          <Card.Body>
-
-            <h1>Money Earned</h1>
+      <div>
+        <Card.Img as={Corkboard} src={Corkboard} alt="Scoreboard" style={{width: "40%", height: "40%"}}/>
+        <Card.ImgOverlay style={{width: "40%", height: "40%"}}>
+          <Card.Text>
+            <h1>Money Earned </h1>
             {facilID &&
-              <FontAwesomeIcon icon={ic} spin onClick={this.props.seatsFull ? this.togglePlay : this.seatsNotFull} disabled={this.state.disabled} />
+              <FontAwesomeIcon className="playIcon" icon={ic} spin onClick={this.props.seatsFull ? this.togglePlay : this.seatsNotFull} disabled={this.state.disabled} />
             }
             {facilID && this.state.seatsFullError &&
               <h5>Error: Seats are not Full yet</h5>
@@ -62,8 +64,8 @@ class GameProgress extends Component {
               envelopes={this.props.envelopes}
             >
             </Minimap>
-          </Card.Body>
-        </Card>
+          </Card.Text>
+        </Card.ImgOverlay>
       </div>
     );
   }

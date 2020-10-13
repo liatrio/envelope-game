@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faEnvelopeOpen, faEnvelopeOpenText, faEnvelopeSquare, faMailBulk } from '@fortawesome/free-solid-svg-icons'
-import { faEnvelope as faEnvelopeClear } from '@fortawesome/free-regular-svg-icons'
 
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import EnvClosed from './assets/icon_stack_current.svg';
+import EnvToDo from './assets/icon_stack_to-do.svg';
+import EnvDone from './assets/icon_stack_finished.svg';
 
 import Badge from 'react-bootstrap/Badge'
 
@@ -36,20 +36,15 @@ class MinimapStatus extends Component {
           <Col>
           </Col>
           <Col>
-            <FontAwesomeIcon
-              icon={faEnvelope}
-            >
-            </FontAwesomeIcon>
+            <EnvClosed style={{padding: "5px"}} size='7x'/>
           </Col>
           <Col>
             <Row>
+            <EnvToDo style={{padding: "5px"}}/>
               <Badge>
                 {this.props.envelopes ? this.getReadyEnveleopes() : 0}
               </Badge>
-              <FontAwesomeIcon
-                icon={faMailBulk}
-              >
-              </FontAwesomeIcon>
+              
             </Row>
 
 
@@ -62,10 +57,7 @@ class MinimapStatus extends Component {
       <Row>
         <Col>
           <Row>
-            <FontAwesomeIcon
-              icon={faMailBulk}
-            >
-            </FontAwesomeIcon>
+          <EnvClosed style={{padding: "5px"}}/>
             <Badge>
               {this.props.envelopes ? this.getReadyEnveleopes() : 0}
             </Badge>
@@ -73,17 +65,11 @@ class MinimapStatus extends Component {
 
         </Col>
         <Col>
-          <FontAwesomeIcon
-            icon={faEnvelope}
-          >
-          </FontAwesomeIcon>
+        <EnvDone style={{padding: "5px"}}/>
         </Col>
 
         <Col>
-          <FontAwesomeIcon
-            icon={faMailBulk}
-          >
-          </FontAwesomeIcon>
+        <EnvToDo style={{padding: "5px"}}/>
           <Badge>
             {this.props.envelopes ? this.getFinishedEnvelopes() : 0}
           </Badge>

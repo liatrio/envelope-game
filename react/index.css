@@ -42,10 +42,8 @@ h2{
 }
 
 div.card {
-    
-    margin: 0 auto;
-    float: none;
-    margin-bottom: 10px;
+    display: 'flex';
+    justify-content: center;
 }
 
 div.facilitatorControl {
@@ -63,4 +61,9 @@ div.game {
 form {
     color: black;
     margin: auto;
+}
+
+FontAwesomeIcon.playIcon {
+    text-align: center;
+    display: inline-block;
 }
