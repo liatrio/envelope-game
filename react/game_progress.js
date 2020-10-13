@@ -42,7 +42,7 @@ class GameProgress extends Component {
     const facilID = this.props.facilitatorId;
     return (
       <div>
-        <Card.Img as={Corkboard} src={Corkboard} alt="Scoreboard" style={{width: "40%", height: "40%"}}/>
+        <Card.Img as={Corkboard} alt="Scoreboard" style={{width: "40%", height: "40%"}}/>
         <Card.ImgOverlay style={{width: "40%", height: "40%"}}>
           <Card.Text>
             <h1>Money Earned </h1>
@@ -52,8 +52,8 @@ class GameProgress extends Component {
             {facilID && this.state.seatsFullError &&
               <h5>Error: Seats are not Full yet</h5>
             }
-            <p> {this.props.t1Name} --- VS --- {this.props.t2Name}</p>
-            <h2 >
+            <div> {this.props.t1Name} --- VS --- {this.props.t2Name}</div>
+            <h2>
               ${this.props.team1Score}
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     {this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick ? this.props.gameTick % 60 : '0'}

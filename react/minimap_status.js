@@ -34,21 +34,16 @@ class MinimapStatus extends Component {
       return (
         <Row>
           <Col>
+            <EnvClosed style={{padding: "3px"}}/>
           </Col>
           <Col>
-            <EnvClosed style={{padding: "5px"}} size='7x'/>
+            <EnvToDo style={{padding: "3px"}}/>
+            <Badge>
+              {this.props.envelopes ? this.getReadyEnveleopes() : 0}
+            </Badge>
           </Col>
-          <Col>
-            <Row>
-            <EnvToDo style={{padding: "5px"}}/>
-              <Badge>
-                {this.props.envelopes ? this.getReadyEnveleopes() : 0}
-              </Badge>
-              
-            </Row>
-
-
-          </Col>
+          <Col></Col>
+          
         </Row>
       );
     }
@@ -56,24 +51,22 @@ class MinimapStatus extends Component {
     return (
       <Row>
         <Col>
-          <Row>
-          <EnvClosed style={{padding: "5px"}}/>
-            <Badge>
-              {this.props.envelopes ? this.getReadyEnveleopes() : 0}
-            </Badge>
-          </Row>
-
+        <EnvToDo style={{padding: "3px"}}/>
+          <Badge>
+            {this.props.envelopes ? this.getReadyEnveleopes() : 0}
+          </Badge>
         </Col>
         <Col>
-        <EnvDone style={{padding: "5px"}}/>
+          <EnvClosed style={{padding: "3px"}}/>
         </Col>
-
         <Col>
-        <EnvToDo style={{padding: "5px"}}/>
+        <EnvDone style={{padding: "3px"}}/>
           <Badge>
             {this.props.envelopes ? this.getFinishedEnvelopes() : 0}
           </Badge>
         </Col>
+        
+        
       </Row>
     );
 
