@@ -176,15 +176,17 @@ router.post('/api/set-player-name', (req, res) => {
 });
 
 router.get('/api/choose-seat/:gameId/:teamId/:seatNumber', (req, res) => {
-  let sql = `UPDATE SEATS SET is_taken = 1 WHERE seat_id = '${req.params.teamId}'
+  let sql = `UPDATE SEATS SET is_taken = 1 WHERE team_id = '${req.params.teamId}'
              AND seat_number = '${req.params.seatNumber}'
              AND game_id = '${req.params.gameId}' 
              AND is_taken = 0`;
+  console.log(sql);
 
   db.query(sql, function (err, result) {
     if (err) throw err;
     // if there was not a changed row then seat is already taken
     // or invalid request
+    console.log(result);
     if (result.changedRows !== 1) {
       res.send({ success: false });
     } else {
