@@ -31,6 +31,7 @@ class Controls extends Component {
     this.setTeamNames = this.setTeamNames.bind(this);
     this.selectSeat = this.selectSeat.bind(this);
     this.getSeats = this.getSeats.bind(this);
+    this.chooseRandom = this.chooseRandom.bind(this);
     this.hideControls = this.hideControls.bind(this);
   }
 
@@ -84,7 +85,7 @@ class Controls extends Component {
     if (json.success) {
       // seat selected successfully
       this.setState({ seatSuccess: true });
-      await new Promise(r => setTimeout(r, 1000));
+      await new Promise(r => setTimeout(r, 500));
       this.setState({ activeIndex: 1 });
 
     } else {
@@ -93,6 +94,13 @@ class Controls extends Component {
         selectedSeat: null,
       });
     }
+  }
+
+  chooseRandom() {
+    const randomSeat = this.props.seats.find(i => {
+      return !i.isTaken;
+    });
+    this.selectSeat(randomSeat);
   }
 
   hideControls() {
@@ -204,6 +212,16 @@ class Controls extends Component {
                       {this.getSeats(false)}
                     </ul>
                   </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Button
+                    className={this.props.seats.length === 0 || this.props.seatsFull ? "invisible" : "visible"}
+                    disabled={this.state.settingSeat}
+                    variant={this.state.settingSeat ? "secondary" : "primary"}
+                    onClick={() => this.chooseRandom()}
+                  >
+                    Choose a random seat
+                  </Button>
                 </Row>
               </Carousel.Item>
               <Carousel.Item>
