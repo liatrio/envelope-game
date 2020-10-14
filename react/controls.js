@@ -33,6 +33,7 @@ class Controls extends Component {
     this.getSeats = this.getSeats.bind(this);
     this.hideControls = this.hideControls.bind(this);
   }
+
   async setTeamNames() {
     await this.setTeamOneName();
     await this.setTeam2Name();
@@ -100,13 +101,8 @@ class Controls extends Component {
 
   getSeats(isTeamOne) {
     // if seat information has loaded
-
     if (this.props.seats.length !== 0) {
       // check if we should dismiss the modal
-      if (this.props.seatsFull) {
-        this.setState({ show: false });
-      }
-
       return this.props.seats.filter(i => {
         return i.isTeam1 === isTeamOne;
       }).sort((a, b) => {
@@ -152,10 +148,10 @@ class Controls extends Component {
 
   render() {
     return (
-
       <Modal
         backdrop="static"
-        show={this.state.show}
+        show={this.props.seatsFull ? false : this.state.show}
+        onHide={this.hideControls}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
