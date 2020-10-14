@@ -30,14 +30,8 @@ class GameArea extends Component {
       gameTick: 0,
       team1Score: 0,
       team2Score: 0,
-      showControls: true,
     }
     this.setSeatId = this.setSeatId.bind(this);
-    this.toggleControls = this.toggleControls.bind(this);
-  }
-
-  toggleControls() {
-    this.setState({ showControls: !this.state.showControls });
   }
 
   setSeatId(seatNumber, isTeamOne) {
@@ -71,7 +65,7 @@ class GameArea extends Component {
       team1Name: json.team1Name,
       team2Name: json.team2Name
     });
-    if (this.state.seats.every(s => s.isTaken === true)) {
+    if (this.state.seats.every(s => s.isTaken === true && s.displayName !== null)) {
       this.setState({ seatsFull: true });
       clearInterval(this.intervalId);
       this.intervalId = setInterval(this.updateGame.bind(this), 1000);
@@ -121,8 +115,6 @@ class GameArea extends Component {
           playerSeatId={this.state.seatId}
         />
         <Controls
-          show={this.state.showControls}
-          toggleControls={this.toggleControls}
           facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
           playerSeatId={this.state.seatId}
           setSeatId={(num, isTeamOne) => this.setSeatId(num, isTeamOne)}

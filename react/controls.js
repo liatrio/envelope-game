@@ -17,10 +17,10 @@ class Controls extends Component {
     this.state = {
       disabled: false,
       show: true,
-      showModal: true,
       activeIndex: 0,
       settingSeat: false,
       selectedSeat: null,
+      seatSuccess: false,
     }
 
     // bind any handlers in the constructor
@@ -30,7 +30,8 @@ class Controls extends Component {
     this.setTeam2Name = this.setTeam2Name.bind(this);
     this.setTeamNames = this.setTeamNames.bind(this);
     this.selectSeat = this.selectSeat.bind(this);
-    this.isSeatTaken = this.isSeatTaken.bind(this);
+    this.getSeats = this.getSeats.bind(this);
+    this.hideControls = this.hideControls.bind(this);
   }
   async setTeamNames() {
     await this.setTeamOneName();
@@ -55,10 +56,7 @@ class Controls extends Component {
         facilitatorId: this.props.facilitatorId,
       })
     };
-    const response = await fetch('/api/set-team-name', requestOptions);
-    const json = await response.json();
-    console.log(requestOptions);
-    console.log(json);
+    await fetch('/api/set-team-name', requestOptions);
   }
 
   async setTeam2Name() {
@@ -74,19 +72,21 @@ class Controls extends Component {
     await fetch('/api/set-team-name', requestOptions);
   }
 
-  async selectSeat(seatNumber, isTeamOne) {
+  async selectSeat(seat) {
     this.setState({
       settingSeat: true,
-      selectedSeat: seatNumber,
+      selectedSeat: seat.seatId,
     });
-    const request = `/api/choose-seat/${this.props.gameId}/${isTeamOne ? this.props.team1 : this.props.team2}/${seatNumber}`;
-    console.log(request);
+    const request = `/api/choose-seat/${seat.teamId}/${seat.seatId}`;
     const response = await fetch(request);
     const json = await response.json();
     if (json.success) {
+      // seat selected successfully
+      this.setState({ seatSuccess: true });
+      await new Promise(r => setTimeout(r, 1000));
       this.setState({ activeIndex: 1 });
+
     } else {
-      console.log('bad');
       this.setState({
         settingSeat: false,
         selectedSeat: null,
@@ -94,14 +94,60 @@ class Controls extends Component {
     }
   }
 
-  isSeatTaken(seatNumber, isTeamOne) {
-    const seat = this.props.seats.find(i => {
-      return i.isTeam1 === isTeamOne && i.seatNumber === seatNumber;
-    });
-    if (seat && seat.isTeam1 && seat.seatNumber === 0) {
-      console.log(seat);
+  hideControls() {
+    this.setState({ show: false });
+  }
+
+  getSeats(isTeamOne) {
+    // if seat information has loaded
+
+    if (this.props.seats.length !== 0) {
+      // check if we should dismiss the modal
+      if (this.props.seatsFull) {
+        this.setState({ show: false });
+      }
+
+      return this.props.seats.filter(i => {
+        return i.isTeam1 === isTeamOne;
+      }).sort((a, b) => {
+        return (a.seatNumber > b.seatNumber ? 1 : -1);
+      }).map(s => {
+        return (
+          <li key={s.seatId}>
+            <Button
+              className={s.isTaken ? "chairFilled" : "chairNotFilled"}
+              disabled={s.isTaken || this.state.settingSeat}
+              variant={this.state.seatSuccess && this.state.selectedSeat === s.seatId ? "success" : s.isTaken ? "secondary" : "primary"}
+              onClick={() => this.selectSeat(s)}
+            >
+              {this.state.selectedSeat === s.seatId ?
+                <div>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                </div> : `Player ${s.seatNumber + 1}`}
+            </Button>
+            <br></br>
+          </li>
+        );
+      });
+    } else {
+      // return placeholder buttons to prevent "pop in"
+      return [...Array(3).keys()].map(i => {
+        return (
+          <li key={i}>
+            <Button
+              disabled={true}
+              className="invisible"
+            >Player 0</Button>
+          </li>
+        );
+      });
     }
-    return seat ? seat.isTaken : false;
   }
 
   render() {
@@ -109,24 +155,25 @@ class Controls extends Component {
 
       <Modal
         backdrop="static"
-        show={this.props.show}
+        show={this.state.show}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <Modal.Header>
-          <Modal.Title id="contained-modal-title-vcenter">
-            {this.state.modalStatus === 0 ? 'Choose a seat' : 'Enter display name'}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Carousel
-            indicators={false}
-            controls={false}
-            activeIndex={this.state.activeIndex}
-          >
-            <Carousel.Item>
-              <Container fluid>
+        <Container fluid>
+          <Modal.Header>
+            <Modal.Title id="contained-modal-title-vcenter">
+              {this.state.modalStatus === 0 ? 'Choose a seat' : 'Enter display name'}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Carousel
+              indicators={false}
+              controls={false}
+              activeIndex={this.state.activeIndex}
+            >
+              <Carousel.Item>
+
                 {
                   this.props.facilitatorId &&
                   <TeamNameForm
@@ -135,85 +182,43 @@ class Controls extends Component {
                     team2={this.props.team2}
                   />
                 }
-                <Row>
-                  <Col lg={false}>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
                     Team 1 Seats
                       <br></br>
                     <ul className="chairColumn list-unstyled">
-                      {
-                        this.props.seats.filter(i => {
-                          return i.isTeam1;
-                        }).sort((a, b) => {
-                          return (a.seatNumber > b.seatNumber ? 1 : -1);
-                        }).map(s => {
-                          return (
-                            <li key={s.seatId}>
-                              <Button
-                                className={this.isSeatTaken(s.seatNumber, true) ? "chairFilled" : "chairNotFilled"}
-                                disabled={this.isSeatTaken(s.seatNumber, true) || this.state.settingSeat}
-                                variant={this.isSeatTaken(s.seatNumber, true) ? "secondary" : "primary"}
-                                onClick={() => this.selectSeat(s.seatNumber, true)}
-                              >
-                                {this.state.selectedSeat === s.seatNumber ?
-                                  <Spinner
-                                    as="span"
-                                    animation="border"
-                                    size="sm"
-                                    role="status"
-                                    aria-hidden="true"
-                                  /> : `Player ${s.seatNumber + 1}`}
-                              </Button>
-                              <br></br>
-                            </li>
-                          );
-                        })
-                      }
+                      {this.getSeats(true)}
                     </ul>
                   </Col>
-                  <Col lg={false}>
+                  <Col md="auto">
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      variant="primary"
+                      className={this.props.seats.length === 0 ? "visible" : "invisible"}
+                    />
+                  </Col>
+                  <Col md="auto">
                     Team 2 Seats
                         <br></br>
                     <ul className="chairColumn list-unstyled">
-                      {
-                        this.props.seats.filter(i => {
-                          return !i.isTeam1;
-                        }).sort((a, b) => {
-                          return (a.seatNumber > b.seatNumber ? 1 : -1);
-                        }).map(s => {
-                          return (
-                            <li key={s.seatId}>
-                              <Button
-                                className={this.isSeatTaken(s.seatNumber, false) ? "chairFilled" : "chairNotFilled"}
-                                disabled={this.isSeatTaken(s.seatNumber, false) || this.state.settingSeat}
-                                variant={this.isSeatTaken(s.seatNumber, false) ? "secondary" : "primary"}
-                                onClick={() => this.selectSeat(s.seatNumber, false)}
-                              >
-                                {this.state.selectedSeat === s.seatNumber + 3 ?
-                                  <Spinner
-                                    as="span"
-                                    animation="border"
-                                    size="sm"
-                                    role="status"
-                                    aria-hidden="true"
-                                  /> : `Player ${s.seatNumber + 1}`}
-                              </Button>
-                              <br></br>
-                            </li>
-                          );
-                        })
-                      }
+                      {this.getSeats(false)}
                     </ul>
                   </Col>
                 </Row>
-              </Container>
-            </Carousel.Item>
-            <Carousel.Item>
-              <PlayerNameForm
-                toggleControls={this.props.toggleControls}
-              ></PlayerNameForm>
-            </Carousel.Item>
-          </Carousel>
-        </Modal.Body>
+              </Carousel.Item>
+              <Carousel.Item>
+                <PlayerNameForm
+                  hideControls={this.hideControls}
+                  seatId={this.state.selectedSeat}
+                ></PlayerNameForm>
+              </Carousel.Item>
+            </Carousel>
+          </Modal.Body>
+        </Container>
       </Modal>
 
     );
@@ -304,16 +309,15 @@ class PlayerNameForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      playerName: '',
+      displayName: '',
       waiting: false,
     };
     this.playerNameChange = this.playerNameChange.bind(this);
     this.setPlayerName = this.setPlayerName.bind(this);
-
   }
 
   playerNameChange(event) {
-    this.setState({ playerName: event.target.value });
+    this.setState({ displayName: event.target.value });
   }
 
   async setPlayerName() {
@@ -323,12 +327,14 @@ class PlayerNameForm extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         displayName: this.state.displayName,
-        seatId: this.state.seatId,
+        seatId: this.props.seatId,
       })
     };
-    await fetch('/api/set-player-name', requestOptions);
+    const response = await fetch('/api/set-player-name', requestOptions);
+    const json = await response.json();
+    console.log(json);
     this.setState({ waiting: false });
-    this.props.toggleControls();
+    this.props.hideControls();
   }
 
   render() {
