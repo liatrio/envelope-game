@@ -22,7 +22,7 @@ class Chair extends Component {
 
   async chooseSeat() {
     if (this.props.playerSeatId === null) {
-      const response = await fetch(`/api/choose-seat/${this.props.gameId}/${this.props.seatId}`)
+      const response = await fetch(`/api/choose-seat/${this.props.gameId}/${this.props.seatId}`);
       const json = await response.json();
       if (json.success) {
         this.state.seatId = json.seatId;

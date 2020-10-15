@@ -29,13 +29,19 @@ class GameArea extends Component {
       startTime: null,
       gameTick: 0,
       team1Score: 0,
-      team2Score: 0
+      team2Score: 0,
     }
     this.setSeatId = this.setSeatId.bind(this);
   }
 
-  setSeatId(id) {
-    this.setState({ seatId: id });
+  setSeatId(seatNumber, isTeamOne) {
+    let seat = this.state.seats.find(i => {
+      return i.isTeamOne === isTeamOne && i.seatNumber === seatNumber;
+    });
+    this.setState({
+      seatId: seat.seatId,
+      mySeatNumber: seatNumber,
+    });
   }
 
   componentDidMount() {
@@ -59,7 +65,7 @@ class GameArea extends Component {
       team1Name: json.team1Name,
       team2Name: json.team2Name
     });
-    if (this.state.seats.every(s => s.isTaken === true)) {
+    if (this.state.seats.every(s => s.isTaken === true && s.displayName !== null)) {
       this.setState({ seatsFull: true });
       clearInterval(this.intervalId);
       this.intervalId = setInterval(this.updateGame.bind(this), 1000);
@@ -85,69 +91,42 @@ class GameArea extends Component {
 
   render() {
     const style = {backgroundImage: `url(${background})`, backgroundRepeat: "no-repeat", backgroundAttachment: "fixed", backgroundSize: "150%", backgroundPosition: "50% 50%", position: "relative", width: "100%", height: "100%"};
-    if (typeof (this.props.location.state) === 'undefined') {
-      return (
-        <div style={style}>
-          <GameProgress
-            gameTick={this.state.gameTick}
-            gameID={this.props.match.params.gameId}
-            team1Score={this.state.team1Score}
-            team2Score={this.state.team2Score}
-            envelopes={this.state.envelopes}
-            startTime={this.state.startTime}
-            t1Name={this.state.team1Name}
-            isStarted={this.state.isStarted}
-            seatsFull={this.state.seatsFull}
-          />
-          <ChairsCollection
-            envelopes={this.state.envelopes}
-            mySeatNumber={this.state.mySeatNumber}
-            startTime={this.state.startTime}
-            seats={this.state.seats.sort((a, b) => {
-              return a.seatNumber - b.seatNumber
-            })}
-            gameId={this.props.match.params.gameId}
-            setSeatId={(id) => this.setSeatId(id)}
-            playerSeatId={this.state.seatId}
-          />
-        </div>
-      );
-    } else {
-      return (
-        <div style={style}>
-          <GameProgress
-            facilitatorId={this.props.location.state.facilitatorId}
-            gameID={this.props.match.params.gameId}
-            gameTick={this.state.gameTick}
-            team1Score={this.state.team1Score}
-            team2Score={this.state.team2Score}
-            envelopes={this.state.envelopes}
-            startTime={this.state.startTime}
-            t1Name={this.state.team1Name}
-            t2Name={this.state.team2Name}
-            isStarted={this.state.isStarted}
-            seatsFull={this.state.seatsFull}
-          />
-          <ChairsCollection
-            envelopes={this.state.envelopes}
-            startTime={this.state.startTime}
-            mySeatNumber={this.state.mySeatNumber}
-            seats={this.state.seats}
-            gameId={this.props.match.params.gameId}
-            setSeatId={(id) => this.setSeatId(id)}
-            playerSeatId={this.state.seatId}
-          />
-          <Controls
-            facilitatorId={this.props.location.state.facilitatorId}
-            team1={this.state.team1}
-            team2={this.state.team2}
-            seatsFull={this.state.seatsFull}
-            gameId={this.props.match.params.gameId}
-          />
-        </div>
-      );
-    }
-
+    return (
+      <div style={{style}}>
+        <GameProgress
+          facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
+          gameID={this.props.match.params.gameId}
+          gameTick={this.state.gameTick}
+          team1Score={this.state.team1Score}
+          team2Score={this.state.team2Score}
+          envelopes={this.state.envelopes}
+          startTime={this.state.startTime}
+          t1Name={this.state.team1Name}
+          t2Name={this.state.team2Name}
+          isStarted={this.state.isStarted}
+          seatsFull={this.state.seatsFull}
+        />
+        <ChairsCollection
+          envelopes={this.state.envelopes}
+          startTime={this.state.startTime}
+          mySeatNumber={this.state.mySeatNumber}
+          seats={this.state.seats}
+          gameId={this.props.match.params.gameId}
+          setSeatId={(num, isTeamOne) => this.setSeatId(num, isTeamOne)}
+          playerSeatId={this.state.seatId}
+        />
+        <Controls
+          facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
+          playerSeatId={this.state.seatId}
+          setSeatId={(num, isTeamOne) => this.setSeatId(num, isTeamOne)}
+          seats={this.state.seats}
+          team1={this.state.team1}
+          team2={this.state.team2}
+          seatsFull={this.state.seatsFull}
+          gameId={this.props.match.params.gameId}
+        />
+      </div>
+    );
   }
 }
 
