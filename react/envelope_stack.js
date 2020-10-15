@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import {ReactComponent as ToDoFull} from './assets/stack_to-do_full.svg';
+import {ReactComponent as ToDoHalf} from './assets/stack_to-do_half.svg';
+import {ReactComponent as ToDoOne} from './assets/stack_to-do_one.svg';
 import Button from 'react-bootstrap/Button'
 import Badge from 'react-bootstrap/Badge'
 
@@ -72,20 +75,22 @@ class EnvelopeStack extends Component {
       count = 0;
     }
     return (
-      <div>
-        {this.props.stackType === 0 ? "Envelopes ready" : "Finished"}
+      <div style={{width: "15%"}}>
+        {this.props.stackType === 0 ? "Ready" : "Finished"}
         <br></br>
         <Button
           variant={this.buttonVariant()}
           disabled={this.isDisabled()}
           onClick={this.updateStack}
+          size="lg"
         >
-          <div>
-            <FontAwesomeIcon
+          <div >
+            {/* <FontAwesomeIcon
               icon={faEnvelope}
               size='5x'
             >
-            </FontAwesomeIcon>
+            </FontAwesomeIcon> */}
+            <ToDoFull/>
             <br></br>
             <Badge pill variant="light" className="align-middle">
               {this.props.stackType === 0 ? count : this.getFinishedEnvelopes().length}

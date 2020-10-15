@@ -15,7 +15,7 @@ class ChairsCollection extends Component {
       if (c.isTeam1 && c.seatId == seatID) {
         isTeamOne = c.isTeam1;
         team1Chairs.push(
-          <li key={c.seatId}>
+          
             <Chair
               envelopes={this.props.envelopes.filter((i) => {
                 return i.team === c.teamId
@@ -30,12 +30,10 @@ class ChairsCollection extends Component {
               isTaken={c.isTaken}
               seatNumber={c.seatNumber}
             ></Chair>
-          </li>
         );
       } else if (!c.isTeam1 && c.seatId == seatID) {
         isTeamOne = c.isTeam1;
         team2Chairs.push(
-          <li key={c.seatId}>
             <Chair
               envelopes={this.props.envelopes.filter((i) => {
                 return i.team === c.teamId
@@ -49,29 +47,22 @@ class ChairsCollection extends Component {
               isTaken={c.isTaken}
               seatNumber={c.seatNumber}
             ></Chair>
-          </li>
         );
       }
     });
     return (
       <div>
-        <Container fluid>
-          <Row>
-            <Col>
             
               {isTeamOne && 
-              <div className= "area" style={{width: "35%", paddingTop: "30%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>  
-                <ul className="chairColumn list-unstyled">{team1Chairs}</ul>
+              <div className= "area" style={{width: "35%", top: "50%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>  
+                {team1Chairs}
               </div>
               }
               {!isTeamOne &&
-              <div className= "area2" style={{width: "35%", paddingTop: "30%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>
-                <ul className="chairColumn list-unstyled">{team2Chairs}</ul>
+              <div className= "area2" style={{width: "35%", top: "50%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>
+                {team2Chairs}
               </div>
               }
-            </Col>
-          </Row>
-        </Container>
       </div>
     )
   }

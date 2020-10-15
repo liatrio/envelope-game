@@ -42,7 +42,7 @@ class GameProgress extends Component {
     let ic = this.props.isStarted ? faPause : faPlay;
     const facilID = this.props.facilitatorId;
     return (
-      <div className="card" style={{width: "35%", top: "20%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>
+      <div className="card" style={{width: "35%", top: "15%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>
         <Card.Img as={Corkboard} alt="Scoreboard"/>    
         <Card.ImgOverlay bsPrefix='card-img-overlay CardImgOverlay'>
           <Card.Body>

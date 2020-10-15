@@ -4,6 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faEnvelopeOpen, faEnvelopeOpenText, faEnvelopeSquare } from '@fortawesome/free-solid-svg-icons'
 import { faEnvelope as faEnvelopeClear } from '@fortawesome/free-regular-svg-icons'
 
+import {ReactComponent as ToDoFull} from './assets/stack_to-do_full.svg';
+import {ReactComponent as ToDoHalf} from './assets/stack_to-do_half.svg';
+import {ReactComponent as ToDoOne} from './assets/stack_to-do_one.svg';
+import {ReactComponent as EnvOpen} from './assets/envelope_open.svg';
+import {ReactComponent as IndexCard} from './assets/index-card.svg';
+import {ReactComponent as EnvClosed} from './assets/envelope_closed.svg';
+
 import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Fade from 'react-bootstrap/Fade'
@@ -86,16 +93,17 @@ class Envelope extends Component {
   render() {
     const open = this.state.open;
     return (
-      <div>
+      <div style={{width: "70%", textAlign: "center"}}>
         {this.props.activeEnvelope ? `Stamp ${this.props.activeEnvelope.matchingStamp}` : "No envelope"}
         <br></br>
-        <FontAwesomeIcon
+        {/* <FontAwesomeIcon
           icon={this.getIcon()}
           size='5x'
           onClick={this.toggleOpen}
           aria-controls="collapse-stamp-bar"
           aria-expanded={open}
-        />
+        /> */}
+        <EnvOpen style={{margin: "0 auto", maxWidth: "50px"}} onClick={this.toggleOpen} aria-controls="collapse-stamp-bar" aria-expanded={open}/>
         <Fade
           in={open}
         >
