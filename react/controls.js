@@ -21,6 +21,7 @@ class Controls extends Component {
       settingSeat: false,
       selectedSeat: null,
       seatSuccess: false,
+      selectedSeatNumber: null,
     }
 
     // bind any handlers in the constructor
@@ -78,11 +79,14 @@ class Controls extends Component {
     this.setState({
       settingSeat: true,
       selectedSeat: seat.seatId,
+      selectedSeatNumber: seat.seatNumber
     });
     const request = `/api/choose-seat/${seat.teamId}/${seat.seatId}`;
     const response = await fetch(request);
     const json = await response.json();
     if (json.success) {
+      console.log(this.state.selectedSeatNumber);
+      this.props.setSeatId(this.state.selectedSeatNumber, seat.isTeam1);
       // seat selected successfully
       this.setState({ seatSuccess: true });
       await new Promise(r => setTimeout(r, 500));

@@ -46,7 +46,7 @@ class Chair extends Component {
   render() {
     return (
       <div>
-        <Button
+        {/* <Button
           className={this.props.isTaken ? "chairFilled" : "chairNotFilled"}
           variant="secondary"
           active={this.props.isTaken || this.props.playerSeatId !== null ? 'false' : 'true'}
@@ -56,7 +56,7 @@ class Chair extends Component {
             size='7x'
             color={this.props.seatId === this.props.playerSeatId ? 'blue' : this.props.isTaken ? 'red' : 'black'}
           />
-        </Button>
+        </Button> */}
         <EnvelopeArea
           envelopes={this.props.envelopes.filter((i) => {
             return i.seatNumber === this.props.seatNumber

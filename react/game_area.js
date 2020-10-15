@@ -35,13 +35,19 @@ class GameArea extends Component {
   }
 
   setSeatId(seatNumber, isTeamOne) {
+    console.log("in 38");
+    console.log(this.state.seats);
+    console.log(seatNumber);
+    console.log(isTeamOne+ "41");
     let seat = this.state.seats.find(i => {
-      return i.isTeamOne === isTeamOne && i.seatNumber === seatNumber;
+      return i.isTeam1 === isTeamOne && i.seatNumber === seatNumber;
     });
+    console.log(seat);
     this.setState({
       seatId: seat.seatId,
       mySeatNumber: seatNumber,
     });
+    console.log(this.state.seatId);
   }
 
   componentDidMount() {
@@ -63,7 +69,8 @@ class GameArea extends Component {
       team1: json.team1,
       team2: json.team2,
       team1Name: json.team1Name,
-      team2Name: json.team2Name
+      team2Name: json.team2Name,
+
     });
     if (this.state.seats.every(s => s.isTaken === true && s.displayName !== null)) {
       this.setState({ seatsFull: true });
@@ -85,14 +92,15 @@ class GameArea extends Component {
       isStarted: json.isStarted,
       team1Score: json.score1,
       team2Score: json.score2,
-      gameTick: json.gameTick
+      gameTick: json.gameTick,
+
     });
   }
 
   render() {
-    const style = {backgroundImage: `url(${background})`, backgroundRepeat: "no-repeat", backgroundAttachment: "fixed", backgroundSize: "150%", backgroundPosition: "50% 50%", position: "relative", width: "100%", height: "100%"};
+    const style = {backgroundImage: `url(${background})`, backgroundRepeat: "no-repeat", backgroundAttachment: "fixed", backgroundSize: "150%", backgroundPosition: "50% 50%", position: "relative", width: "100%", height: "100vh"};
     return (
-      <div style={{style}}>
+      <div style={style}>
         <GameProgress
           facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
           gameID={this.props.match.params.gameId}

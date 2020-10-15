@@ -8,8 +8,12 @@ class ChairsCollection extends Component {
   render() {
     let team1Chairs = []
     let team2Chairs = []
+    let isTeamOne = null
+    const seatID = this.props.playerSeatId;
+    console.log("12 " + seatID);
     this.props.seats.forEach((c, index) => {
-      if (c.isTeam1) {
+      if (c.isTeam1 && c.seatId == seatID) {
+        isTeamOne = c.isTeam1;
         team1Chairs.push(
           <li key={c.seatId}>
             <Chair
@@ -28,7 +32,8 @@ class ChairsCollection extends Component {
             ></Chair>
           </li>
         );
-      } else {
+      } else if (!c.isTeam1 && c.seatId == seatID) {
+        isTeamOne = c.isTeam1;
         team2Chairs.push(
           <li key={c.seatId}>
             <Chair
@@ -50,17 +55,20 @@ class ChairsCollection extends Component {
     });
     return (
       <div>
-        <Container>
+        <Container fluid>
           <Row>
             <Col>
-              <div>
+            
+              {isTeamOne && 
+              <div className= "area" style={{width: "35%", paddingTop: "30%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>  
                 <ul className="chairColumn list-unstyled">{team1Chairs}</ul>
               </div>
-            </Col>
-            <Col>
-              <div>
+              }
+              {!isTeamOne &&
+              <div className= "area2" style={{width: "35%", paddingTop: "30%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>
                 <ul className="chairColumn list-unstyled">{team2Chairs}</ul>
               </div>
+              }
             </Col>
           </Row>
         </Container>
