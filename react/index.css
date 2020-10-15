@@ -28,6 +28,12 @@ h1 {
     margin: auto;
 }
 
+h2{
+    color: green;
+    text-align: center;
+    margin: auto;
+}
+
 p {
     color: black;
     text-align: center;
@@ -35,15 +41,9 @@ p {
     margin: auto;
 }
 
-h2{
-    color: green;
-    text-align: center;
-    margin: auto;
-}
-
 div.card {
-    display: 'flex';
-    justify-content: center;
+    margin: 0 auto;
+    width: 50%;
 }
 
 div.facilitatorControl {
@@ -58,12 +58,11 @@ div.game {
     border: 1px solid black;
 }
 
+.CardImgOverlay {
+    padding: 0% !important;
+}
+
 form {
     color: black;
     margin: auto;
-}
-
-FontAwesomeIcon.playIcon {
-    text-align: center;
-    display: inline-block;
 }

@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import GameProgress from './game_progress';
 import ChairsCollection from './chair_collection';
 import Controls from './controls'
-import Table from './assets/table.svg';
-import background from './assets/background.svg';
+import background, {ReactComponent as Background} from './assets/background.svg';
 
 import './index.css'
 
@@ -85,9 +84,10 @@ class GameArea extends Component {
   }
 
   render() {
+    const style = {backgroundImage: `url(${background})`, backgroundRepeat: "no-repeat", backgroundAttachment: "fixed", backgroundSize: "150%", backgroundPosition: "50% 50%", position: "relative", width: "100%", height: "100%"};
     if (typeof (this.props.location.state) === 'undefined') {
       return (
-        <div style={{ backgroundImage: `url(${background})` }}>
+        <div style={style}>
           <GameProgress
             gameTick={this.state.gameTick}
             gameID={this.props.match.params.gameId}
@@ -114,7 +114,7 @@ class GameArea extends Component {
       );
     } else {
       return (
-        <div style={{ backgroundImage: `url("data:image/svg+xml,${background}")`}}>
+        <div style={style}>
           <GameProgress
             facilitatorId={this.props.location.state.facilitatorId}
             gameID={this.props.match.params.gameId}

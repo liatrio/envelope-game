@@ -3,9 +3,9 @@ import React, { Component } from 'react'
 
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import EnvClosed from './assets/icon_stack_current.svg';
-import EnvToDo from './assets/icon_stack_to-do.svg';
-import EnvDone from './assets/icon_stack_finished.svg';
+import {ReactComponent as EnvClosed} from './assets/icon_stack_current.svg';
+import {ReactComponent as EnvToDo} from './assets/icon_stack_to-do.svg';
+import {ReactComponent as EnvDone} from './assets/icon_stack_finished.svg';
 
 import Badge from 'react-bootstrap/Badge'
 
