@@ -21,7 +21,8 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-podAnnotations: {}
+podAnnotations:
+  sidecar.istio.io/inject: "false"
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -79,3 +80,6 @@ mysql:
   initdbScriptsConfigMap: envelope-game-mysql-init
   replication:
     enabled: false
+  master:
+    podAnnotations:
+      sidecar.istio.io/inject: "false"
