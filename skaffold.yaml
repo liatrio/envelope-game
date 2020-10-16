@@ -11,6 +11,9 @@ deploy:
       chartPath: ./charts/envelope-game
       artifactOverrides:
         image.name: envelope-game
+      setValueTemplates:
+        ingress.hosts[0].host: "{{ .INGRESS_HOST }}" 
+        ingress.hosts[0].paths[0]: /
 portForward:
 - resourceType: service
   resourceName: envelope-game
@@ -25,6 +28,8 @@ profiles:
     path: /deploy/helm/releases/0/setValues
     value:
       nodeEnv: development
+      ingress:
+        enabled: false
       mysql:
         master:
           persistence:
