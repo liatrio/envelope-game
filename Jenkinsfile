@@ -28,6 +28,7 @@ pipeline {
       steps {
         container('skaffold') {
           unstash 'build'
+          sh "helm repo add bitnami https://charts.bitnami.com/bitnami"
           sh "skaffold deploy -a image.json -n ${NAMESPACE}"
         }
         stageMessage "Successfully deployed to staging:\n${INGRESS_HOST}"
