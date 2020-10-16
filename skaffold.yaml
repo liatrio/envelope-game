@@ -1,0 +1,31 @@
+apiVersion: skaffold/v2beta8
+kind: Config	
+build:
+  artifacts:
+  - image: envelope-game
+  local: {}
+deploy:
+  helm:
+    releases:
+    - name: envelope-game
+      chartPath: ./charts/envelope-game
+      artifactOverrides:
+        image.name: envelope-game
+portForward:
+- resourceType: service
+  resourceName: envelope-game
+  port: 80
+  localPort: 8080
+profiles:
+- name: local
+  activation:
+  - kubeContext: docker-desktop
+  patches:
+  - op: add
+    path: /deploy/helm/releases/0/setValues
+    value:
+      nodeEnv: development
+      mysql:
+        master:
+          persistence:
+            enabled: false
