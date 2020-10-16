@@ -23,7 +23,7 @@ pipeline {
       }
       environment {
         NAMESPACE = "${env.stagingNamespace}"
-        INGRESS_HOST = "http://envelope-game.${env.stagingDomain}/"
+        INGRESS_HOST = "envelope-game.${env.stagingDomain}"
       }
       steps {
         container('skaffold') {
@@ -57,7 +57,7 @@ pipeline {
       }
       environment {
         NAMESPACE = "${env.productionNamespace}"
-        INGRESS_HOST = "http://envelope-game.${env.productionDomain}/"
+        INGRESS_HOST = "envelope-game.${env.productionDomain}"
       }
       steps {
         container('skaffold') {
