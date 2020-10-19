@@ -44,8 +44,7 @@ class MinimapStatus extends Component {
           </Col>
           <Col>
           {this.props.displayName}
-          </Col>
-          
+          </Col>         
         </Row>
       );
     }
