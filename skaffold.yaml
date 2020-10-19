@@ -5,6 +5,7 @@ build:
   - image: envelope-game
   local: {}
 deploy:
+  statusCheckDeadlineSeconds: 300
   helm:
     releases:
     - name: envelope-game
@@ -26,7 +27,10 @@ profiles:
   - op: add
     path: /deploy/helm/releases/0/setValues
     value:
-      nodeEnv: production
+      nodeEnv: development
+      resources:
+        limits:
+          cpu: 1
       istio:
         enabled: false
       mysql:
