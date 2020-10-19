@@ -55,7 +55,7 @@ class GameProgress extends Component {
             {facilID && this.state.seatsFullError &&
               <Row className= "justify-content-md-center">Error: Seats are not Full yet</Row>
             }
-            <Row className= "justify-content-md-center"> {this.props.t1Name} --- VS --- {this.props.t2Name}</Row>
+            {/* <Row className= "justify-content-md-center"> {this.props.t1Name} --- VS --- {this.props.t2Name}</Row> */}
             <Row className= "justify-content-md-center">
               ${this.props.team1Score}
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -65,6 +65,8 @@ class GameProgress extends Component {
             </Row>
             <Minimap
               envelopes={this.props.envelopes}
+              t1Name={this.props.t1Name}
+              t2Name={this.props.t2Name}
             >
             </Minimap>
           </Card.Body>

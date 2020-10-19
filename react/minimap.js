@@ -14,11 +14,12 @@ import MinimapStatus from './minimap_status'
 class Minimap extends Component {
 
   render() {
+
     return (
       <Container fluid>
-        <Row>Game Progress</Row>
         <Row>
           <Col lg={false}>
+          Team {this.props.t1Name} Progress
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={0}
@@ -38,7 +39,9 @@ class Minimap extends Component {
             >
             </MinimapStatus>
           </Col>
+
           <Col lg={false}>
+          Team {this.props.t2Name} Progress
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={0}
