@@ -5,8 +5,11 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
-import Carousel from 'react-bootstrap/Carousel';
 import Form from 'react-bootstrap/Form';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
+import Overlay from 'react-bootstrap/Overlay'
+
 
 import IndexCard from './assets/index-card.svg'
 import { Card } from 'react-bootstrap';
@@ -14,9 +17,9 @@ import { Card } from 'react-bootstrap';
 class Controls extends Component {
   constructor(props) {
     super(props);
+    this.myRef = React.createRef(null);
     this.state = {
       disabled: false,
-      show: true,
       activeIndex: 0,
       settingSeat: false,
       selectedSeat: null,
@@ -33,7 +36,6 @@ class Controls extends Component {
     this.selectSeat = this.selectSeat.bind(this);
     this.getSeats = this.getSeats.bind(this);
     this.chooseRandom = this.chooseRandom.bind(this);
-    this.hideControls = this.hideControls.bind(this);
   }
 
   async setTeamNames() {
@@ -86,12 +88,11 @@ class Controls extends Component {
     const json = await response.json();
     if (json.success) {
       console.log(this.state.selectedSeatNumber);
-      this.props.setSeatId(this.state.selectedSeatNumber, seat.isTeam1);
+      this.props.setSeatId(seat);
       // seat selected successfully
       this.setState({ seatSuccess: true });
       await new Promise(r => setTimeout(r, 500));
       this.setState({ activeIndex: 1 });
-
     } else {
       this.setState({
         settingSeat: false,
@@ -107,10 +108,6 @@ class Controls extends Component {
     this.selectSeat(randomSeat);
   }
 
-  hideControls() {
-    this.setState({ show: false });
-  }
-
   getSeats(isTeamOne) {
     // if seat information has loaded
     if (this.props.seats.length !== 0) {
@@ -124,7 +121,7 @@ class Controls extends Component {
           <li key={s.seatId}>
             <Button
               className={s.isTaken ? "chairFilled" : "chairNotFilled"}
-              disabled={s.isTaken || this.state.settingSeat}
+              disabled={s.isTaken || this.state.settingSeat || this.props.playerSeatId}
               variant={this.state.seatSuccess && this.state.selectedSeat === s.seatId ? "success" : s.isTaken ? "secondary" : "primary"}
               onClick={() => this.selectSeat(s)}
             >
@@ -137,7 +134,10 @@ class Controls extends Component {
                     role="status"
                     aria-hidden="true"
                   />
-                </div> : `Player ${s.seatNumber + 1}`}
+                </div> : s.displayName === null ?
+                  `Player ${s.seatNumber + 1}` :
+                  s.displayName
+              }
             </Button>
             <br></br>
           </li>
@@ -162,79 +162,71 @@ class Controls extends Component {
     return (
       <Modal
         backdrop="static"
-        show={this.props.seatsFull ? false : this.state.show}
-        onHide={this.hideControls}
+        show={this.props.seatsFull ? false : this.props.show}
+        onHide={this.props.toggleControls}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
         <Container fluid>
-          <Modal.Header>
+          <Modal.Header closeButton={!this.props.playerSeatId}>
             <Modal.Title id="contained-modal-title-vcenter">
               {this.state.modalStatus === 0 ? 'Choose a seat' : 'Enter display name'}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Carousel
-              indicators={false}
-              controls={false}
-              activeIndex={this.state.activeIndex}
-            >
-              <Carousel.Item>
-
-                {
-                  this.props.facilitatorId &&
-                  <TeamNameForm
-                    facilitatorId={this.props.facilitatorId}
-                    team1={this.props.team1}
-                    team2={this.props.team2}
-                  />
-                }
-                <Row className="justify-content-md-center">
-                  <Col md="auto">
-                    Team 1 Seats
+            {
+              this.props.facilitatorId &&
+              <TeamNameForm
+                facilitatorId={this.props.facilitatorId}
+                team1={this.props.team1}
+                team2={this.props.team2}
+              />
+            }
+            <Row className="justify-content-md-center">
+              <Col md="auto">
+                Team 1 Seats
                       <br></br>
-                    <ul className="chairColumn list-unstyled">
-                      {this.getSeats(true)}
-                    </ul>
-                  </Col>
-                  <Col md="auto">
-                    <Spinner
-                      as="span"
-                      animation="border"
-                      size="sm"
-                      role="status"
-                      aria-hidden="true"
-                      variant="primary"
-                      className={this.props.seats.length === 0 ? "visible" : "invisible"}
-                    />
-                  </Col>
-                  <Col md="auto">
-                    Team 2 Seats
+                <ul className="chairColumn list-unstyled">
+                  {this.getSeats(true)}
+                </ul>
+              </Col>
+              <Col md="auto">
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  variant="primary"
+                  className={this.props.seats.length === 0 ? "visible" : "invisible"}
+                />
+              </Col>
+              <Col md="auto">
+                Team 2 Seats
                         <br></br>
-                    <ul className="chairColumn list-unstyled">
-                      {this.getSeats(false)}
-                    </ul>
-                  </Col>
-                </Row>
-                <Row className="justify-content-md-center">
-                  <Button
-                    className={this.props.seats.length === 0 || this.props.seatsFull ? "invisible" : "visible"}
-                    disabled={this.state.settingSeat}
-                    variant={this.state.settingSeat ? "secondary" : "primary"}
-                    onClick={() => this.chooseRandom()}
-                  >
-                    Choose a random seat
-                  </Button>
-                </Row>
-              </Carousel.Item>
-              <Carousel.Item>
-                <PlayerNameForm
-                  hideControls={this.hideControls}
-                  seatId={this.state.selectedSeat}
-                ></PlayerNameForm>
-              </Carousel.Item>
-            </Carousel>
+                <ul className="chairColumn list-unstyled">
+                  {this.getSeats(false)}
+                </ul>
+              </Col>
+            </Row>
+            <Row className="justify-content-md-center">
+              <Button
+                className={this.props.seats.length === 0 || this.props.seatsFull ? "invisible" : "visible"}
+                disabled={this.state.settingSeat}
+                variant={this.state.settingSeat ? "secondary" : "primary"}
+                onClick={() => this.chooseRandom()}
+              >
+                Choose a random seat
+              </Button>
+            </Row>
+            <PlayerNameForm
+              toggleControls={this.props.toggleControls}
+              seatId={this.state.selectedSeat}
+              seatSucees={this.state.seatSuccess}
+            ></PlayerNameForm>
+
+
           </Modal.Body>
         </Container>
       </Modal>
@@ -326,6 +318,7 @@ class TeamNameForm extends Component {
 class PlayerNameForm extends Component {
   constructor(props) {
     super(props);
+    this.ref = React.createRef();
     this.state = {
       displayName: '',
       waiting: false,
@@ -352,7 +345,7 @@ class PlayerNameForm extends Component {
     const json = await response.json();
     console.log(json);
     this.setState({ waiting: false });
-    this.props.hideControls();
+    this.props.toggleControls();
   }
 
   render() {
@@ -360,6 +353,7 @@ class PlayerNameForm extends Component {
       <Col>
         <Form.Group>
           <Form.Control
+            ref={this.ref}
             type="text"
             placeholder="Display Name"
             name="playerName"

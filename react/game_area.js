@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import GameProgress from './game_progress';
 import ChairsCollection from './chair_collection';
 import Controls from './controls'
-import background, {ReactComponent as Background} from './assets/background.svg';
+import background, { ReactComponent as Background } from './assets/background.svg';
+import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
 
 import './index.css'
 
@@ -30,22 +32,17 @@ class GameArea extends Component {
       gameTick: 0,
       team1Score: 0,
       team2Score: 0,
+      showControls: false,
     }
     this.setSeatId = this.setSeatId.bind(this);
+    this.toggleControls = this.toggleControls.bind(this);
   }
 
-  setSeatId(seatNumber, isTeamOne) {
-    console.log("in 38");
-    console.log(this.state.seats);
-    console.log(seatNumber);
-    console.log(isTeamOne+ "41");
-    let seat = this.state.seats.find(i => {
-      return i.isTeam1 === isTeamOne && i.seatNumber === seatNumber;
-    });
+  setSeatId(seat) {
     console.log(seat);
     this.setState({
       seatId: seat.seatId,
-      mySeatNumber: seatNumber,
+      mySeatNumber: seat.seatNumber,
     });
     console.log(this.state.seatId);
   }
@@ -97,10 +94,33 @@ class GameArea extends Component {
     });
   }
 
+  toggleControls() {
+    this.setState({ showControls: !this.state.showControls});
+  }
+
   render() {
-    const style = {backgroundImage: `url(${background})`, backgroundRepeat: "no-repeat", backgroundAttachment: "fixed", backgroundSize: "150%", backgroundPosition: "50% 50%", position: "relative", width: "100%", height: "100vh"};
+    const style = {
+      backgroundImage: `url(${background})`,
+      backgroundRepeat: "no-repeat",
+      backgroundAttachment: "fixed",
+      backgroundSize: "150%",
+      backgroundPosition: "50% 50%",
+      position: "relative",
+      width: "100%",
+      height: "100vh"
+    };
     return (
       <div style={style}>
+        <Row className="justify-content-md-center">
+          <Button 
+            onClick={this.toggleControls}
+            disabled={this.state.seatId}
+            variant={this.state.seatId ? "secondary" : "primary"}
+            className={this.state.seatsFull ? "invisible" : "visible"}
+          >
+            Join Game
+          </Button>
+        </Row>
         <GameProgress
           facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
           gameID={this.props.match.params.gameId}
@@ -132,6 +152,8 @@ class GameArea extends Component {
           team2={this.state.team2}
           seatsFull={this.state.seatsFull}
           gameId={this.props.match.params.gameId}
+          show={this.state.showControls}
+          toggleControls={this.toggleControls}
         />
       </div>
     );
