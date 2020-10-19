@@ -7,11 +7,13 @@ import Col from 'react-bootstrap/Col'
 import MinimapStatus from './minimap_status'
 
 class Minimap extends Component {
-
-  getDisplayName(seatNumber) {
-    for (var s in this.props.seats) {
-      if (s.seatNumber === seatNumber) {
-        return s.displayName;
+  
+  getDisplayName(seatNumber, isTeam1) {
+    console.log(this.props.seats)
+    for (var s = 0; s < this.props.seats.length; s++) {
+      if (this.props.seats[s].seatNumber === seatNumber && this.props.seats[s].isTeam1 === isTeam1) {
+        console.log( "Display Name: " + this.props.seats[s].displayName);
+        return this.props.seats[s].displayName;
       }
     }
   }
@@ -29,20 +31,22 @@ class Minimap extends Component {
               seatNumber={0}
               isTeam1={1}
             >
-           {this.getDisplayName(0)}
             </MinimapStatus>
+            {this.getDisplayName(0, true)}
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={1}
               isTeam1={1}
             >
             </MinimapStatus>
+            {this.getDisplayName(1, true)}
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={2}
               isTeam1={1}
             >
             </MinimapStatus>
+            {this.getDisplayName(2, true)}
           </Col>
           <Col lg={false}>
             <MinimapStatus
@@ -51,18 +55,21 @@ class Minimap extends Component {
               isTeam1={0}
             >
             </MinimapStatus>
+            {this.getDisplayName(0, false)}
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={1}
               isTeam1={0}
             >
             </MinimapStatus>
+            {this.getDisplayName(1, false)}
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={2}
               isTeam1={0}
             >
             </MinimapStatus>
+            {this.getDisplayName(2, false)}
           </Col>
         </Row>
       </Container>
