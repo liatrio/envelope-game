@@ -13,7 +13,9 @@ COPY routes /envelope-game/routes
 COPY __tests__ /envelope-game/__tests__
 COPY __mocks__ /envelope-game/__mocks__
 
-# RUN npm test
+RUN npm test
+
+RUN npm run build
 
 # RUN npm prune --production
 
