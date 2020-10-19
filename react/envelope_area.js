@@ -56,7 +56,7 @@ class EnvelopeArea extends Component {
   async finishActiveEnvelope() {
     let finished = this.state.finishedEnvelopes;
     finished.add(this.state.activeEnvelope.envelopeId);
-    if (this.props.isTeam1) {
+    if (this.props.seat.isTeam1) {
       this.advanceEnvelopeSeat([this.state.activeEnvelope.envelopeId]);
     } else {
       let envelope = this.state.activeEnvelope;
@@ -81,17 +81,22 @@ class EnvelopeArea extends Component {
   }
 
   render() {
-    if (this.props.isTeam1) {
+    if (!this.props.seat) {
       return (
-        <Container>
+        <div></div>
+      )
+    }
+    if (this.props.seat.isTeam1) {
+      return (
+        <Container style={{width: "35%", top: "60%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>
           <Row>
             <Envelope
               updateEnvelope={this.updateEnvelope}
               activeEnvelope={this.state.activeEnvelope}
               gameId={this.props.gameId}
-              seatId={this.props.seatId}
-              seatNumber={this.props.seatNumber}
-              isTeam1={this.props.isTeam1}
+              seatId={this.props.seat.seatId}
+              seatNumber={this.props.seat.seatNumber}
+              isTeam1={this.props.seat.isTeam1}
               finishActiveEnvelope={this.finishActiveEnvelope}
               updateActiveEnvelope={this.updateActiveEnvelope}
             >
@@ -109,7 +114,7 @@ class EnvelopeArea extends Component {
       );
     } else {
       return (
-        <Container>
+        <Container style={{width: "35%", top: "60%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>
           <Row>
             <EnvelopeStack
               stackType={1}
@@ -123,9 +128,9 @@ class EnvelopeArea extends Component {
               updateEnvelope={this.updateEnvelope}
               activeEnvelope={this.state.activeEnvelope}
               gameId={this.props.gameId}
-              seatId={this.props.seatId}
-              seatNumber={this.props.seatNumber}
-              isTeam1={this.props.isTeam1}
+              seatId={this.props.seat.seatId}
+              seatNumber={this.props.seat.seatNumber}
+              isTeam1={this.props.seat.isTeam1}
               finishActiveEnvelope={this.finishActiveEnvelope}
               updateActiveEnvelope={this.updateActiveEnvelope}
             >

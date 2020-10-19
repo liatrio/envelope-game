@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import GameProgress from './game_progress';
-import ChairsCollection from './chair_collection';
+import EnvelopeArea from './envelope_area';
 import Controls from './controls'
 import background, {ReactComponent as Background} from './assets/background.svg';
 
@@ -10,6 +10,7 @@ class GameArea extends Component {
 
   constructor(props) {
     super(props);
+    this.gameID = props.match.params.gameId; 
     this.intervalId = '';
     this.state = {
       isStarted: false,
@@ -114,7 +115,7 @@ class GameArea extends Component {
           isStarted={this.state.isStarted}
           seatsFull={this.state.seatsFull}
         />
-        <ChairsCollection
+        {/* <ChairsCollection
           envelopes={this.state.envelopes}
           startTime={this.state.startTime}
           mySeatNumber={this.state.mySeatNumber}
@@ -122,7 +123,18 @@ class GameArea extends Component {
           gameId={this.props.match.params.gameId}
           setSeatId={(num, isTeamOne) => this.setSeatId(num, isTeamOne)}
           playerSeatId={this.state.seatId}
-        />
+        /> */}
+        <EnvelopeArea
+          envelopes={this.state.envelopes.filter((i) => {
+            return i.seatNumber === this.props.seatNumber
+          })}
+          teamId={this.state.teamId}
+          gameId={this.gameId}
+          seat={this.state.seats.find(i => {
+            return i.seatId === this.state.seatId;
+            })}
+          seatNumber={this.props.mySeatNumber}
+        ></EnvelopeArea>
         <Controls
           facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
           playerSeatId={this.state.seatId}
@@ -131,7 +143,7 @@ class GameArea extends Component {
           team1={this.state.team1}
           team2={this.state.team2}
           seatsFull={this.state.seatsFull}
-          gameId={this.props.match.params.gameId}
+          gameId={this.gameId}
         />
       </div>
     );
