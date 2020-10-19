@@ -113,6 +113,7 @@ class GameArea extends Component {
           t2Name={this.state.team2Name}
           isStarted={this.state.isStarted}
           seatsFull={this.state.seatsFull}
+          seats={this.state.seats}
         />
         <ChairsCollection
           envelopes={this.state.envelopes}

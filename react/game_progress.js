@@ -65,6 +65,7 @@ class GameProgress extends Component {
             </Row>
             <Minimap
               envelopes={this.props.envelopes}
+              seats={this.props.seats}
             >
             </Minimap>
           </Card.Body>
