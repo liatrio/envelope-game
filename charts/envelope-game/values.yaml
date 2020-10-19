@@ -12,8 +12,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-podAnnotations:
-  sidecar.istio.io/inject: "false"
+podAnnotations: {}
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -65,6 +64,7 @@ tolerations: []
 affinity: {}
 
 mysql:
+  existingSecret: envelope-game-mysql
   db:
     name: envelope-game
     user: envelope-game
@@ -72,8 +72,6 @@ mysql:
   replication:
     enabled: false
   master:
-    podAnnotations:
-      sidecar.istio.io/inject: "false"
     resources: 
       requests:
         cpu: 100m

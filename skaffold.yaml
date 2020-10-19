@@ -34,6 +34,7 @@ profiles:
       istio:
         enabled: false
       mysql:
+        existingSecret: ""
         master:
           persistence:
             enabled: false
