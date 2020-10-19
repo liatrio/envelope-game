@@ -5,7 +5,7 @@ metadata:
   name: "{{ .Release.Name }}"
 spec:
   hosts:
-  - {{ .Release.Name }}.{{ .Values.istio.host }}
+  - {{ .Values.istio.host }}
   gateways:
   - istio-system/app-gateway
   http:
