@@ -25,6 +25,10 @@ spec:
       serviceAccountName: {{ include "envelope-game.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: wait-for-dbserver
+          image: bitnami/kubectl:1.15
+          args: ['wait','--for=condition=ready','pod/{{ .Release.Name }}-mysql-master-0','--timeout=300s']
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
