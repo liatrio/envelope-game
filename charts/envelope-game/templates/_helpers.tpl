@@ -49,14 +49,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "envelope-game.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "envelope-game.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "envelope-game.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
