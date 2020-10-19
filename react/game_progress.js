@@ -46,26 +46,32 @@ class GameProgress extends Component {
         <Card.Img as={Corkboard} alt="Scoreboard"/>    
         <Card.ImgOverlay bsPrefix='card-img-overlay CardImgOverlay'>
           <Card.Body>
-            <Row className= "justify-content-md-center">Money Earned </Row>
-            {facilID &&
+            {/* <Row className= "justify-content-md-center">Money Earned </Row> */}
+            {/* {facilID &&
               <Row className= "justify-content-md-center">
                 <FontAwesomeIcon className="playIcon" icon={ic} spin onClick={this.props.seatsFull ? this.togglePlay : this.seatsNotFull} disabled={this.state.disabled} />
               </Row>
-            }
+            } */}
             {facilID && this.state.seatsFullError &&
               <Row className= "justify-content-md-center">Error: Seats are not Full yet</Row>
             }
-            <Row className= "justify-content-md-center"> {this.props.t1Name} --- VS --- {this.props.t2Name}</Row>
+            {/* <Row className= "justify-content-md-center"> {this.props.t1Name} --- VS --- {this.props.t2Name}</Row> */}
             <Row className= "justify-content-md-center">
-              ${this.props.team1Score}
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    {this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick ? this.props.gameTick % 60 : '0'}
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    ${this.props.team2Score}
+              {/* ${this.props.team1Score}
+                    &nbsp;&nbsp;&nbsp;&nbsp; */}
+                    {/* {this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick ? this.props.gameTick % 60 : '0'} */}
+                    {/* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    ${this.props.team2Score} */}
             </Row>
             <Minimap
               envelopes={this.props.envelopes}
               seats={this.props.seats}
+              t1Name={this.props.t1Name}
+              t2Name={this.props.t2Name}
+              team1Score={this.props.team1Score}
+              team2Score={this.props.team2Score}
+              gameTick={this.props.gameTick}
+              
             >
             </Minimap>
           </Card.Body>
