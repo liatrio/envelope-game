@@ -12,8 +12,7 @@ deploy:
       artifactOverrides:
         image.name: envelope-game
       setValueTemplates:
-        ingress.hosts[0].host: "{{ .INGRESS_HOST }}" 
-        ingress.hosts[0].paths[0]: /
+        istio.host: "{{ .INGRESS_HOST }}" 
 portForward:
 - resourceType: service
   resourceName: envelope-game
@@ -27,8 +26,8 @@ profiles:
   - op: add
     path: /deploy/helm/releases/0/setValues
     value:
-      nodeEnv: development
-      ingress:
+      nodeEnv: production
+      istio:
         enabled: false
       mysql:
         master:
