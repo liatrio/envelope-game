@@ -42,7 +42,8 @@ class MinimapStatus extends Component {
               {this.props.envelopes ? this.getReadyEnveleopes() : 0}
             </Badge>              
           </Col>
-          <Col className="invisible">
+          <Col>
+          {this.props.displayName}
           </Col>
           
         </Row>
@@ -51,6 +52,7 @@ class MinimapStatus extends Component {
 
     return (
       <Row>
+        {this.props.displayName}
         <Col>
         <EnvToDo style={{padding: "3px"}}/>
           <Badge>
