@@ -18,6 +18,7 @@ class GameArea extends Component {
 
   constructor(props) {
     super(props);
+    this.gameID = props.match.params.gameId; 
     this.intervalId = '';
     this.state = {
       isStarted: false,
@@ -159,17 +160,19 @@ class GameArea extends Component {
           t2Name={this.state.team2Name}
           isStarted={this.state.isStarted}
           seatsFull={this.state.seatsFull}
+          seats={this.state.seats}
         />
         <EnvelopeArea
           envelopes={this.state.envelopes.filter((i) => {
             return i.seatNumber === this.props.seatNumber
           })}
           teamId={this.state.teamId}
-          isTeam1={this.state.isTeam1}
-          gameId={this.state.gameId}
-          seatId={this.state.seatId}
-          seatNumber={this.state.seatNumber}
-        />
+          gameId={this.gameId}
+          seat={this.state.seats.find(i => {
+            return i.seatId === this.state.seatId;
+            })}
+          seatNumber={this.props.mySeatNumber}
+        ></EnvelopeArea>
         <Modal
           show={this.state.joinGameControls}
           size="lg"

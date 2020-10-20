@@ -83,6 +83,7 @@ class EnvelopeStack extends Component {
           disabled={this.isDisabled()}
           onClick={this.updateStack}
           size="lg"
+          style={{display: "contents"}}
         >
           <div >
             {/* <FontAwesomeIcon
