@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
-import GameProgress from './game_progress';
-import Controls from './controls'
-import background, { ReactComponent as Background } from './assets/background.svg';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
+import Cookies from 'universal-cookie';
+import nanoid from 'nanoid/non-secure';
 
+import background, { ReactComponent as Background } from './assets/background.svg';
+import Controls from './controls'
 import EnvelopeArea from './envelope_area';
-import PlayerNameForm from './player_name';
 import FacilitatorControls from './facilitator_controls';
+import GameProgress from './game_progress';
+import PlayerNameForm from './player_name';
 
 
 
@@ -18,9 +20,11 @@ class GameArea extends Component {
 
   constructor(props) {
     super(props);
-    this.gameID = props.match.params.gameId; 
+    this.cookies = new Cookies();
+    this.gameID = props.match.params.gameId;
     this.intervalId = '';
     this.state = {
+      session: undefined,
       isStarted: false,
       seats: [],
       team1: '',
@@ -170,7 +174,7 @@ class GameArea extends Component {
           gameId={this.gameId}
           seat={this.state.seats.find(i => {
             return i.seatId === this.state.seatId;
-            })}
+          })}
           seatNumber={this.props.mySeatNumber}
         ></EnvelopeArea>
         <Modal
