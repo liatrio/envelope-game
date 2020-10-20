@@ -56,9 +56,9 @@ class Minimap extends Component {
             </MinimapStatus>
             
           </Col>
-          <Col md="auto">
+          {/* <Col md="auto">
             {this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick ? this.props.gameTick % 60 : '0'}
-          </Col>
+          </Col> */}
           <Col lg={false}>
           <h5>Team {this.props.t2Name} Progress</h5>
             <h7>Money Earned: ${this.props.team2Score}</h7><br/> 

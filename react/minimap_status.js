@@ -32,44 +32,54 @@ class MinimapStatus extends Component {
   render() {
     if (this.props.isTeam1) {
       return (
-        <Row>
-          <Col>
+        <div>
+        <Row style={{fontFamily: "Courier", textAlign: "center"}}>{this.props.displayName}</Row>
+        <Row md={5} lg={5} sm={5}>
+          <Col style={{padding: "0"}}>
+          <EnvToDo style={{padding: "3px"}}/>
+          </Col>
+          <Col md="auto" lg="auto" sm="auto" style={{padding: "0"}}>
+          <Badge>
+              {this.props.envelopes ? this.getReadyEnveleopes() : 0}
+            </Badge>
+          </Col>
+          <Col style={{padding: "0"}}>
             <EnvClosed style={{padding: "3px"}}/>
           </Col>
-          <Col>
-            <EnvToDo style={{padding: "3px"}}/>
-            <Badge>
-              {this.props.envelopes ? this.getReadyEnveleopes() : 0}
-            </Badge>              
+          <Col style={{padding: "0"}}>
           </Col>
-          <Col>
-          {this.props.displayName}
-          </Col>         
+          <Col md="auto" lg="auto" sm="auto" style={{padding: "0"}}>
+          </Col>
         </Row>
+      </div>
       );
     }
 
     return (
-      <Row>
-        {this.props.displayName}
-        <Col>
-        <EnvToDo style={{padding: "3px"}}/>
+      <div>
+        <Row style={{fontFamily: "Courier", textAlign: "center"}}>{this.props.displayName}</Row>
+        <Row md={5} lg={5} sm={5}>
+          <Col style={{padding: "0"}}>
+          <EnvToDo style={{padding: "3px"}}/>
+          </Col>
+          <Col md="auto" lg="auto" sm="auto" style={{padding: "0"}}>
           <Badge>
-            {this.props.envelopes ? this.getReadyEnveleopes() : 0}
-          </Badge>
-        </Col>
-        <Col>
-          <EnvClosed style={{padding: "3px"}}/>
-        </Col>
-        <Col>
-        <EnvDone style={{padding: "3px"}}/>
+              {this.props.envelopes ? this.getReadyEnveleopes() : 0}
+            </Badge>
+          </Col>
+          <Col style={{padding: "0"}}>
+            <EnvClosed style={{padding: "3px"}}/>
+          </Col>
+          <Col style={{padding: "0"}}>
+            <EnvDone style={{padding: "3px"}}/>
+          </Col>
+          <Col md="auto" lg="auto" sm="auto" style={{padding: "0"}}>
           <Badge>
-            {this.props.envelopes ? this.getFinishedEnvelopes() : 0}
-          </Badge>
-        </Col>
-        
-        
-      </Row>
+              {this.props.envelopes ? this.getFinishedEnvelopes() : 0}
+            </Badge>
+          </Col>
+        </Row>
+      </div>
     );
 
   }
