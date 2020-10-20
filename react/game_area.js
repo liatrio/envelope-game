@@ -172,7 +172,7 @@ class GameArea extends Component {
             return i.seatId === this.state.seatId;
             })}
           seatNumber={this.props.mySeatNumber}
-        ></EnvelopeArea>
+        ></EnvelopeArea>     
         <Modal
           show={this.state.joinGameControls}
           size="lg"
