@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import GameProgress from './game_progress';
-import ChairsCollection from './chair_collection';
 import Controls from './controls'
 import background, { ReactComponent as Background } from './assets/background.svg';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
 
+import EnvelopeArea from './envelope_area';
 import PlayerNameForm from './player_name';
-import TeamNameForm from './team_name';
 import FacilitatorControls from './facilitator_controls';
 
 
@@ -161,16 +160,16 @@ class GameArea extends Component {
           isStarted={this.state.isStarted}
           seatsFull={this.state.seatsFull}
         />
-        <ChairsCollection
-          envelopes={this.state.envelopes}
-          startTime={this.state.startTime}
-          mySeatNumber={this.state.mySeatNumber}
-          seats={this.state.seats}
-          gameId={this.props.match.params.gameId}
-          setSeatId={(seat) => this.setSeatId(seat)}
-          playerSeatId={this.state.seatId}
+        <EnvelopeArea
+          envelopes={this.state.envelopes.filter((i) => {
+            return i.seatNumber === this.props.seatNumber
+          })}
+          teamId={this.state.teamId}
+          isTeam1={this.state.isTeam1}
+          gameId={this.state.gameId}
+          seatId={this.state.seatId}
+          seatNumber={this.state.seatNumber}
         />
-
         <Modal
           show={this.state.joinGameControls}
           size="lg"
