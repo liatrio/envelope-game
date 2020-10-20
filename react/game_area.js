@@ -173,7 +173,7 @@ class GameArea extends Component {
             })}
           seatNumber={this.props.mySeatNumber}
         ></EnvelopeArea> 
-        <div style={{top: "65%", width: "60%", left: "20%", position: "absolute"}}>
+        <div style={{top: "65%", width: "60%", left: "20%", zIndex: 0,position: "absolute"}}>
           <Row>
           <Table></Table>
           </Row>  
