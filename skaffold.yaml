@@ -1,0 +1,40 @@
+apiVersion: skaffold/v2beta8
+kind: Config	
+build:
+  artifacts:
+  - image: envelope-game
+  local: {}
+deploy:
+  statusCheckDeadlineSeconds: 300
+  helm:
+    releases:
+    - name: envelope-game
+      chartPath: ./charts/envelope-game
+      artifactOverrides:
+        image.name: envelope-game
+      setValueTemplates:
+        istio.host: "{{ .INGRESS_HOST }}" 
+portForward:
+- resourceType: service
+  resourceName: envelope-game
+  port: 80
+  localPort: 8080
+profiles:
+- name: local
+  activation:
+  - kubeContext: docker-desktop
+  patches:
+  - op: add
+    path: /deploy/helm/releases/0/setValues
+    value:
+      nodeEnv: development
+      resources:
+        limits:
+          cpu: 1
+      istio:
+        enabled: false
+      mysql:
+        existingSecret: ""
+        master:
+          persistence:
+            enabled: false
