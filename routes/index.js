@@ -150,6 +150,7 @@ router.post('/api/set-team-name', (req, res) => {
 
   db.query(sql, function (err, result) {
     if (err) throw err;
+    console.log(result);
     if (result.changedRows !== 1) {
       res.send({ success: false });
     } else {
