@@ -213,6 +213,7 @@ class GameArea extends Component {
             </Modal.Header>
             <Modal.Body>
               <PlayerNameForm
+                seatSuccess={true}
                 seatId={this.state.playerSeatId}
                 toggleControls={this.togglePlayerName}
               />

@@ -13,7 +13,6 @@ class Controls extends Component {
     super(props);
     this.state = {
       disabled: false,
-      activeIndex: 0,
       settingSeat: false,
       selectedSeat: null,
       seatSuccess: false,
@@ -38,8 +37,6 @@ class Controls extends Component {
       this.props.setSeatId(seat);
       // seat selected successfully
       this.setState({ seatSuccess: true });
-      await new Promise(r => setTimeout(r, 500));
-      this.setState({ activeIndex: 1 });
     } else {
       this.setState({
         settingSeat: false,
@@ -140,7 +137,7 @@ class Controls extends Component {
             className={this.props.seats.length === 0 || this.props.seatsFull ? "invisible" : "visible"}
             disabled={this.state.settingSeat}
             variant={this.state.settingSeat ? "secondary" : "primary"}
-            onClick={() => this.chooseRandom()}
+            onClick={this.chooseRandom}
           >
             Choose a random seat
           </Button>

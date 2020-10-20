@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 class PlayerNameForm extends Component {
   constructor(props) {
@@ -20,6 +22,10 @@ class PlayerNameForm extends Component {
   }
 
   async setPlayerName() {
+    if (!this.props.seatSuccess) {
+      console.log("choose seat first");
+      return;
+    }
     this.setState({ waiting: true });
     const requestOptions = {
       method: 'POST',
@@ -30,8 +36,7 @@ class PlayerNameForm extends Component {
       })
     };
     const response = await fetch('/api/set-player-name', requestOptions);
-    const json = await response.json();
-    console.log(json);
+    await response.json();
     this.setState({ waiting: false });
     this.props.toggleControls();
   }
@@ -43,12 +48,17 @@ class PlayerNameForm extends Component {
           <Form.Control
             ref={this.ref}
             type="text"
-            placeholder="Display Name"
+            placeholder="Enter display name"
             name="playerName"
             onChange={this.playerNameChange}
           />
         </Form.Group>
-        <Button onClick={this.setPlayerName} disabled={this.state.waiting}>Submit</Button>
+        <Button 
+          onClick={this.setPlayerName} 
+          disabled={this.state.waiting}
+        >
+          Submit
+        </Button>
       </Col>
     );
   }
