@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faEnvelopeOpen, faEnvelopeOpenText, faEnvelopeSquare, faMailBulk } from '@fortawesome/free-solid-svg-icons'
-import { faEnvelope as faEnvelopeClear } from '@fortawesome/free-regular-svg-icons'
 
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import {ReactComponent as EnvClosed} from './assets/icon_stack_current.svg';
+import {ReactComponent as EnvToDo} from './assets/icon_stack_to-do.svg';
+import {ReactComponent as EnvDone} from './assets/icon_stack_finished.svg';
 
 import Badge from 'react-bootstrap/Badge'
 
@@ -34,26 +34,16 @@ class MinimapStatus extends Component {
       return (
         <Row>
           <Col>
+            <EnvClosed style={{padding: "3px"}}/>
           </Col>
           <Col>
-            <FontAwesomeIcon
-              icon={faEnvelope}
-            >
-            </FontAwesomeIcon>
+            <EnvToDo style={{padding: "3px"}}/>
+            <Badge>
+              {this.props.envelopes ? this.getReadyEnveleopes() : 0}
+            </Badge>
           </Col>
-          <Col>
-            <Row>
-              <Badge>
-                {this.props.envelopes ? this.getReadyEnveleopes() : 0}
-              </Badge>
-              <FontAwesomeIcon
-                icon={faMailBulk}
-              >
-              </FontAwesomeIcon>
-            </Row>
-
-
-          </Col>
+          <Col></Col>
+          
         </Row>
       );
     }
@@ -61,33 +51,22 @@ class MinimapStatus extends Component {
     return (
       <Row>
         <Col>
-          <Row>
-            <FontAwesomeIcon
-              icon={faMailBulk}
-            >
-            </FontAwesomeIcon>
-            <Badge>
-              {this.props.envelopes ? this.getReadyEnveleopes() : 0}
-            </Badge>
-          </Row>
-
+        <EnvToDo style={{padding: "3px"}}/>
+          <Badge>
+            {this.props.envelopes ? this.getReadyEnveleopes() : 0}
+          </Badge>
         </Col>
         <Col>
-          <FontAwesomeIcon
-            icon={faEnvelope}
-          >
-          </FontAwesomeIcon>
+          <EnvClosed style={{padding: "3px"}}/>
         </Col>
-
         <Col>
-          <FontAwesomeIcon
-            icon={faMailBulk}
-          >
-          </FontAwesomeIcon>
+        <EnvDone style={{padding: "3px"}}/>
           <Badge>
             {this.props.envelopes ? this.getFinishedEnvelopes() : 0}
           </Badge>
         </Col>
+        
+        
       </Row>
     );
 

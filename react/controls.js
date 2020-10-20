@@ -1,163 +1,154 @@
 import React, { Component } from 'react'
-import { Modal, Button } from "react-bootstrap";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Spinner from 'react-bootstrap/Spinner';
+import Button from 'react-bootstrap/Button';
 
+import PlayerNameForm from './player_name';
 
+import IndexCard from './assets/index-card.svg';
 
-class MyVerticallyCenteredModal extends Component {
+class Controls extends Component {
   constructor(props) {
     super(props);
     this.state = {
       disabled: false,
-      show: true,
-      showModal: true,
+      settingSeat: false,
+      selectedSeat: null,
+      seatSuccess: false,
+      selectedSeatNumber: null,
     }
-    
-        // bind any handlers in the constructor
-        this.teamOneChange = this.teamOneChange.bind(this);
-        this.teamTwoChange = this.teamTwoChange.bind(this);
-        this.setTeamOneName = this.setTeamOneName.bind(this);
-        this.setTeam2Name = this.setTeam2Name.bind(this);
-        this.setTeamNames = this.setTeamNames.bind(this);
-  }
-  async setTeamNames() {
-    await this.setTeamOneName();
-    await this.setTeam2Name();
-    this.props.onHide();
-    this.setState({show: false});
-    this.setState({showModal: false});
+    this.selectSeat = this.selectSeat.bind(this);
+    this.getSeats = this.getSeats.bind(this);
+    this.chooseRandom = this.chooseRandom.bind(this);
   }
 
-  teamOneChange(event) {
-    this.setState({ teamOneName: event.target.value });
-  }
-
-  teamTwoChange(event) {
-    this.setState({ team2Name: event.target.value });
-  }
-
-  async setTeamOneName() {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        teamName: this.state.teamOneName,
-        teamId: this.props.team1,
-        facilitatorId: this.props.facilitatorId,
-      })
-    };
-    const response = await fetch('/api/set-team-name', requestOptions);
+  async selectSeat(seat) {
+    this.setState({
+      settingSeat: true,
+      selectedSeat: seat.seatId,
+      selectedSeatNumber: seat.seatNumber
+    });
+    const request = `/api/choose-seat/${seat.teamId}/${seat.seatId}`;
+    const response = await fetch(request);
     const json = await response.json();
-    console.log(requestOptions);
-    console.log(json);
+    if (json.success) {
+      console.log(this.state.selectedSeatNumber);
+      this.props.setSeatId(seat);
+      // seat selected successfully
+      this.setState({ seatSuccess: true });
+    } else {
+      this.setState({
+        settingSeat: false,
+        selectedSeat: null,
+      });
+    }
   }
 
-  async setTeam2Name() {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        teamName: this.state.team2Name,
-        teamId: this.props.team2,
-        facilitatorId: this.props.facilitatorId,
-      })
-    };
-    await fetch('/api/set-team-name', requestOptions);
+  chooseRandom() {
+    const randomSeat = this.props.seats.find(i => {
+      return !i.isTaken;
+    });
+    this.selectSeat(randomSeat);
   }
 
-
-  render() {
-    return (
-      <Modal
-        {...this.props}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Choose Team Names
-              </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <form>
-            <label>
-              Team One Name: <input type="text" onChange={this.teamOneChange} name="teamOneName" />
-              <br />
-              Team Two Name: <input type="text" onChange={this.teamTwoChange} name="team2Name" />
-            </label>
-          </form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={this.setTeamNames}>Submit</Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  }
-}
-
-class Controls extends Component {
-  constructor() {
-    super();
-    this.state = {
-      disabled: false,
-      teamOneName: '',
-      team2Name: '',
-      facilitatorId: '',
-      modalShow: true,
-    };
-  }
-
-  teamOneChange(event) {
-    this.setState({ teamOneName: event.target.value });
-  }
-
-  teamTwoChange(event) {
-    this.setState({ team2Name: event.target.value });
-  }
-
-
-  async setTeamOneName() {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        teamName: this.state.teamOneName,
-        teamId: this.props.team1,
-        facilitatorId: this.props.facilitatorId,
-      })
-    };
-    await fetch('/api/set-team-name', requestOptions);
-  }
-
-  async setTeam2Name() {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        teamName: this.state.team2Name,
-        teamId: this.props.team2,
-        facilitatorId: this.props.facilitatorId,
-      })
-    };
-    await fetch('/api/set-team-name', requestOptions);
+  getSeats(isTeamOne) {
+    // if seat information has loaded
+    if (this.props.seats.length !== 0) {
+      // check if we should dismiss the modal
+      return this.props.seats.filter(i => {
+        return i.isTeam1 === isTeamOne;
+      }).sort((a, b) => {
+        return (a.seatNumber > b.seatNumber ? 1 : -1);
+      }).map(s => {
+        return (
+          <li key={s.seatId}>
+            <Button
+              className={s.isTaken ? "chairFilled" : "chairNotFilled"}
+              disabled={s.isTaken || this.state.settingSeat || this.props.playerSeatId}
+              variant={this.state.seatSuccess && this.state.selectedSeat === s.seatId ? "success" : s.isTaken ? "secondary" : "primary"}
+              onClick={() => this.selectSeat(s)}
+            >
+              {this.state.selectedSeat === s.seatId ?
+                <div>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                </div> : s.displayName === null ?
+                  `Player ${s.seatNumber + 1}` :
+                  s.displayName
+              }
+            </Button>
+            <br></br>
+          </li>
+        );
+      });
+    } else {
+      // return placeholder buttons to prevent "pop in"
+      return [...Array(3).keys()].map(i => {
+        return (
+          <li key={i}>
+            <Button
+              disabled={true}
+              className="invisible"
+            >Player 0</Button>
+          </li>
+        );
+      });
+    }
   }
 
   render() {
-
-    let modalClose = () => this.setState({ modalShow: false });
     return (
       <div>
-
-        <MyVerticallyCenteredModal
-          facilitatorId = {this.props.facilitatorId}
-          team1 = {this.props.team1}
-          team2 = {this.props.team2}
-          show = {this.state.modalShow}
-          onHide={modalClose}
-        />
-
+        <Row className="justify-content-md-center">
+          <Col md="auto">
+            Team 1 Seats
+                      <br></br>
+            <ul className="chairColumn list-unstyled">
+              {this.getSeats(true)}
+            </ul>
+          </Col>
+          <Col md="auto">
+            <Spinner
+              as="span"
+              animation="border"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+              variant="primary"
+              className={this.props.seats.length === 0 ? "visible" : "invisible"}
+            />
+          </Col>
+          <Col md="auto">
+            Team 2 Seats
+            <br></br>
+            <ul className="chairColumn list-unstyled">
+              {this.getSeats(false)}
+            </ul>
+          </Col>
+        </Row >
+        <Row className="justify-content-md-center">
+          <Button
+            className={this.props.seats.length === 0 || this.props.seatsFull ? "invisible" : "visible"}
+            disabled={this.state.settingSeat}
+            variant={this.state.settingSeat ? "secondary" : "primary"}
+            onClick={this.chooseRandom}
+          >
+            Choose a random seat
+          </Button>
+        </Row>
+        <PlayerNameForm
+          toggleControls={this.props.toggleControls}
+          seatId={this.state.selectedSeat}
+          seatSucees={this.state.seatSuccess}
+        ></PlayerNameForm>
       </div>
-    )
+    );
   }
 }
 
