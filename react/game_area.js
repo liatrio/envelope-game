@@ -1,8 +1,16 @@
 import React, { Component } from 'react'
 import GameProgress from './game_progress';
-import EnvelopeArea from './envelope_area';
 import Controls from './controls'
-import background, {ReactComponent as Background} from './assets/background.svg';
+import background, { ReactComponent as Background } from './assets/background.svg';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Modal from 'react-bootstrap/Modal';
+
+import EnvelopeArea from './envelope_area';
+import PlayerNameForm from './player_name';
+import FacilitatorControls from './facilitator_controls';
+
+
 
 import './index.css'
 
@@ -31,22 +39,22 @@ class GameArea extends Component {
       gameTick: 0,
       team1Score: 0,
       team2Score: 0,
+      joinGameControls: false,
+      facilitatorControls: false,
+      playerNameControls: false,
     }
     this.setSeatId = this.setSeatId.bind(this);
+    this.toggleJoinGame = this.toggleJoinGame.bind(this);
+    this.togglePlayerName = this.togglePlayerName.bind(this);
+    this.toggleFacilitatorControls = this.toggleFacilitatorControls.bind(this);
+
   }
 
-  setSeatId(seatNumber, isTeamOne) {
-    console.log("in 38");
-    console.log(this.state.seats);
-    console.log(seatNumber);
-    console.log(isTeamOne+ "41");
-    let seat = this.state.seats.find(i => {
-      return i.isTeam1 === isTeamOne && i.seatNumber === seatNumber;
-    });
+  setSeatId(seat) {
     console.log(seat);
     this.setState({
       seatId: seat.seatId,
-      mySeatNumber: seatNumber,
+      mySeatNumber: seat.seatNumber,
     });
     console.log(this.state.seatId);
   }
@@ -98,10 +106,48 @@ class GameArea extends Component {
     });
   }
 
+  toggleJoinGame() {
+    this.setState({ joinGameControls: !this.state.joinGameControls });
+  }
+
+  togglePlayerName() {
+    this.setState({ playerNameControls: !this.state.playerNameControls });
+  }
+
+  toggleFacilitatorControls() {
+    this.setState({ facilitatorControls: !this.state.facilitatorControls });
+  }
+
   render() {
-    const style = {backgroundImage: `url(${background})`, backgroundRepeat: "no-repeat", backgroundAttachment: "fixed", backgroundSize: "150%", backgroundPosition: "50% 50%", position: "relative", width: "100%", height: "100vh"};
+    const style = {
+      backgroundImage: `url(${background})`,
+      backgroundRepeat: "no-repeat",
+      backgroundAttachment: "fixed",
+      backgroundSize: "150%",
+      backgroundPosition: "50% 50%",
+      position: "relative",
+      width: "100%",
+      height: "100vh"
+    };
     return (
       <div style={style}>
+        <div className="justify-content-md-center">
+          <Button
+            onClick={this.state.seatId ? this.togglePlayerName : this.toggleJoinGame}
+            className={this.state.seatsFull && !this.state.playerSeatId ? "invisible" : "visible"}
+          >
+            {this.state.seatId ? "Set Display Name" : "Join Game"}
+          </Button>
+
+          {this.props.location.state && this.props.location.state.facilitatorId &&
+            <Button
+              onClick={this.toggleFacilitatorControls}
+              variant="primary"
+            >
+              Facilitator Controls
+          </Button>
+          }
+        </div>
         <GameProgress
           facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
           gameID={this.props.match.params.gameId}
@@ -116,15 +162,6 @@ class GameArea extends Component {
           seatsFull={this.state.seatsFull}
           seats={this.state.seats}
         />
-        {/* <ChairsCollection
-          envelopes={this.state.envelopes}
-          startTime={this.state.startTime}
-          mySeatNumber={this.state.mySeatNumber}
-          seats={this.state.seats}
-          gameId={this.props.match.params.gameId}
-          setSeatId={(num, isTeamOne) => this.setSeatId(num, isTeamOne)}
-          playerSeatId={this.state.seatId}
-        /> */}
         <EnvelopeArea
           envelopes={this.state.envelopes.filter((i) => {
             return i.seatNumber === this.props.seatNumber
@@ -136,16 +173,80 @@ class GameArea extends Component {
             })}
           seatNumber={this.props.mySeatNumber}
         ></EnvelopeArea>
-        <Controls
-          facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
-          playerSeatId={this.state.seatId}
-          setSeatId={(num, isTeamOne) => this.setSeatId(num, isTeamOne)}
-          seats={this.state.seats}
-          team1={this.state.team1}
-          team2={this.state.team2}
-          seatsFull={this.state.seatsFull}
-          gameId={this.gameId}
-        />
+        <Modal
+          show={this.state.joinGameControls}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered={true}
+          onHide={this.toggleJoinGame}
+        >
+          <Container fluid>
+            <Modal.Header closeButton>
+              <Modal.Title id="contained-modal-title-vcenter">
+                Choose an open position
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Controls
+                facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
+                playerSeatId={this.state.seatId}
+                setSeatId={(seat) => this.setSeatId(seat)}
+                seats={this.state.seats}
+                seatsFull={this.state.seatsFull}
+                gameId={this.props.match.params.gameId}
+                show={this.state.joinGameControls}
+                toggleControls={this.toggleJoinGame}
+              />
+            </Modal.Body>
+          </Container>
+        </Modal>
+
+        <Modal
+          show={this.state.playerNameControls}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          onHide={this.togglePlayerName}
+        >
+          <Container fluid>
+            <Modal.Header closeButton>
+              <Modal.Title id="contained-modal-title-vcenter">
+                Set Display Name
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <PlayerNameForm
+                seatSuccess={true}
+                seatId={this.state.playerSeatId}
+                toggleControls={this.togglePlayerName}
+              />
+            </Modal.Body>
+          </Container>
+        </Modal>
+        {this.props.location.state && this.props.location.state.facilitatorId &&
+          <Modal
+            show={this.state.facilitatorControls}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            onHide={this.toggleFacilitatorControls}
+          >
+            <Container fluid>
+              <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                  Facilitator Controls
+              </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <FacilitatorControls
+                  seats={this.state.seats}
+                  team1={this.state.team1}
+                  team2={this.state.team2}
+                  facilitatorId={this.props.location.state.facilitatorId}
+                  toggleControls={this.toggleFacilitatorControls}
+                />
+              </Modal.Body>
+            </Container>
+          </Modal>
+        }
       </div>
     );
   }
