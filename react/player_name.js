@@ -22,7 +22,7 @@ class PlayerNameForm extends Component {
   }
 
   async setPlayerName() {
-    if (!this.props.seatSuccess) {
+    if (!this.props.seatId) {
       console.log("choose seat first");
       return;
     }
@@ -55,7 +55,7 @@ class PlayerNameForm extends Component {
         </Form.Group>
         <Button 
           onClick={this.setPlayerName} 
-          disabled={this.state.waiting}
+          disabled={this.state.waiting || !this.props.seatId }
         >
           Submit
         </Button>
