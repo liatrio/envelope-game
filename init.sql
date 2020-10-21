@@ -43,7 +43,6 @@ CREATE TABLE SEATS
   session_id VARCHAR(21),
   PRIMARY KEY (seat_id),
   FOREIGN KEY (game_id) REFERENCES GAME(game_id),
-  FOREIGN KEY (facilitator_session) REFERENCES GAME(facilitator_session),
   FOREIGN KEY (team_id) REFERENCES TEAMS(team_id)
 );
 

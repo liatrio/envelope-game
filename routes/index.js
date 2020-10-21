@@ -121,13 +121,12 @@ router.get('/api/join/:gameId', (req, res) => {
 
 router.get('/api/game-state/:id', (req, res) => {
   let sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, is_started, ENVELOPES.game_id, team_id, 
-             GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick,
+             GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick
              FROM ENVELOPES 
-             INNER JOIN GAME on GAME.game_id = ENVELOPES.game_id
+             INNER JOIN GAME ON GAME.game_id = ENVELOPES.game_id
              WHERE ENVELOPES.game_id = '${req.params.id}'`;
   db.query(sql, function (err, result) {
     if (err) throw err;
-
     res.send({
       gameId: result[0].gameId,
       startTime: result[0].start_time,
@@ -273,17 +272,20 @@ router.get('/api/remove-player/:seatId', (req, res) => {
   const session = req.universalCookies.get('session');
   if (facil) {
     let sql = `UPDATE SEATS
-             SET is_taken = 0, session_id = ${null}, display_name = ''
-             WHERE seat_id = ${req.params.seatId}
-             AND facilitator_session = ${session}`;
-
+             INNER JOIN GAME ON SEATS.game_id = GAME.game_id
+             SET SEATS.is_taken = 0, SEATS.session_id = ${null}, SEATS.display_name = ${null}
+             WHERE SEATS.seat_id = '${req.params.seatId}'
+             AND GAME.facilitator_session = '${session}'`;
     db.query(sql, function (err, result) {
       if (err) throw err;
-      res.send(200);
+      console.log('removed player');
+      if (result.changedRows === 1) {
+        res.send({ success: true });
+      } else {
+        res.send({ success: false });
+      }
     });
   }
-  res.send(200);
-
 });
 
 if (module.hot) {

@@ -105,6 +105,10 @@ class GameArea extends Component {
       this.setState({ 
         seatId: match.seatId,
       });
+    } else {
+      if (this.state.seatId) {
+        this.setState({ seatId: null });
+      }
     }
 
     if (this.state.seats.every(s => s.isTaken === true)) {
@@ -241,7 +245,7 @@ class GameArea extends Component {
             <Modal.Body>
               <PlayerNameForm
                 seatSuccess={true}
-                seat={this.state.playerSeat}
+                seatId={this.state.seatId}
                 toggleControls={this.togglePlayerName}
               />
             </Modal.Body>
