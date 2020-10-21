@@ -3,7 +3,6 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
 import Cookies from 'universal-cookie';
-import nanoid from 'nanoid/non-secure';
 
 import background, { ReactComponent as Background } from './assets/background.svg';
 import Controls from './controls'
@@ -25,6 +24,7 @@ class GameArea extends Component {
     let facilitatorId = null;
     const cookies = new Cookies();
     const facil = cookies.get('facilitatorInfo');
+    this.session = cookies.get('session');
     if (facil) {
       console.log(facil);
       if (facil.game === this.gameId) {
@@ -42,8 +42,8 @@ class GameArea extends Component {
       seatId: null,
       mySeatNumber: null,
       playerSeatId: null,
-      team1Name: 'Unnamed Team 1',
-      team2Name: 'Unnamed Team 2',
+      team1Name: '',
+      team2Name: '',
       envelopes: [],
       displayName: '',
       now: '',
@@ -58,10 +58,8 @@ class GameArea extends Component {
       isFacilitator: isFacilitator,
       facilitatorId: facilitatorId,
     }
-
-    this.cookies = new Cookies();
     this.intervalId = '';
-    
+
     this.setSeatId = this.setSeatId.bind(this);
     this.toggleJoinGame = this.toggleJoinGame.bind(this);
     this.togglePlayerName = this.togglePlayerName.bind(this);
@@ -87,8 +85,7 @@ class GameArea extends Component {
 
 
   async joinGame() {
-    const gameId = this.props.match.params.gameId;
-    const response = await fetch(`/api/join/${gameId}`)
+    const response = await fetch(`/api/join/${this.gameId}`)
     const json = await response.json();
     this.setState({
       isStarted: json.isStarted,
@@ -97,8 +94,16 @@ class GameArea extends Component {
       team2: json.team2,
       team1Name: json.team1Name,
       team2Name: json.team2Name,
-
     });
+    // check if we have already selected a seat
+    const match = this.state.seats.find(s => {
+      return s.sessionId === this.session
+    });
+    if (match) {
+      console.log('found a match');
+      console.log(match);
+    }
+
     if (this.state.seats.every(s => s.isTaken === true && s.displayName !== null)) {
       this.setState({ seatsFull: true });
       clearInterval(this.intervalId);
@@ -108,8 +113,7 @@ class GameArea extends Component {
 
   async updateGame() {
     console.log("updateGame");
-    const gameId = this.props.match.params.gameId;
-    const response = await fetch(`/api/game-state/${gameId}`)
+    const response = await fetch(`/api/game-state/${this.gameId}`)
     const json = await response.json();
     this.setState({
       envelopes: json.envelopes,
@@ -157,7 +161,7 @@ class GameArea extends Component {
             {this.state.seat ? "Set Display Name" : "Join Game"}
           </Button>
 
-          {this.props.location.state && this.props.location.state.facilitatorId &&
+          {this.state.isFacilitator &&
             <Button
               onClick={this.toggleFacilitatorControls}
               variant="primary"
@@ -167,8 +171,8 @@ class GameArea extends Component {
           }
         </div>
         <GameProgress
-          facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
-          gameId={this.props.match.params.gameId}
+          facilitatorId={this.state.isFacilitator ? this.state.facilitatorId : ''}
+          gameId={this.gameId}
           gameTick={this.state.gameTick}
           team1Score={this.state.team1Score}
           team2Score={this.state.team2Score}
@@ -206,12 +210,11 @@ class GameArea extends Component {
             </Modal.Header>
             <Modal.Body>
               <Controls
-                facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
                 playerSeat={this.state.playerSeat}
                 setSeatId={(seat) => this.setSeatId(seat)}
                 seats={this.state.seats}
                 seatsFull={this.state.seatsFull}
-                gameId={this.props.match.params.gameId}
+                gameId={this.gameId}
                 show={this.state.joinGameControls}
                 toggleControls={this.toggleJoinGame}
               />
@@ -240,7 +243,7 @@ class GameArea extends Component {
             </Modal.Body>
           </Container>
         </Modal>
-        {this.props.location.state && this.props.location.state.facilitatorId &&
+        {this.state.isFacilitator &&
           <Modal
             show={this.state.facilitatorControls}
             size="lg"
@@ -258,7 +261,7 @@ class GameArea extends Component {
                   seats={this.state.seats}
                   team1={this.state.team1}
                   team2={this.state.team2}
-                  facilitatorId={this.props.location.state.facilitatorId}
+                  facilitatorId={this.state.facilitatorId}
                   toggleControls={this.toggleFacilitatorControls}
                 />
               </Modal.Body>

@@ -22,7 +22,7 @@ class PlayerNameForm extends Component {
   }
 
   async setPlayerName() {
-    if (this.props.seatId) {
+    if (!this.props.seatId) {
       console.log("choose seat first");
       return;
     }
@@ -32,7 +32,7 @@ class PlayerNameForm extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         displayName: this.state.displayName,
-        seatId: this.props.seat.seatId,
+        seatId: this.props.seatId,
       })
     };
     const response = await fetch('/api/set-player-name', requestOptions);
@@ -48,14 +48,14 @@ class PlayerNameForm extends Component {
           <Form.Control
             ref={this.ref}
             type="text"
-            placeholder="Enter display name"
+            placeholder={this.props.seatId ? "Enter a display name" : "Choose a seat first"}
             name="playerName"
             onChange={this.playerNameChange}
           />
         </Form.Group>
         <Button 
           onClick={this.setPlayerName} 
-          disabled={this.state.waiting || this.props.seatId}
+          disabled={this.state.waiting || !this.props.seatId}
         >
           Submit
         </Button>

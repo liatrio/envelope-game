@@ -10,13 +10,14 @@ const numEnvelopes = 20;
 //const timer = new Timers();
 // endpoint to create a game
 router.get('/api/create', (req, res) => {
+  const session = req.universalCookies.get('session');
 
   // generate a game and facilitator id
-  let gameId = nanoid(16);
-  let facilitatorId = nanoid(16);
+  const gameId = nanoid(16);
+  const facilitatorId = nanoid(16);
 
   // generate team ids
-  let teamIds = [nanoid(16), nanoid(16)];
+  const teamIds = [nanoid(16), nanoid(16)];
 
 
   // generate ids for seats
@@ -37,9 +38,9 @@ router.get('/api/create', (req, res) => {
 
   // create game instance
   values = [
-    [gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0]
+    [gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0, session]
   ];
-  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick) VALUES ?';
+  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick, facilitator_session) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
   });
@@ -76,7 +77,9 @@ router.get('/api/create', (req, res) => {
 });
 
 router.get('/api/join/:gameId', (req, res) => {
-  let sql = `SELECT SEATS.seat_number, SEATS.seat_id, SEATS.is_taken, SEATS.display_name, GAME.game_id, TEAMS.team_id, TEAMS.is_team_1, TEAMS.team_name, GAME.is_started, GAME.team_1_id, GAME.team_2_id
+  let sql = `SELECT SEATS.seat_number, SEATS.seat_id, SEATS.is_taken, SEATS.display_name, SEATS.session_id, 
+               GAME.game_id, GAME.is_started, GAME.team_1_id, GAME.team_2_id,
+               TEAMS.team_id, TEAMS.is_team_1, TEAMS.team_name
                FROM SEATS 
                INNER JOIN GAME on GAME.game_id = SEATS.game_id 
                INNER JOIN TEAMS on TEAMS.team_id = SEATS.team_id 
@@ -103,6 +106,7 @@ router.get('/api/join/:gameId', (req, res) => {
       seat.seatNumber = i.seat_number;
       seat.teamId = i.team_id;
       seat.displayName = i.display_name;
+      seat.sessionId = i.session_id;
       if (i.is_team_1 === 1) {
         summary.team1Name = i.team_name;
       } else if (i.is_team_1 === 0) {
@@ -116,7 +120,8 @@ router.get('/api/join/:gameId', (req, res) => {
 });
 
 router.get('/api/game-state/:id', (req, res) => {
-  let sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, is_started, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick
+  let sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, is_started, ENVELOPES.game_id, team_id, 
+             GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick,
              FROM ENVELOPES 
              INNER JOIN GAME on GAME.game_id = ENVELOPES.game_id
              WHERE ENVELOPES.game_id = '${req.params.id}'`;
@@ -179,10 +184,14 @@ router.post('/api/set-player-name', (req, res) => {
 });
 
 router.get('/api/choose-seat/:teamId/:seatId', (req, res) => {
-  let sql = `UPDATE SEATS SET is_taken = 1 WHERE seat_id = '${req.params.seatId}'
+  const session = req.universalCookies.get('session');
+  let sql = `UPDATE SEATS SET 
+             is_taken = 1, session_id = '${session}'
+             WHERE seat_id = '${req.params.seatId}'
              AND team_id = '${req.params.teamId}' 
              AND is_taken = 0`;
 
+  console.log(sql);
   db.query(sql, function (err, result) {
     if (err) throw err;
     // if there was not a changed row then seat is already taken
@@ -193,7 +202,7 @@ router.get('/api/choose-seat/:teamId/:seatId', (req, res) => {
       // return a confirmation of success and the seat id
       res.send({ success: true, seatId: req.params.seatId });
     }
-  })
+  });
 });
 
 router.get('/api/update-envelope/:gameId/:envelopeId/:state', (req, res) => {
