@@ -65,7 +65,7 @@ class Controls extends Component {
           <li key={s.seatId}>
             <Button
               className={s.isTaken ? "chairFilled" : "chairNotFilled"}
-              disabled={s.isTaken || this.state.settingSeat || this.props.playerSeatId}
+              disabled={s.isTaken || this.state.settingSeat || this.props.playerSeat}
               variant={this.state.seatSuccess && this.state.selectedSeat === s.seatId ? "success" : s.isTaken ? "secondary" : "primary"}
               onClick={() => this.selectSeat(s)}
             >
@@ -144,7 +144,7 @@ class Controls extends Component {
         </Row>
         <PlayerNameForm
           toggleControls={this.props.toggleControls}
-          seatId={this.state.selectedSeat}
+          seatId={this.props.seatId}
           seatSucees={this.state.seatSuccess}
         ></PlayerNameForm>
       </div>

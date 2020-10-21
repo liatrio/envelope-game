@@ -16,7 +16,6 @@ app.use(cookiesMiddleware())
     if (session === undefined) {
       req.universalCookies.set('session', nanoid(20), { path: '/' });
     }
-    console.log(req.universalCookies.get('session'));
     next();
   });
 const webpackConfig = require('./webpack.config');

@@ -68,6 +68,10 @@ router.get('/api/create', (req, res) => {
     if (err) throw err;
   });
   timer.addGame(gameId, teamIds[0], teamIds[1]);
+  req.universalCookies.set('facilitatorInfo', {
+    game: gameId,
+    id: facilitatorId,
+  }, { path: '/' });
   res.send({ game: gameId, facilitator: facilitatorId });
 });
 
@@ -164,12 +168,8 @@ router.post('/api/set-player-name', (req, res) => {
                 SET display_name = '${req.body.displayName}'
                 WHERE seat_id = '${req.body.seatId}'`;
 
-  console.log(sql);
-
   db.query(sql, function (err, result) {
     if (err) throw err;
-
-    console.log(result);
     if (result.changedRows !== 1) {
       res.send({ success: false });
     } else {
@@ -182,13 +182,11 @@ router.get('/api/choose-seat/:teamId/:seatId', (req, res) => {
   let sql = `UPDATE SEATS SET is_taken = 1 WHERE seat_id = '${req.params.seatId}'
              AND team_id = '${req.params.teamId}' 
              AND is_taken = 0`;
-  console.log(sql);
 
   db.query(sql, function (err, result) {
     if (err) throw err;
     // if there was not a changed row then seat is already taken
     // or invalid request
-    console.log(result);
     if (result.changedRows !== 1) {
       res.send({ success: false });
     } else {

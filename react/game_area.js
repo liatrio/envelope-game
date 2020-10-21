@@ -20,11 +20,19 @@ class GameArea extends Component {
 
   constructor(props) {
     super(props);
-    this.cookies = new Cookies();
-    this.gameID = props.match.params.gameId;
-    this.intervalId = '';
+    this.gameId = props.match.params.gameId;
+    let isFacilitator = false;
+    let facilitatorId = null;
+    const cookies = new Cookies();
+    const facil = cookies.get('facilitatorInfo');
+    if (facil) {
+      console.log(facil);
+      if (facil.game === this.gameId) {
+        isFacilitator = true;
+        facilitatorId = facil.id;
+      }
+    }
     this.state = {
-      session: undefined,
       isStarted: false,
       seats: [],
       team1: '',
@@ -33,6 +41,7 @@ class GameArea extends Component {
       seatsFull: false,
       seatId: null,
       mySeatNumber: null,
+      playerSeatId: null,
       team1Name: 'Unnamed Team 1',
       team2Name: 'Unnamed Team 2',
       envelopes: [],
@@ -46,7 +55,13 @@ class GameArea extends Component {
       joinGameControls: false,
       facilitatorControls: false,
       playerNameControls: false,
+      isFacilitator: isFacilitator,
+      facilitatorId: facilitatorId,
     }
+
+    this.cookies = new Cookies();
+    this.intervalId = '';
+    
     this.setSeatId = this.setSeatId.bind(this);
     this.toggleJoinGame = this.toggleJoinGame.bind(this);
     this.togglePlayerName = this.togglePlayerName.bind(this);
@@ -55,10 +70,9 @@ class GameArea extends Component {
   }
 
   setSeatId(seat) {
-    console.log(seat);
+    console.log(seat.seatId);
     this.setState({
-      seatId: seat.seatId,
-      mySeatNumber: seat.seatNumber,
+      playerSeatId: seat.seatId,
     });
     console.log(this.state.seatId);
   }
@@ -140,7 +154,7 @@ class GameArea extends Component {
             onClick={this.state.seatId ? this.togglePlayerName : this.toggleJoinGame}
             className={this.state.seatsFull && !this.state.playerSeatId ? "invisible" : "visible"}
           >
-            {this.state.seatId ? "Set Display Name" : "Join Game"}
+            {this.state.seat ? "Set Display Name" : "Join Game"}
           </Button>
 
           {this.props.location.state && this.props.location.state.facilitatorId &&
@@ -154,7 +168,7 @@ class GameArea extends Component {
         </div>
         <GameProgress
           facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
-          gameID={this.props.match.params.gameId}
+          gameId={this.props.match.params.gameId}
           gameTick={this.state.gameTick}
           team1Score={this.state.team1Score}
           team2Score={this.state.team2Score}
@@ -193,7 +207,7 @@ class GameArea extends Component {
             <Modal.Body>
               <Controls
                 facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
-                playerSeatId={this.state.seatId}
+                playerSeat={this.state.playerSeat}
                 setSeatId={(seat) => this.setSeatId(seat)}
                 seats={this.state.seats}
                 seatsFull={this.state.seatsFull}
@@ -220,7 +234,7 @@ class GameArea extends Component {
             <Modal.Body>
               <PlayerNameForm
                 seatSuccess={true}
-                seatId={this.state.playerSeatId}
+                seat={this.state.playerSeat}
                 toggleControls={this.togglePlayerName}
               />
             </Modal.Body>
