@@ -107,7 +107,7 @@ class GameArea extends Component {
       });
     }
 
-    if (this.state.seats.every(s => s.isTaken === true && s.displayName !== null)) {
+    if (this.state.seats.every(s => s.isTaken === true)) {
       this.setState({ seatsFull: true });
       clearInterval(this.intervalId);
       this.intervalId = setInterval(this.updateGame.bind(this), 1000);

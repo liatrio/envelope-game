@@ -268,6 +268,24 @@ router.get('/api/stop-game/:facilitatorId/:gameId', (req, res) => {
   });
 });
 
+router.get('/api/remove-player/:seatId', (req, res) => {
+  const facil = req.universalCookies.get('facilitatorInfo');
+  const session = req.universalCookies.get('session');
+  if (facil) {
+    let sql = `UPDATE SEATS
+             SET is_taken = 0, session_id = ${null}, display_name = ''
+             WHERE seat_id = ${req.params.seatId}
+             AND facilitator_session = ${session}`;
+
+    db.query(sql, function (err, result) {
+      if (err) throw err;
+      res.send(200);
+    });
+  }
+  res.send(200);
+
+});
+
 if (module.hot) {
   module.hot.accept();
 }
