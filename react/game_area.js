@@ -18,7 +18,7 @@ class GameArea extends Component {
 
   constructor(props) {
     super(props);
-    this.gameID = props.match.params.gameId; 
+    this.gameId = props.match.params.gameId; 
     this.intervalId = '';
     this.state = {
       isStarted: false,
@@ -42,6 +42,7 @@ class GameArea extends Component {
       joinGameControls: false,
       facilitatorControls: false,
       playerNameControls: false,
+      isTeam1: null,
     }
     this.setSeatId = this.setSeatId.bind(this);
     this.toggleJoinGame = this.toggleJoinGame.bind(this);
@@ -55,6 +56,7 @@ class GameArea extends Component {
     this.setState({
       seatId: seat.seatId,
       mySeatNumber: seat.seatNumber,
+      isTeam1: seat.isTeam1,
     });
     console.log(this.state.seatId);
   }
@@ -150,7 +152,7 @@ class GameArea extends Component {
         </div>
         <GameProgress
           facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
-          gameID={this.props.match.params.gameId}
+          gameId={this.props.match.params.gameId}
           gameTick={this.state.gameTick}
           team1Score={this.state.team1Score}
           team2Score={this.state.team2Score}
@@ -164,14 +166,14 @@ class GameArea extends Component {
         />
         <EnvelopeArea
           envelopes={this.state.envelopes.filter((i) => {
-            return i.seatNumber === this.props.seatNumber
+            return i.seatNumber === this.state.mySeatNumber && i.isTeam1 === this.state.isTeam1
           })}
           teamId={this.state.teamId}
           gameId={this.gameId}
           seat={this.state.seats.find(i => {
             return i.seatId === this.state.seatId;
             })}
-          seatNumber={this.props.mySeatNumber}
+          seatNumber={this.state.mySeatNumber}
         ></EnvelopeArea>
         <Modal
           show={this.state.joinGameControls}

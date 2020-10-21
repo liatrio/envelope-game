@@ -31,7 +31,7 @@ class Minimap extends Component {
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={0}
-              isTeam1={1}
+              isTeam1={true}
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(0, true)}
             >
@@ -40,7 +40,7 @@ class Minimap extends Component {
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={1}
-              isTeam1={1}
+              isTeam1={true}
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(1, true)}
             >
@@ -49,16 +49,13 @@ class Minimap extends Component {
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={2}
-              isTeam1={1}
+              isTeam1={true}
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(2, true)}
             >
             </MinimapStatus>
             
           </Col>
-          {/* <Col md="auto">
-            {this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick ? this.props.gameTick % 60 : '0'}
-          </Col> */}
           <Col lg={false}>
           <h5>Team {this.props.t2Name} Progress</h5>
             <h7>Money Earned: ${this.props.team2Score}</h7><br/> 
@@ -66,7 +63,7 @@ class Minimap extends Component {
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={0}
-              isTeam1={0}
+              isTeam1={false}
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(0, false)}
             >
@@ -75,7 +72,7 @@ class Minimap extends Component {
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={1}
-              isTeam1={0}
+              isTeam1={false}
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(1, false)}
             >
@@ -84,7 +81,7 @@ class Minimap extends Component {
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={2}
-              isTeam1={0}
+              isTeam1={false}
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(2, false)}
             >

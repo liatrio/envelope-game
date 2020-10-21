@@ -134,7 +134,7 @@ router.get('/api/game-state/:id', (req, res) => {
           matchingStamp: i.matching_stamp,
           envelopeState: i.envelope_state,
           team: i.team_id,
-          isTeam1: i.is_team_1,
+          isTeam1: i.is_team_1 === 1 ? true : false,
           seatNumber: i.seat_number
         });
       })
@@ -234,6 +234,7 @@ router.get('/api/start-game/:facilitatorId/:gameId', (req, res) => {
              AND game_id = '${req.params.gameId}'`;
   db.query(sql, function (err, result) {
     if (err) throw err;
+    console.log(req.params.gameId);
     timer.startTimer(req.params.gameId);
     db.query(sql, function (err, result) {
       if (err) throw err;

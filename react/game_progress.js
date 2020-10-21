@@ -25,10 +25,10 @@ class GameProgress extends Component {
     this.setState({ disabled: true });
     this.setState({ seatsFullError: false });
     if (!this.props.isStarted) {
-      await fetch(`/api/start-game/${this.props.facilitatorId}/${this.props.gameID}`)
+      await fetch(`/api/start-game/${this.props.facilitatorId}/${this.props.gameId}`)
 
     } else {
-      await fetch(`/api/stop-game/${this.props.facilitatorId}/${this.props.gameID}`)
+      await fetch(`/api/stop-game/${this.props.facilitatorId}/${this.props.gameId}`)
     }
     this.setState({ disabled: false });
 
@@ -42,39 +42,40 @@ class GameProgress extends Component {
     let ic = this.props.isStarted ? faPause : faPlay;
     const facilID = this.props.facilitatorId;
     return (
-      <div style={{width: "35%", top: "15%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>
-        <Card.Img as={Corkboard} alt="Scoreboard"/>    
-        <Card.ImgOverlay bsPrefix='card-img-overlay CardImgOverlay'>
-          <Card.Body>
-            {facilID &&
-              <Row className= "justify-content-md-center">
-                <FontAwesomeIcon className="playIcon" icon={ic} spin onClick={this.props.seatsFull ? this.togglePlay : this.seatsNotFull} disabled={this.state.disabled} />
-              </Row>
-            }
-            {facilID && this.state.seatsFullError &&
-              <Row className= "justify-content-md-center">Error: Seats are not Full yet</Row>
-            }
-            {/* <Row className= "justify-content-md-center"> {this.props.t1Name} --- VS --- {this.props.t2Name}</Row> */}
-            <Row className= "justify-content-md-center">
-              ${this.props.team1Score}
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    {this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick ? this.props.gameTick % 60 : '0'}
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    ${this.props.team2Score}
-            </Row>
-            <Minimap
-              envelopes={this.props.envelopes}
-              seats={this.props.seats}
-              t1Name={this.props.t1Name}
-              t2Name={this.props.t2Name}
-              team1Score={this.props.team1Score}
-              team2Score={this.props.team2Score}
-              gameTick={this.props.gameTick}
-              
-            >
-            </Minimap>
-          </Card.Body>
-        </Card.ImgOverlay>
+      <div>
+        <div>
+        {facilID &&
+          <Row className= "justify-content-md-center">
+            <FontAwesomeIcon className="playIcon" 
+            icon={ic} 
+            spin onClick={this.props.seatsFull ? this.togglePlay : this.seatsNotFull} 
+            disabled={this.state.disabled} />
+          </Row>
+        }
+        <Row className= "justify-content-md-center">
+          {this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick % 60 < 10 ? 0 : ''}{this.props.gameTick ? this.props.gameTick % 60 : '0'}
+        </Row>
+        {facilID && this.state.seatsFullError &&
+          <Row className= "justify-content-md-center">Error: Seats are not Full yet</Row>
+        }
+        </div>
+        <div style={{width: "35%", top: "15%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>
+          <Card.Img as={Corkboard} alt="Scoreboard"/>    
+          <Card.ImgOverlay bsPrefix='card-img-overlay CardImgOverlay'>
+            <Card.Body>
+              <Minimap
+                envelopes={this.props.envelopes}
+                seats={this.props.seats}
+                t1Name={this.props.t1Name}
+                t2Name={this.props.t2Name}
+                team1Score={this.props.team1Score}
+                team2Score={this.props.team2Score}
+                gameTick={this.props.gameTick}
+              >
+              </Minimap>
+            </Card.Body>
+          </Card.ImgOverlay>
+        </div>
       </div>
     );
   }
