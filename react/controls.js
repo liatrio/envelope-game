@@ -34,7 +34,7 @@ class Controls extends Component {
     const json = await response.json();
     if (json.success) {
       console.log(this.state.selectedSeatNumber);
-      this.props.setSeatId(seat);
+      //this.props.setSeatId(seat);
       // seat selected successfully
       this.setState({ seatSuccess: true });
     } else {
@@ -52,6 +52,7 @@ class Controls extends Component {
     this.selectSeat(randomSeat);
   }
 
+
   getSeats(isTeamOne) {
     // if seat information has loaded
     if (this.props.seats.length !== 0) {
@@ -65,11 +66,11 @@ class Controls extends Component {
           <li key={s.seatId}>
             <Button
               className={s.isTaken ? "chairFilled" : "chairNotFilled"}
-              disabled={s.isTaken || this.state.settingSeat || this.props.playerSeat}
+              disabled={s.isTaken || this.state.settingSeat || this.props.seatId}
               variant={this.state.seatSuccess && this.state.selectedSeat === s.seatId ? "success" : s.isTaken ? "secondary" : "primary"}
               onClick={() => this.selectSeat(s)}
             >
-              {this.state.selectedSeat === s.seatId ?
+              {this.state.selectedSeat === s.seatId && !this.props.seatId ?
                 <div>
                   <Spinner
                     as="span"

@@ -102,6 +102,9 @@ class GameArea extends Component {
     if (match) {
       console.log('found a match');
       console.log(match);
+      this.setState({ 
+        seatId: match.seatId,
+      });
     }
 
     if (this.state.seats.every(s => s.isTaken === true && s.displayName !== null)) {
@@ -211,6 +214,7 @@ class GameArea extends Component {
             <Modal.Body>
               <Controls
                 playerSeat={this.state.playerSeat}
+                seatId={this.state.seatId}
                 setSeatId={(seat) => this.setSeatId(seat)}
                 seats={this.state.seats}
                 seatsFull={this.state.seatsFull}

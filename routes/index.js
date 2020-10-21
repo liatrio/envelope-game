@@ -159,7 +159,6 @@ router.post('/api/set-team-name', (req, res) => {
 
   db.query(sql, function (err, result) {
     if (err) throw err;
-    console.log(result);
     if (result.changedRows !== 1) {
       res.send({ success: false });
     } else {
@@ -190,8 +189,6 @@ router.get('/api/choose-seat/:teamId/:seatId', (req, res) => {
              WHERE seat_id = '${req.params.seatId}'
              AND team_id = '${req.params.teamId}' 
              AND is_taken = 0`;
-
-  console.log(sql);
   db.query(sql, function (err, result) {
     if (err) throw err;
     // if there was not a changed row then seat is already taken
