@@ -43,24 +43,27 @@ class GameProgress extends Component {
     const facilID = this.props.facilitatorId;
     return (
       <div>
+        <div>
         {facilID &&
-          <Row className= "justify-content-md-center">
-            <FontAwesomeIcon className="playIcon" 
-            icon={ic} 
-            onClick={this.props.seatsFull ? this.togglePlay : this.seatsNotFull} 
-            disabled={this.state.disabled} />
-          </Row>
-        }
-        <Row className= "justify-content-md-center">
-          {this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick % 60 < 10 ? 0 : ''}{this.props.gameTick ? this.props.gameTick % 60 : '0'}
-        </Row>
-        {facilID && this.state.seatsFullError &&
-          <Row className= "justify-content-md-center">Error: Seats are not Full yet</Row>
-        }
+              <Row className= "justify-content-md-center" style={{marginLeft: "0", marginRight: "0"}}>
+                <FontAwesomeIcon className="playIcon" 
+                icon={ic} 
+                onClick={this.props.seatsFull ? this.togglePlay : this.seatsNotFull} 
+                disabled={this.state.disabled} />
+              </Row>
+            }
+            <Row style={{marginLeft: "0", marginRight: "0"}} className= "justify-content-md-center" >
+              {this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick % 60 < 10 ? 0 : ''}{this.props.gameTick ? this.props.gameTick % 60 : '0'}
+            </Row>
+            {facilID && this.state.seatsFullError &&
+              <Row style={{marginLeft: "0", marginRight: "0"}} className= "justify-content-md-center">Error: Seats are not Full yet</Row>
+            }
+        </div>
         <div style={{width: "35%", top: "15%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>
           <Card.Img as={Corkboard} alt="Scoreboard"/>    
           <Card.ImgOverlay bsPrefix='card-img-overlay CardImgOverlay'>
             <Card.Body>
+            
               <Minimap
                 envelopes={this.props.envelopes}
                 seats={this.props.seats}
