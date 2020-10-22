@@ -5,11 +5,11 @@ import background, { ReactComponent as Background } from './assets/background.sv
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
-
+import table, {ReactComponent as Table} from './assets/table.svg';
 import EnvelopeArea from './envelope_area';
 import PlayerNameForm from './player_name';
 import FacilitatorControls from './facilitator_controls';
-
+import Row from 'react-bootstrap/Row'
 
 
 import './index.css'
@@ -174,7 +174,10 @@ class GameArea extends Component {
             return i.seatId === this.state.seatId;
             })}
           seatNumber={this.state.mySeatNumber}
-        ></EnvelopeArea>
+        ></EnvelopeArea> 
+        <div style={{top: "65%", width: "60%", left: "20%", zIndex: 0,position: "absolute"}}>
+          <Table></Table>
+        </div>
         <Modal
           show={this.state.joinGameControls}
           size="lg"

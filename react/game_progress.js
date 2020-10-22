@@ -59,7 +59,7 @@ class GameProgress extends Component {
               <Row style={{marginLeft: "0", marginRight: "0"}} className= "justify-content-md-center">Error: Seats are not Full yet</Row>
             }
         </div>
-        <div style={{width: "35%", top: "15%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>
+        <div style={{width: "35%", top: "15%", left: "50%", marginLeft: "-17.5%", position: "absolute", overflow: "auto"}}>
           <Card.Img as={Corkboard} alt="Scoreboard"/>    
           <Card.ImgOverlay bsPrefix='card-img-overlay CardImgOverlay'>
             <Card.Body>
