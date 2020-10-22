@@ -288,6 +288,32 @@ router.get('/api/remove-player/:seatId', (req, res) => {
   }
 });
 
+router.get('/api/fill-seats', (req, res) => {
+  const facil = req.universalCookies.get('facilitatorInfo');
+  const session = req.universalCookies.get('session');
+  if (facil) {
+    let sql = `UPDATE SEATS
+               INNER JOIN GAME ON SEATS.game_id = GAME.game_id
+               SET is_taken = 1
+               WHERE SEATS.game_id = '${facil.game}'
+               AND GAME.facilitator_session = '${session}'`;
+
+    db.query(sql, function (err, result) {
+      if (err) throw err;
+      console.log('removed player');
+      if (result.changedRows === 0) {
+        res.send({ success: false });
+      } else {
+        res.send({ success: true });
+      }
+    });
+
+  }
+
+
+
+});
+
 if (module.hot) {
   module.hot.accept();
 }

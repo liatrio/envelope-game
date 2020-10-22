@@ -39,6 +39,11 @@ class FacilitatorControls extends Component {
               `Player ${s.seatNumber + 1}` :
               s.displayName
             }
+            <Button
+              disabled={this.props.seatId === s.seatId}
+            >
+              Switch to {s.seatNumber + 1}
+            </Button>
             <br></br>
           </li>
         );
