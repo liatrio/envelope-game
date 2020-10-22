@@ -176,9 +176,7 @@ class GameArea extends Component {
           seatNumber={this.state.mySeatNumber}
         ></EnvelopeArea> 
         <div style={{top: "65%", width: "60%", left: "20%", zIndex: 0,position: "absolute"}}>
-          <Row>
           <Table></Table>
-          </Row>  
         </div>
         <Modal
           show={this.state.joinGameControls}
