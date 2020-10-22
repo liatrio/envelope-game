@@ -59,22 +59,9 @@ class GameArea extends Component {
       isTeam1: null,
     }
     this.intervalId = '';
-
-    this.setSeatId = this.setSeatId.bind(this);
     this.toggleJoinGame = this.toggleJoinGame.bind(this);
     this.togglePlayerName = this.togglePlayerName.bind(this);
     this.toggleFacilitatorControls = this.toggleFacilitatorControls.bind(this);
-
-  }
-
-  setSeatId(seat) {
-    console.log(seat.seatId);
-    this.setState({
-      seatId: seat.seatId,
-      mySeatNumber: seat.seatNumber,
-      isTeam1: seat.isTeam1,
-    });
-    console.log(this.state.seatId);
   }
 
   componentDidMount() {
@@ -97,7 +84,7 @@ class GameArea extends Component {
       team1Name: json.team1Name,
       team2Name: json.team2Name,
     });
-    // check if we have already selected a seat
+    // check if we have selected a seat
     const match = this.state.seats.find(s => {
       return s.sessionId === this.session
     });
@@ -198,6 +185,7 @@ class GameArea extends Component {
           envelopes={this.state.envelopes.filter((i) => {
             return i.seatNumber === this.state.mySeatNumber && i.isTeam1 === this.state.isTeam1
           })}
+          isStarted={this.state.isStarted}
           teamId={this.state.teamId}
           gameId={this.gameId}
           seat={this.state.seats.find(i => {
@@ -225,7 +213,6 @@ class GameArea extends Component {
               <Controls
                 playerSeat={this.state.playerSeat}
                 seatId={this.state.seatId}
-                // setSeatId={(seat) => this.setSeatId(seat)}
                 seats={this.state.seats}
                 seatsFull={this.state.seatsFull}
                 gameId={this.gameId}
@@ -272,6 +259,7 @@ class GameArea extends Component {
               </Modal.Header>
               <Modal.Body>
                 <FacilitatorControls
+                  isStarted={this.state.isStarted}
                   seats={this.state.seats}
                   team1={this.state.team1}
                   team2={this.state.team2}

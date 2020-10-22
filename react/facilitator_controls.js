@@ -9,12 +9,21 @@ import TeamNameForm from './team_name';
 class FacilitatorControls extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      seatRemoveDisable: new Array(props.seats.length).fill(false)
+    };
     this.getSeats = this.getSeats.bind(this);
     this.emptySeat = this.emptySeat.bind(this);
   }
 
-  async emptySeat(seatId) {
+  async emptySeat(seatId, idx) {
+    let s = this.state.seatRemoveDisable;
+    s[idx] = true;
+    this.setState({ seatRemoveDisable: s });
     await fetch(`/api/remove-player/${seatId}`);
+    s = this.state.seatRemoveDisable;
+    s[idx] = false;
+    this.setState({ seatRemoveDisable: s });
   }
 
   getSeats(isTeamOne) {
@@ -25,13 +34,14 @@ class FacilitatorControls extends Component {
         return i.isTeam1 === isTeamOne;
       }).sort((a, b) => {
         return (a.seatNumber > b.seatNumber ? 1 : -1);
-      }).map(s => {
+      }).map((s, idx) => {
         return (
           <li key={s.seatId}>
             <Button
               className={s.isTaken ? "visible" : "invisible"}
               variant="danger"
-              onClick={() => this.emptySeat(s.seatId)}
+              disabled={this.state.seatRemoveDisable[idx] || this.props.isStarted}
+              onClick={() => this.emptySeat(s.seatId, idx)}
             >
               X
             </Button>
@@ -39,11 +49,6 @@ class FacilitatorControls extends Component {
               `Player ${s.seatNumber + 1}` :
               s.displayName
             }
-            <Button
-              disabled={this.props.seatId === s.seatId}
-            >
-              Switch to {s.seatNumber + 1}
-            </Button>
             <br></br>
           </li>
         );

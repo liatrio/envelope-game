@@ -52,6 +52,7 @@ class EnvelopeStack extends Component {
 
   isDisabled() {
     if (!this.props.envelopes) return true;
+    if (!this.props.isStarted) return true;
     if (this.props.stackType === 0 && this.props.envelopes.length > 0) {
       // disable until they pass envelopes on
       if (this.getFinishedEnvelopes().length === 5) {
@@ -86,11 +87,6 @@ class EnvelopeStack extends Component {
           style={{display: "contents"}}
         >
           <div >
-            {/* <FontAwesomeIcon
-              icon={faEnvelope}
-              size='5x'
-            >
-            </FontAwesomeIcon> */}
             <ToDoFull/>
             <br></br>
             <Badge pill variant="light" className="align-middle">
