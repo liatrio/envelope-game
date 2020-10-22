@@ -30,7 +30,7 @@ class Minimap extends Component {
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={0}
-              isTeam1={1}
+              isTeam1={true}
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(0, true)}
             >
@@ -38,7 +38,7 @@ class Minimap extends Component {
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={1}
-              isTeam1={1}
+              isTeam1={true}
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(1, true)}
             >
@@ -46,7 +46,7 @@ class Minimap extends Component {
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={2}
-              isTeam1={1}
+              isTeam1={true}
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(2, true)}
             >
@@ -59,7 +59,7 @@ class Minimap extends Component {
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={0}
-              isTeam1={0}
+              isTeam1={false}
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(0, false)}
             >
@@ -67,7 +67,7 @@ class Minimap extends Component {
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={1}
-              isTeam1={0}
+              isTeam1={false}
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(1, false)}
             >
@@ -75,7 +75,7 @@ class Minimap extends Component {
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={2}
-              isTeam1={0}
+              isTeam1={false}
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(2, false)}
             >

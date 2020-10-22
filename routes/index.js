@@ -142,7 +142,7 @@ router.get('/api/game-state/:id', (req, res) => {
           matchingStamp: i.matching_stamp,
           envelopeState: i.envelope_state,
           team: i.team_id,
-          isTeam1: i.is_team_1,
+          isTeam1: i.is_team_1 === 1 ? true : false,
           seatNumber: i.seat_number
         });
       })
@@ -237,6 +237,7 @@ router.get('/api/start-game/:facilitatorId/:gameId', (req, res) => {
              AND game_id = '${req.params.gameId}'`;
   db.query(sql, function (err, result) {
     if (err) throw err;
+    console.log(req.params.gameId);
     timer.startTimer(req.params.gameId);
     db.query(sql, function (err, result) {
       if (err) throw err;
@@ -249,22 +250,26 @@ router.get('/api/start-game/:facilitatorId/:gameId', (req, res) => {
   });
 });
 
-
 router.get('/api/stop-game/:facilitatorId/:gameId', (req, res) => {
-  let sql = `UPDATE GAME
+  let facilitatorInfo = req.universalCookies.get('facilitatorInfo');
+  if (facilitatorInfo.id === req.params.facilitatorId && facilitatorInfo.game === req.params.gameId) {
+    let sql = `UPDATE GAME
              SET is_started = ${false}
              WHERE facilitator_id = '${req.params.facilitatorId}'
              AND game_id = '${req.params.gameId}'`;
-  db.query(sql, function (err, result) {
-    if (err) throw err;
-    timer.stopTimer(req.params.gameId);
-    // return if query succeeded or not
-    if (result.changedRows !== 1) {
-      res.send({ success: false });
-    } else {
-      res.send({ success: true });
-    }
-  });
+    db.query(sql, function (err, result) {
+      if (err) throw err;
+      timer.stopTimer(req.params.gameId);
+      // return if query succeeded or not
+      if (result.changedRows !== 1) {
+        res.send({ success: false });
+      } else {
+        res.send({ success: true });
+      }
+    });
+  } else {
+    res.send({ success: false });
+  }
 });
 
 router.get('/api/remove-player/:seatId', (req, res) => {
@@ -278,7 +283,6 @@ router.get('/api/remove-player/:seatId', (req, res) => {
              AND GAME.facilitator_session = '${session}'`;
     db.query(sql, function (err, result) {
       if (err) throw err;
-      console.log('removed player');
       if (result.changedRows === 1) {
         res.send({ success: true });
       } else {
@@ -300,7 +304,6 @@ router.get('/api/fill-seats', (req, res) => {
 
     db.query(sql, function (err, result) {
       if (err) throw err;
-      console.log('removed player');
       if (result.changedRows === 0) {
         res.send({ success: false });
       } else {

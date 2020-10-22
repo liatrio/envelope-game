@@ -11,8 +11,6 @@ import FacilitatorControls from './facilitator_controls';
 import GameProgress from './game_progress';
 import PlayerNameForm from './player_name';
 
-
-
 import './index.css'
 
 class GameArea extends Component {
@@ -57,6 +55,7 @@ class GameArea extends Component {
       playerNameControls: false,
       isFacilitator: isFacilitator,
       facilitatorId: facilitatorId,
+      isTeam1: null,
     }
     this.intervalId = '';
 
@@ -70,7 +69,9 @@ class GameArea extends Component {
   setSeatId(seat) {
     console.log(seat.seatId);
     this.setState({
-      playerSeatId: seat.seatId,
+      seatId: seat.seatId,
+      mySeatNumber: seat.seatNumber,
+      isTeam1: seat.isTeam1,
     });
     console.log(this.state.seatId);
   }
@@ -104,6 +105,8 @@ class GameArea extends Component {
       console.log(match);
       this.setState({ 
         seatId: match.seatId,
+        mySeatNumber: match.seatNumber,
+        isTeam1: match.isTeam1,
       });
     } else {
       if (this.state.seatId) {
@@ -131,7 +134,6 @@ class GameArea extends Component {
       team1Score: json.score1,
       team2Score: json.score2,
       gameTick: json.gameTick,
-
     });
   }
 
@@ -193,14 +195,14 @@ class GameArea extends Component {
         />
         <EnvelopeArea
           envelopes={this.state.envelopes.filter((i) => {
-            return i.seatNumber === this.props.seatNumber
+            return i.seatNumber === this.state.mySeatNumber && i.isTeam1 === this.state.isTeam1
           })}
           teamId={this.state.teamId}
           gameId={this.gameId}
           seat={this.state.seats.find(i => {
             return i.seatId === this.state.seatId;
-          })}
-          seatNumber={this.props.mySeatNumber}
+            })}
+          seatNumber={this.state.mySeatNumber}
         ></EnvelopeArea>
         <Modal
           show={this.state.joinGameControls}
@@ -219,7 +221,7 @@ class GameArea extends Component {
               <Controls
                 playerSeat={this.state.playerSeat}
                 seatId={this.state.seatId}
-                setSeatId={(seat) => this.setSeatId(seat)}
+                // setSeatId={(seat) => this.setSeatId(seat)}
                 seats={this.state.seats}
                 seatsFull={this.state.seatsFull}
                 gameId={this.gameId}
