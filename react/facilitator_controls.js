@@ -21,10 +21,9 @@ class FacilitatorControls extends Component {
     s[idx] = true;
     this.setState({ seatRemoveDisable: s });
     await fetch(`/api/remove-player/${seatId}`);
-  }
-
-  async switchToSeat(seatId) {
-    
+    s = this.state.seatRemoveDisable;
+    s[idx] = false;
+    this.setState({ seatRemoveDisable: s });
   }
 
   getSeats(isTeamOne) {
@@ -50,14 +49,6 @@ class FacilitatorControls extends Component {
               `Player ${s.seatNumber + 1}` :
               s.displayName
             }
-            <Button
-              disabled={this.props.seatId === s.seatId}
-            >
-              Switch to {s.displayName === null ?
-                `Player ${s.seatNumber + 1}` :
-                s.displayName
-              }
-            </Button>
             <br></br>
           </li>
         );
