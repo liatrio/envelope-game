@@ -105,39 +105,40 @@ router.get('/api/join/:gameId', (req, res) => {
     if (err) {
       console.log(err);
       res.send({ game: null });
-    }
-    // if result from query is of length 0 then query was invalid
-    if (result.length === 0) {
+    } else if (result.length === 0 || !result || !result[0] || !result[0].game_id) {
+      // handle any invalid queries
+      console.log(`Game not found - in /api/join/${req.params.gameId}`);
       res.send({ game: null });
-    }
-    let summary = {};
-    summary.game = result[0].game_id;
-    summary.isStarted = result[0].is_started === 1 ? true : false;
-    summary.team1 = result[0].team_1_id;
-    summary.team2 = result[0].team_2_id;
-    summary.seats = [];
 
-    for (let i of result) {
-      let seat = {};
-      seat.seatId = i.seat_id;
-      seat.isTaken = (i.is_taken === 1) ? true : false;
-      seat.isTeam1 = (i.is_team_1 === 1) ? true : false;
-      seat.seatNumber = i.seat_number;
-      seat.teamId = i.team_id;
-      seat.displayName = i.display_name;
-      seat.sessionId = i.session_id;
-      if (i.is_team_1 === 1) {
-        summary.team1Name = i.team_name;
-      } else if (i.is_team_1 === 0) {
-        summary.team2Name = i.team_name;
+    } else {
+      let summary = {};
+      summary.game = result[0].game_id;
+      summary.isStarted = result[0].is_started === 1 ? true : false;
+      summary.team1 = result[0].team_1_id;
+      summary.team2 = result[0].team_2_id;
+      summary.seats = [];
+      for (let i of result) {
+        let seat = {};
+        seat.seatId = i.seat_id;
+        seat.isTaken = (i.is_taken === 1) ? true : false;
+        seat.isTeam1 = (i.is_team_1 === 1) ? true : false;
+        seat.seatNumber = i.seat_number;
+        seat.teamId = i.team_id;
+        seat.displayName = i.display_name;
+        seat.sessionId = i.session_id;
+        if (i.is_team_1 === 1) {
+          summary.team1Name = i.team_name;
+        } else if (i.is_team_1 === 0) {
+          summary.team2Name = i.team_name;
+        }
+        summary.seats.push(seat);
       }
-      summary.seats.push(seat);
+      res.send(summary);
     }
-    res.send(summary);
   });
 });
 
-router.get('/api/game-state/:id', (req, res) => {
+router.get('/api/game-state/:gameId', (req, res) => {
   const sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, ENVELOPES.game_id, team_id, 
              GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick, GAME.is_started
              FROM ENVELOPES 
@@ -147,9 +148,12 @@ router.get('/api/game-state/:id', (req, res) => {
     if (err) {
       console.log(err);
       res.send({ success: false });
+    } else if (!result || !result[0] || !result[0].game_id) {
+      console.log(`Game not found - in /api/game-state/${req.params.gameId}`);
+      res.send({ success: false });
     } else {
       res.send({
-        gameId: result[0].gameId,
+        gameId: result[0].game_id,
         startTime: result[0].start_time,
         isStarted: result[0].is_started === 1 ? true : false,
         team1: result[0].team_1_id,
