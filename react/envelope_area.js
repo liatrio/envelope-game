@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import Row from 'react-bootstrap/Row'
 import Container from 'react-bootstrap/Container'
 
-
 import Envelope from './envelope'
 import EnvelopeStack from './envelope_stack'
 
@@ -88,7 +87,7 @@ class EnvelopeArea extends Component {
     }
     if (this.props.seat.isTeam1) {
       return (
-        <Container style={{width: "35%", top: "60%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>
+        <Container style={{width: "35%", top: "56%", left: "50%", marginLeft: "-17.5%", zIndex: "1", position: "absolute"}}>
           <Row>
             <Envelope
               updateEnvelope={this.updateEnvelope}
@@ -114,7 +113,7 @@ class EnvelopeArea extends Component {
       );
     } else {
       return (
-        <Container style={{width: "35%", top: "60%", left: "50%", marginLeft: "-17.5%", position: "absolute"}}>
+        <Container style={{width: "35%", top: "56%", left: "50%", marginLeft: "-17.5%", zIndex: "1", position: "absolute"}}>
           <Row>
             <EnvelopeStack
               stackType={1}
