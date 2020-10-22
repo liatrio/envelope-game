@@ -272,6 +272,7 @@ class GameArea extends Component {
               </Modal.Header>
               <Modal.Body>
                 <FacilitatorControls
+                  isStarted={this.state.isStarted}
                   seats={this.state.seats}
                   team1={this.state.team1}
                   team2={this.state.team2}
