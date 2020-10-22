@@ -41,9 +41,9 @@ router.get('/api/create', (req, res) => {
 
   // create game instance
   values = [
-    [gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0, session]
+    [gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0, session, false]
   ];
-  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick, facilitator_session) VALUES ?';
+  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick, facilitator_session, is_started) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) {
       console.log(err);
@@ -112,7 +112,7 @@ router.get('/api/join/:gameId', (req, res) => {
     }
     let summary = {};
     summary.game = result[0].game_id;
-    summary.isStarted = result[0].is_started;
+    summary.isStarted = result[0].is_started === 1 ? true : false;
     summary.team1 = result[0].team_1_id;
     summary.team2 = result[0].team_2_id;
     summary.seats = [];
@@ -138,8 +138,8 @@ router.get('/api/join/:gameId', (req, res) => {
 });
 
 router.get('/api/game-state/:id', (req, res) => {
-  const sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, is_started, ENVELOPES.game_id, team_id, 
-             GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick
+  const sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, ENVELOPES.game_id, team_id, 
+             GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick, GAME.is_started
              FROM ENVELOPES 
              INNER JOIN GAME ON GAME.game_id = ENVELOPES.game_id
              WHERE ENVELOPES.game_id = ${db.escape(req.params.id)}`;
@@ -151,7 +151,7 @@ router.get('/api/game-state/:id', (req, res) => {
       res.send({
         gameId: result[0].gameId,
         startTime: result[0].start_time,
-        isStarted: result[0].is_started,
+        isStarted: result[0].is_started === 1 ? true : false,
         team1: result[0].team_1_id,
         team2: result[0].team_2_id,
         score1: result[0].score_1,

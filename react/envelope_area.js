@@ -90,6 +90,7 @@ class EnvelopeArea extends Component {
         <Container style={{width: "35%", top: "56%", left: "50%", marginLeft: "-17.5%", zIndex: "1", position: "absolute"}}>
           <Row>
             <Envelope
+              isStarted={this.props.isStarted}
               updateEnvelope={this.updateEnvelope}
               activeEnvelope={this.state.activeEnvelope}
               gameId={this.props.gameId}
@@ -101,6 +102,7 @@ class EnvelopeArea extends Component {
             >
             </Envelope>
             <EnvelopeStack
+              isStarted={this.props.isStarted}
               stackType={0}
               setActiveEnvelope={this.setActiveEnvelope}
               finishedEnvelopes={Array.from(this.state.finishedEnvelopes)}
@@ -116,6 +118,7 @@ class EnvelopeArea extends Component {
         <Container style={{width: "35%", top: "56%", left: "50%", marginLeft: "-17.5%", zIndex: "1", position: "absolute"}}>
           <Row>
             <EnvelopeStack
+              isStarted={this.props.isStarted}
               stackType={1}
               setActiveEnvelope={this.setActiveEnvelope}
               envelopes={this.props.envelopes}
@@ -124,6 +127,7 @@ class EnvelopeArea extends Component {
               advanceEnvelopeSeat={this.advanceEnvelopeSeat}
             ></EnvelopeStack>
             <Envelope
+              isStarted={this.props.isStarted}
               updateEnvelope={this.updateEnvelope}
               activeEnvelope={this.state.activeEnvelope}
               gameId={this.props.gameId}
@@ -135,6 +139,7 @@ class EnvelopeArea extends Component {
             >
             </Envelope>
             <EnvelopeStack
+              isStarted={this.props.isStarted}
               stackType={0}
               envelopes={this.props.envelopes}
               finishedEnvelopes={Array.from(this.state.finishedEnvelopes)}

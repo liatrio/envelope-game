@@ -4,12 +4,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faEnvelopeOpen, faEnvelopeOpenText, faEnvelopeSquare } from '@fortawesome/free-solid-svg-icons'
 import { faEnvelope as faEnvelopeClear } from '@fortawesome/free-regular-svg-icons'
 
-import {ReactComponent as ToDoFull} from './assets/stack_to-do_full.svg';
-import {ReactComponent as ToDoHalf} from './assets/stack_to-do_half.svg';
-import {ReactComponent as ToDoOne} from './assets/stack_to-do_one.svg';
-import {ReactComponent as EnvOpen} from './assets/envelope_open.svg';
-import {ReactComponent as IndexCard} from './assets/index-card.svg';
-import {ReactComponent as EnvClosed} from './assets/envelope_closed.svg';
+import { ReactComponent as ToDoFull } from './assets/stack_to-do_full.svg';
+import { ReactComponent as ToDoHalf } from './assets/stack_to-do_half.svg';
+import { ReactComponent as ToDoOne } from './assets/stack_to-do_one.svg';
+import { ReactComponent as EnvOpen } from './assets/envelope_open.svg';
+import { ReactComponent as IndexCard } from './assets/index-card.svg';
+import { ReactComponent as EnvClosed } from './assets/envelope_closed.svg';
+import { ReactComponent as EnvOpenIndex } from './assets/envelope_open_index-card.svg';
+import { ReactComponent as EnvClosedOk } from './assets/envelope_ok.svg';
+
+
+
 
 import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
@@ -28,10 +33,8 @@ class Envelope extends Component {
     };
     this.checkStamp = this.checkStamp.bind(this);
     this.toggleOpen = this.toggleOpen.bind(this);
-    this.getIcon = this.getIcon.bind(this);
+    this.getEnvelope = this.getEnvelope.bind(this);
   }
-
-
 
   // handles checking the stamp to see if its correct
   // has a two second cooldown on clicking a button before it can be completed
@@ -54,6 +57,8 @@ class Envelope extends Component {
   }
 
   toggleOpen() {
+    // disable if game isn't running
+    if (!this.props.isStarted) return;
     const open = this.state.open;
     let envelope = this.props.activeEnvelope;
     if (open && envelope.stamped) {
@@ -68,54 +73,81 @@ class Envelope extends Component {
   }
 
   // helper function to return the right icon based on state
-  getIcon() {
+  getEnvelope() {
     if (!this.props.activeEnvelope) {
-      return faEnvelope;
+      return (
+        <EnvClosed
+          className="invisible"
+          style={{ margin: "0 auto", maxWidth: "50px" }}
+          onClick={this.toggleOpen}
+          aria-controls="collapse-stamp-bar"
+          aria-expanded={this.state.open}
+        />
+      );
     }
-    switch (this.props.activeEnvelope.envelopeState) {
-      case 0:
-        return faEnvelopeClear;
+
+    switch (this.props.activeEnvelope.clientState) {
       case 1:
-        return faEnvelope;
+        return (
+          <EnvClosed
+            style={{ margin: "0 auto", maxWidth: "50px" }}
+            onClick={this.toggleOpen}
+            aria-controls="collapse-stamp-bar"
+            aria-expanded={this.state.open}
+          />
+        );
       case 2:
-        return faEnvelopeOpen;
+        return (
+          <EnvOpen
+            style={{ margin: "0 auto", maxWidth: "50px" }}
+            onClick={this.toggleOpen}
+            aria-controls="collapse-stamp-bar"
+            aria-expanded={this.state.open}
+          />
+        );
       case 3:
-        return faEnvelopeOpenText;
+        return (
+          <EnvOpenIndex
+            style={{ margin: "0 auto", maxWidth: "50px" }}
+            onClick={this.toggleOpen}
+            aria-controls="collapse-stamp-bar"
+            aria-expanded={this.state.open}
+          />
+        );
       case 4:
-        return faEnvelopeSquare;
-      case 5:
-        return faEnvelope;
+        return (
+          <EnvClosedOk
+            style={{ margin: "0 auto", maxWidth: "50px" }}
+            onClick={this.toggleOpen}
+            aria-controls="collapse-stamp-bar"
+            aria-expanded={this.state.open}
+          />
+        );
       default:
-        return faEnvelope;
+        return <div></div>;
     }
   }
 
   render() {
     const open = this.state.open;
     return (
-      <div style={{width: "70%", textAlign: "center"}}>
+      <div style={{ width: "70%", textAlign: "center" }}>
         {this.props.activeEnvelope ? `Stamp ${this.props.activeEnvelope.matchingStamp}` : "No envelope"}
         <br></br>
-        {/* <FontAwesomeIcon
-          icon={this.getIcon()}
-          size='5x'
-          onClick={this.toggleOpen}
-          aria-controls="collapse-stamp-bar"
-          aria-expanded={open}
-        /> */}
-        <EnvOpen style={{margin: "0 auto", maxWidth: "50px"}} onClick={this.toggleOpen} aria-controls="collapse-stamp-bar" aria-expanded={open}/>
+        {this.getEnvelope()}
+        {/* <EnvOpen style={{ margin: "0 auto", maxWidth: "50px" }} onClick={this.toggleOpen} aria-controls="collapse-stamp-bar" aria-expanded={open} /> */}
         <Fade
           in={open}
         >
           <div id="collapse-stamp-bar">
-            <ButtonGroup aria-label="collapse-stamp-bar">
+            <ButtonGroup aria-label="collapse-stamp-bar" className={this.state.open ? "visible" : "invisible"}>
               {this.props.activeEnvelope ? this.props.activeEnvelope.random.map((i) => {
                 const variant = i === this.props.activeEnvelope.matchingStamp ? "success" : "danger";
                 return (
                   <Button
                     key={i}
                     variant={this.props.activeEnvelope.checked[i] ? variant : "primary"}
-                    disabled={this.state.waiting || this.props.activeEnvelope.checked[i]}
+                    disabled={this.state.waiting || this.props.activeEnvelope.checked[i] || !this.props.isStarted}
                     onClick={() => this.checkStamp(i)}
                   >
                     {i}
