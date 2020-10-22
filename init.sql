@@ -17,7 +17,8 @@ CREATE TABLE GAME
   is_started BOOLEAN,
   total_stages INT NOT NULL,
   game_tick INT NOT NULL,
-  facilitator_id VARCHAR(16) NOT NULL,
+  facilitator_id VARCHAR(21) NOT NULL,
+  facilitator_session VARCHAR(21) NOT NULL,
   team_1_id VARCHAR(16) NOT NULL,
   team_2_id VARCHAR(16) NOT NULL,
   score_1 INT NOT NULL,
@@ -39,6 +40,7 @@ CREATE TABLE SEATS
   display_name VARCHAR(16),
   game_id VARCHAR(16) NOT NULL,
   team_id VARCHAR(16) NOT NULL,
+  session_id VARCHAR(21),
   PRIMARY KEY (seat_id),
   FOREIGN KEY (game_id) REFERENCES GAME(game_id),
   FOREIGN KEY (team_id) REFERENCES TEAMS(team_id)

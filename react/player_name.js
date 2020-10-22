@@ -48,14 +48,14 @@ class PlayerNameForm extends Component {
           <Form.Control
             ref={this.ref}
             type="text"
-            placeholder="Enter display name"
+            placeholder={this.props.seatId ? "Enter a display name" : "Choose a seat first"}
             name="playerName"
             onChange={this.playerNameChange}
           />
         </Form.Group>
         <Button 
           onClick={this.setPlayerName} 
-          disabled={this.state.waiting || !this.props.seatId }
+          disabled={this.state.waiting || !this.props.seatId}
         >
           Submit
         </Button>

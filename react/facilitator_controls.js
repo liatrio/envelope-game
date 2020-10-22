@@ -10,6 +10,11 @@ class FacilitatorControls extends Component {
   constructor(props) {
     super(props);
     this.getSeats = this.getSeats.bind(this);
+    this.emptySeat = this.emptySeat.bind(this);
+  }
+
+  async emptySeat(seatId) {
+    await fetch(`/api/remove-player/${seatId}`);
   }
 
   getSeats(isTeamOne) {
@@ -26,7 +31,7 @@ class FacilitatorControls extends Component {
             <Button
               className={s.isTaken ? "visible" : "invisible"}
               variant="danger"
-              onClick={() => this.selectSeat(s)}
+              onClick={() => this.emptySeat(s.seatId)}
             >
               X
             </Button>
@@ -34,6 +39,11 @@ class FacilitatorControls extends Component {
               `Player ${s.seatNumber + 1}` :
               s.displayName
             }
+            <Button
+              disabled={this.props.seatId === s.seatId}
+            >
+              Switch to {s.seatNumber + 1}
+            </Button>
             <br></br>
           </li>
         );
