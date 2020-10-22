@@ -9,7 +9,7 @@ import table, {ReactComponent as Table} from './assets/table.svg';
 import EnvelopeArea from './envelope_area';
 import PlayerNameForm from './player_name';
 import FacilitatorControls from './facilitator_controls';
-import Row from 'react-bootstrap/Row'
+
 
 
 import './index.css'
