@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
-import CorkboardUrl, { ReactComponent as Corkboard } from './assets/corkboard.svg';
+import { ReactComponent as Corkboard } from './assets/corkboard.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 

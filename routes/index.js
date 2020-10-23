@@ -109,7 +109,6 @@ router.get('/api/join/:gameId', (req, res) => {
       // handle any invalid queries
       console.log(`Game not found - in /api/join/${req.params.gameId}`);
       res.send({ game: null });
-
     } else {
       let summary = {};
       summary.game = result[0].game_id;

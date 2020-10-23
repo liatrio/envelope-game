@@ -6,8 +6,6 @@ import Button from 'react-bootstrap/Button';
 
 import PlayerNameForm from './player_name';
 
-import IndexCard from './assets/index-card.svg';
-
 class Controls extends Component {
   constructor(props) {
     super(props);
@@ -33,8 +31,6 @@ class Controls extends Component {
     const response = await fetch(request);
     const json = await response.json();
     if (json.success) {
-      console.log(this.state.selectedSeatNumber);
-      //this.props.setSeatId(seat);
       // seat selected successfully
       this.setState({ seatSuccess: true });
     } else {

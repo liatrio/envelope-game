@@ -4,9 +4,9 @@ import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
 import Cookies from 'universal-cookie';
 
-import background, { ReactComponent as Background } from './assets/background.svg';
+import background from './assets/background.svg';
 import Controls from './controls'
-import table, {ReactComponent as Table} from './assets/table.svg';
+import { ReactComponent as Table } from './assets/table.svg';
 import EnvelopeArea from './envelope_area';
 import FacilitatorControls from './facilitator_controls';
 import GameProgress from './game_progress';
@@ -25,7 +25,6 @@ class GameArea extends Component {
     const facil = cookies.get('facilitatorInfo');
     this.session = cookies.get('session');
     if (facil) {
-      console.log(facil);
       if (facil.game === this.gameId) {
         isFacilitator = true;
         facilitatorId = facil.id;
@@ -89,9 +88,7 @@ class GameArea extends Component {
       return s.sessionId === this.session
     });
     if (match) {
-      console.log('found a match');
-      console.log(match);
-      this.setState({ 
+      this.setState({
         seatId: match.seatId,
         mySeatNumber: match.seatNumber,
         isTeam1: match.isTeam1,
@@ -110,7 +107,6 @@ class GameArea extends Component {
   }
 
   async updateGame() {
-    console.log("updateGame");
     const response = await fetch(`/api/game-state/${this.gameId}`)
     const json = await response.json();
     this.setState({
@@ -188,12 +184,12 @@ class GameArea extends Component {
           isStarted={this.state.isStarted}
           teamId={this.state.teamId}
           gameId={this.gameId}
-          seat={this.state.seats.find(i => {
+          seat={this.state.seats ? this.state.seats.find(i => {
             return i.seatId === this.state.seatId;
-            })}
+          }) : null}
           seatNumber={this.state.mySeatNumber}
-        ></EnvelopeArea> 
-        <div style={{top: "65%", width: "60%", left: "20%", zIndex: 0,position: "absolute"}}>
+        ></EnvelopeArea>
+        <div style={{ top: "65%", width: "60%", left: "20%", zIndex: 0, position: "absolute" }}>
           <Table></Table>
         </div>
         <Modal

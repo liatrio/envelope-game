@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
 
 class PlayerNameForm extends Component {
   constructor(props) {
@@ -23,7 +21,6 @@ class PlayerNameForm extends Component {
 
   async setPlayerName() {
     if (!this.props.seatId) {
-      console.log("choose seat first");
       return;
     }
     this.setState({ waiting: true });

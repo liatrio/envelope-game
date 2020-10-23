@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import {ReactComponent as ToDoFull} from './assets/stack_to-do_full.svg';
 import {ReactComponent as ToDoHalf} from './assets/stack_to-do_half.svg';
 import {ReactComponent as ToDoOne} from './assets/stack_to-do_one.svg';
@@ -37,6 +35,13 @@ class EnvelopeStack extends Component {
         return e === i.envelopeId
       });
     });
+  }
+
+  envelopeStackType() {
+    if (this.getFinishedEnvelopes() > 9) {
+      return 
+    }
+
   }
 
   buttonVariant() {
