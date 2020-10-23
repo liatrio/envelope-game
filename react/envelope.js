@@ -96,13 +96,6 @@ class Envelope extends Component {
       <div style={{width: "70%", textAlign: "center"}}>
         {this.props.activeEnvelope ? `Stamp ${this.props.activeEnvelope.matchingStamp}` : "No envelope"}
         <br></br>
-        {/* <FontAwesomeIcon
-          icon={this.getIcon()}
-          size='5x'
-          onClick={this.toggleOpen}
-          aria-controls="collapse-stamp-bar"
-          aria-expanded={open}
-        /> */}
         <EnvOpen style={{margin: "0 auto", maxWidth: "50px"}} onClick={this.toggleOpen} aria-controls="collapse-stamp-bar" aria-expanded={open}/>
         <Fade
           in={open}

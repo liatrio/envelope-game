@@ -85,13 +85,18 @@ class EnvelopeStack extends Component {
           size="lg"
           style={{display: "contents"}}
         >
-          <div >
-            {/* <FontAwesomeIcon
-              icon={faEnvelope}
-              size='5x'
-            >
-            </FontAwesomeIcon> */}
-            <ToDoFull/>
+          <div>
+            {count > 10 && 
+              <ToDoFull/>
+            }
+
+            {count <= 10 && count > 1 && 
+              <ToDoHalf/>
+            }
+
+            {count === 1 &&
+              <ToDoOne/>
+            }
             <br></br>
             <Badge pill variant="light" className="align-middle">
               {this.props.stackType === 0 ? count : this.getFinishedEnvelopes().length}
