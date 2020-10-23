@@ -175,7 +175,7 @@ class GameArea extends Component {
           t2Name={this.state.team2Name}
           isStarted={this.state.isStarted}
           seatsFull={this.state.seatsFull}
-          seats={this.state.seats}
+          seats={this.state.seats ? this.state.seats : []}
         />
         <EnvelopeArea
           envelopes={this.state.envelopes ? this.state.envelopes.filter((i) => {
@@ -209,7 +209,7 @@ class GameArea extends Component {
               <Controls
                 playerSeat={this.state.playerSeat}
                 seatId={this.state.seatId}
-                seats={this.state.seats}
+                seats={this.state.seats ? this.state.seats : []}
                 seatsFull={this.state.seatsFull}
                 gameId={this.gameId}
                 show={this.state.joinGameControls}
@@ -256,7 +256,7 @@ class GameArea extends Component {
               <Modal.Body>
                 <FacilitatorControls
                   isStarted={this.state.isStarted}
-                  seats={this.state.seats}
+                  seats={this.state.seats ? this.state.seats : []}
                   team1={this.state.team1}
                   team2={this.state.team2}
                   facilitatorId={this.state.facilitatorId}
