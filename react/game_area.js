@@ -169,7 +169,7 @@ class GameArea extends Component {
           gameTick={this.state.gameTick}
           team1Score={this.state.team1Score}
           team2Score={this.state.team2Score}
-          envelopes={this.state.envelopes}
+          envelopes={this.state.envelopes ? this.state.envelopes :  []}
           startTime={this.state.startTime}
           t1Name={this.state.team1Name}
           t2Name={this.state.team2Name}
@@ -178,9 +178,9 @@ class GameArea extends Component {
           seats={this.state.seats}
         />
         <EnvelopeArea
-          envelopes={this.state.envelopes.filter((i) => {
+          envelopes={this.state.envelopes ? this.state.envelopes.filter((i) => {
             return i.seatNumber === this.state.mySeatNumber && i.isTeam1 === this.state.isTeam1
-          })}
+          }) : []}
           isStarted={this.state.isStarted}
           teamId={this.state.teamId}
           gameId={this.gameId}

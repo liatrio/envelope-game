@@ -142,7 +142,7 @@ router.get('/api/game-state/:gameId', (req, res) => {
              GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick, GAME.is_started
              FROM ENVELOPES 
              INNER JOIN GAME ON GAME.game_id = ENVELOPES.game_id
-             WHERE ENVELOPES.game_id = ${db.escape(req.params.id)}`;
+             WHERE ENVELOPES.game_id = ${db.escape(req.params.gameId)}`;
   db.query(sql, function (err, result) {
     if (err) {
       console.log(err);
