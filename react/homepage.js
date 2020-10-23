@@ -20,7 +20,6 @@ class Homepage extends Component {
     this.setState({ disabled: true });
     const response = await fetch('/api/create')
     const json = await response.json();
-    console.log(json);
     if (json.success) {
       this.setState({ gameId: json.game, facilitatorId: json.facilitator, success: true })
     }
