@@ -37,9 +37,9 @@ router.get('/api/create', (req, res) => {
 
   // create game instance
   values = [
-    [gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0]
+    [gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0, 0, 0]
   ];
-  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick) VALUES ?';
+  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick, team_1_completed, team_2_completed) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) throw err;
   });
@@ -112,7 +112,8 @@ router.get('/api/join/:gameId', (req, res) => {
 });
 
 router.get('/api/game-state/:id', (req, res) => {
-  let sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, is_started, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick
+  let sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, is_started, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick,
+             GAME.team_1_completed, GAME.team_2_completed
              FROM ENVELOPES 
              INNER JOIN GAME on GAME.game_id = ENVELOPES.game_id
              WHERE ENVELOPES.game_id = '${req.params.id}'`;
@@ -120,6 +121,8 @@ router.get('/api/game-state/:id', (req, res) => {
     if (err) throw err;
 
     res.send({
+      team1Completed: result[0].team_1_completed,
+      team2Completed: result[0].team_2_completed,
       gameId: result[0].gameId,
       startTime: result[0].start_time,
       isStarted: result[0].is_started,

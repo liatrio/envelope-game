@@ -39,6 +39,8 @@ class GameArea extends Component {
       gameTick: 0,
       team1Score: 0,
       team2Score: 0,
+      team1Completed: 0,
+      team2Completed: 0,
       joinGameControls: false,
       facilitatorControls: false,
       playerNameControls: false,
@@ -104,7 +106,8 @@ class GameArea extends Component {
       team1Score: json.score1,
       team2Score: json.score2,
       gameTick: json.gameTick,
-
+      team1Completed: json.team1Completed,
+      team2Completed: json.team2Completed
     });
   }
 
@@ -163,6 +166,8 @@ class GameArea extends Component {
           isStarted={this.state.isStarted}
           seatsFull={this.state.seatsFull}
           seats={this.state.seats}
+          team1Completed={this.state.team1Completed}
+          team2Completed={this.state.team2Completed}
         />
         <EnvelopeArea
           envelopes={this.state.envelopes.filter((i) => {
