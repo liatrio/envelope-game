@@ -24,9 +24,19 @@ class Minimap extends Component {
       <Container fluid>
         <Row>
           <Col lg={false}>
+            <h1 class="board-title">FLOW</h1>
             <h5>Team {this.props.t1Name} Progress</h5>
             <h5>Money Earned: ${this.props.team1Score}</h5><br/> 
-            <h5>Envelopes Completed: </h5>
+            <h5>Total Completed: </h5>
+            <hr></hr>
+            <Row>
+              <Col>
+                  <div class="player-svg"></div>
+              </Col>
+              <Col>
+                  <div class="env-open-svg"></div>
+              </Col>
+            </Row>
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={0}
@@ -53,9 +63,22 @@ class Minimap extends Component {
             </MinimapStatus>            
           </Col>
           <Col lg={false}>
+          <h1 class="board-title">BATCH</h1>
           <h5>Team {this.props.t2Name} Progress</h5>
             <h5>Money Earned: ${this.props.team2Score}</h5><br/> 
-            <h5>Envelopes Completed: </h5> 
+            <h5>Total Completed: </h5> 
+            <hr></hr>
+            <Row>
+              <Col>
+                  <div class="player-svg"></div>
+              </Col>
+              <Col>
+                  <div class="env-open-svg"></div>
+              </Col>
+              <Col>
+                  <div class="env-ok-svg"></div>
+              </Col>
+            </Row>
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={0}
@@ -82,6 +105,7 @@ class Minimap extends Component {
             </MinimapStatus>          
           </Col>
         </Row>
+       
       </Container>
     );
   }

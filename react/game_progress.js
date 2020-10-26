@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
-import CorkboardUrl, { ReactComponent as Corkboard } from './assets/corkboard.svg';
+import { ReactComponent as Corkboard } from './assets/corkboard.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 
@@ -49,13 +49,13 @@ class GameProgress extends Component {
               </Row>
             }
             <Row style={{marginLeft: "0", marginRight: "0"}} className= "justify-content-md-center" >
-              {this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick % 60 < 10 ? 0 : ''}{this.props.gameTick ? this.props.gameTick % 60 : '0'}
+              <div class="display-time clock">{this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick % 60 < 10 ? 0 : ''}{this.props.gameTick ? this.props.gameTick % 60 : '0'}</div>
             </Row>
             {facilID && this.state.seatsFullError &&
               <Row style={{marginLeft: "0", marginRight: "0"}} className= "justify-content-md-center">Error: Seats are not Full yet</Row>
             }
         </div>
-        <div style={{width: "35%", top: "15%", left: "50%", marginLeft: "-17.5%", position: "absolute", overflow: "auto"}}>
+        <div style={{width: "900px", top: "10px", left: "50%", transform: "translate(-50%)", position: "relative", overflow: "auto"}}>
           <Card.Img as={Corkboard} alt="Scoreboard"/>    
           <Card.ImgOverlay bsPrefix='card-img-overlay CardImgOverlay'>
             <Card.Body>

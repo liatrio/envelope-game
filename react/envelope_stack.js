@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import {ReactComponent as ToDoFull} from './assets/stack_to-do_full.svg';
 import {ReactComponent as ToDoHalf} from './assets/stack_to-do_half.svg';
 import {ReactComponent as ToDoOne} from './assets/stack_to-do_one.svg';
@@ -39,6 +37,13 @@ class EnvelopeStack extends Component {
     });
   }
 
+  envelopeStackType() {
+    if (this.getFinishedEnvelopes() > 9) {
+      return 
+    }
+
+  }
+
   buttonVariant() {
     if (!this.props.envelopes) return "secondary";
     if (this.props.stackType === 0 && this.props.envelopes.length > 0) {
@@ -52,6 +57,7 @@ class EnvelopeStack extends Component {
 
   isDisabled() {
     if (!this.props.envelopes) return true;
+    if (!this.props.isStarted) return true;
     if (this.props.stackType === 0 && this.props.envelopes.length > 0) {
       // disable until they pass envelopes on
       if (this.getFinishedEnvelopes().length === 5) {
@@ -85,6 +91,7 @@ class EnvelopeStack extends Component {
           size="lg"
           style={{display: "contents"}}
         >
+<<<<<<< HEAD
           <div>
             {count > 10 && 
               <ToDoFull/>
@@ -105,6 +112,10 @@ class EnvelopeStack extends Component {
             {this.props.stackType === 1 && this.getFinishedEnvelopes().length > 1 &&
               <ToDoHalf/>
             }
+=======
+          <div >
+            <ToDoFull/>
+>>>>>>> master
             <br></br>
             <Badge pill variant="light" className="align-middle">
               {this.props.stackType === 0 ? count : this.getFinishedEnvelopes().length}

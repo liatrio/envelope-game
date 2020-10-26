@@ -14,7 +14,7 @@ CREATE TABLE TEAMS
 CREATE TABLE GAME
 (
   game_id VARCHAR(16) NOT NULL,
-  is_started BOOLEAN,
+  is_started BOOLEAN NOT NULL,
   total_stages INT NOT NULL,
   game_tick INT NOT NULL,
   facilitator_id VARCHAR(21) NOT NULL,

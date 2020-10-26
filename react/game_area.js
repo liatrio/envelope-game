@@ -4,9 +4,9 @@ import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
 import Cookies from 'universal-cookie';
 
-import background, { ReactComponent as Background } from './assets/background.svg';
+import background from './assets/background.svg';
 import Controls from './controls'
-import table, {ReactComponent as Table} from './assets/table.svg';
+import { ReactComponent as Table } from './assets/table.svg';
 import EnvelopeArea from './envelope_area';
 import FacilitatorControls from './facilitator_controls';
 import GameProgress from './game_progress';
@@ -25,7 +25,6 @@ class GameArea extends Component {
     const facil = cookies.get('facilitatorInfo');
     this.session = cookies.get('session');
     if (facil) {
-      console.log(facil);
       if (facil.game === this.gameId) {
         isFacilitator = true;
         facilitatorId = facil.id;
@@ -59,22 +58,9 @@ class GameArea extends Component {
       isTeam1: null,
     }
     this.intervalId = '';
-
-    this.setSeatId = this.setSeatId.bind(this);
     this.toggleJoinGame = this.toggleJoinGame.bind(this);
     this.togglePlayerName = this.togglePlayerName.bind(this);
     this.toggleFacilitatorControls = this.toggleFacilitatorControls.bind(this);
-
-  }
-
-  setSeatId(seat) {
-    console.log(seat.seatId);
-    this.setState({
-      seatId: seat.seatId,
-      mySeatNumber: seat.seatNumber,
-      isTeam1: seat.isTeam1,
-    });
-    console.log(this.state.seatId);
   }
 
   componentDidMount() {
@@ -97,14 +83,12 @@ class GameArea extends Component {
       team1Name: json.team1Name,
       team2Name: json.team2Name,
     });
-    // check if we have already selected a seat
+    // check if we have selected a seat
     const match = this.state.seats.find(s => {
       return s.sessionId === this.session
     });
     if (match) {
-      console.log('found a match');
-      console.log(match);
-      this.setState({ 
+      this.setState({
         seatId: match.seatId,
         mySeatNumber: match.seatNumber,
         isTeam1: match.isTeam1,
@@ -123,7 +107,6 @@ class GameArea extends Component {
   }
 
   async updateGame() {
-    console.log("updateGame");
     const response = await fetch(`/api/game-state/${this.gameId}`)
     const json = await response.json();
     this.setState({
@@ -155,7 +138,7 @@ class GameArea extends Component {
       backgroundImage: `url(${background})`,
       backgroundRepeat: "no-repeat",
       backgroundAttachment: "fixed",
-      backgroundSize: "150%",
+      backgroundSize: "cover",
       backgroundPosition: "50% 50%",
       position: "relative",
       width: "100%",
@@ -186,26 +169,27 @@ class GameArea extends Component {
           gameTick={this.state.gameTick}
           team1Score={this.state.team1Score}
           team2Score={this.state.team2Score}
-          envelopes={this.state.envelopes}
+          envelopes={this.state.envelopes ? this.state.envelopes :  []}
           startTime={this.state.startTime}
           t1Name={this.state.team1Name}
           t2Name={this.state.team2Name}
           isStarted={this.state.isStarted}
           seatsFull={this.state.seatsFull}
-          seats={this.state.seats}
+          seats={this.state.seats ? this.state.seats : []}
         />
         <EnvelopeArea
-          envelopes={this.state.envelopes.filter((i) => {
+          envelopes={this.state.envelopes ? this.state.envelopes.filter((i) => {
             return i.seatNumber === this.state.mySeatNumber && i.isTeam1 === this.state.isTeam1
-          })}
+          }) : []}
+          isStarted={this.state.isStarted}
           teamId={this.state.teamId}
           gameId={this.gameId}
-          seat={this.state.seats.find(i => {
+          seat={this.state.seats ? this.state.seats.find(i => {
             return i.seatId === this.state.seatId;
-            })}
+          }) : null}
           seatNumber={this.state.mySeatNumber}
-        ></EnvelopeArea> 
-        <div style={{top: "65%", width: "60%", left: "20%", zIndex: 0,position: "absolute"}}>
+        ></EnvelopeArea>
+        <div style={{ top: "70%", width: "60%", left: "20%", zIndex: 0, position: "absolute" }}>
           <Table></Table>
         </div>
         <Modal
@@ -225,8 +209,7 @@ class GameArea extends Component {
               <Controls
                 playerSeat={this.state.playerSeat}
                 seatId={this.state.seatId}
-                // setSeatId={(seat) => this.setSeatId(seat)}
-                seats={this.state.seats}
+                seats={this.state.seats ? this.state.seats : []}
                 seatsFull={this.state.seatsFull}
                 gameId={this.gameId}
                 show={this.state.joinGameControls}
@@ -272,7 +255,8 @@ class GameArea extends Component {
               </Modal.Header>
               <Modal.Body>
                 <FacilitatorControls
-                  seats={this.state.seats}
+                  isStarted={this.state.isStarted}
+                  seats={this.state.seats ? this.state.seats : []}
                   team1={this.state.team1}
                   team2={this.state.team2}
                   facilitatorId={this.state.facilitatorId}
