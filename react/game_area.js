@@ -138,7 +138,7 @@ class GameArea extends Component {
       backgroundImage: `url(${background})`,
       backgroundRepeat: "no-repeat",
       backgroundAttachment: "fixed",
-      backgroundSize: "150%",
+      backgroundSize: "cover",
       backgroundPosition: "50% 50%",
       position: "relative",
       width: "100%",
