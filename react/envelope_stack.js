@@ -91,7 +91,6 @@ class EnvelopeStack extends Component {
           size="lg"
           style={{display: "contents"}}
         >
-<<<<<<< HEAD
           <div>
             {count > 10 && 
               <ToDoFull/>
@@ -112,10 +111,6 @@ class EnvelopeStack extends Component {
             {this.props.stackType === 1 && this.getFinishedEnvelopes().length > 1 &&
               <ToDoHalf/>
             }
-=======
-          <div >
-            <ToDoFull/>
->>>>>>> master
             <br></br>
             <Badge pill variant="light" className="align-middle">
               {this.props.stackType === 0 ? count : this.getFinishedEnvelopes().length}
