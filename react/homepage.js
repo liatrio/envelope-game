@@ -33,7 +33,7 @@ class Homepage extends Component {
 	      <div class="row">
 	      	<div class="col-md-12">
             <br></br>
-            <h1>The Envelope Game</h1>
+            <h1 data-testid='123'>The Envelope Game</h1>
             <hr></hr>
 			      <div class="jumbotron">
               <h4 text-align="left">About The Game</h4>
