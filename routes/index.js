@@ -40,16 +40,8 @@ router.get('/api/create', (req, res) => {
   });
 
   // create game instance
-  values = [
-<<<<<<< HEAD
-    [gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0, 0, 0]
-  ];
-  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick, team_1_completed, team_2_completed) VALUES ?';
-=======
-    [gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0, session, false]
-  ];
-  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick, facilitator_session, is_started) VALUES ?';
->>>>>>> master
+  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick, team_1_completed, team_2_completed , facilitator_session, isstarted) VALUES ?';
+    [gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0, 0, 0, session, false];
   db.query(sql, [values], function (err, result) {
     if (err) {
       console.log(err);
@@ -143,45 +135,13 @@ router.get('/api/join/:gameId', (req, res) => {
   });
 });
 
-<<<<<<< HEAD
 router.get('/api/game-state/:id', (req, res) => {
   let sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, is_started, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick,
              GAME.team_1_completed, GAME.team_2_completed
-=======
-router.get('/api/game-state/:gameId', (req, res) => {
-  const sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, ENVELOPES.game_id, team_id, 
-             GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick, GAME.is_started
->>>>>>> master
              FROM ENVELOPES 
              INNER JOIN GAME ON GAME.game_id = ENVELOPES.game_id
              WHERE ENVELOPES.game_id = ${db.escape(req.params.gameId)}`;
   db.query(sql, function (err, result) {
-<<<<<<< HEAD
-    if (err) throw err;
-
-    res.send({
-      team1Completed: result[0].team_1_completed,
-      team2Completed: result[0].team_2_completed,
-      gameId: result[0].gameId,
-      startTime: result[0].start_time,
-      isStarted: result[0].is_started,
-      team1: result[0].team_1_id,
-      team2: result[0].team_2_id,
-      score1: result[0].score_1,
-      score2: result[0].score_2,
-      gameTick: result[0].game_tick,
-      envelopes: result.map((i) => {
-        return ({
-          envelopeId: i.envelope_id,
-          matchingStamp: i.matching_stamp,
-          envelopeState: i.envelope_state,
-          team: i.team_id,
-          isTeam1: i.is_team_1 === 1 ? true : false,
-          seatNumber: i.seat_number
-        });
-      })
-    });
-=======
     if (err) {
       console.log(err);
       res.send({ success: false });
@@ -210,7 +170,6 @@ router.get('/api/game-state/:gameId', (req, res) => {
         })
       });
     }
->>>>>>> master
   });
 });
 

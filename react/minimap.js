@@ -24,12 +24,9 @@ class Minimap extends Component {
       <Container fluid>
         <Row>
           <Col lg={false}>
-<<<<<<< HEAD
-=======
             <h5>Team {this.props.t1Name} Progress</h5>
             <h5>Money Earned: ${this.props.team1Score}</h5><br/> 
             <h5>Envelopes Completed: </h5>
->>>>>>> master
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={0}
@@ -56,12 +53,9 @@ class Minimap extends Component {
             </MinimapStatus>            
           </Col>
           <Col lg={false}>
-<<<<<<< HEAD
-=======
           <h5>Team {this.props.t2Name} Progress</h5>
             <h5>Money Earned: ${this.props.team2Score}</h5><br/> 
             <h5>Envelopes Completed: </h5> 
->>>>>>> master
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={0}

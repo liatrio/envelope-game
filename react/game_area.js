@@ -9,13 +9,8 @@ import Controls from './controls'
 import { ReactComponent as Table } from './assets/table.svg';
 import EnvelopeArea from './envelope_area';
 import FacilitatorControls from './facilitator_controls';
-<<<<<<< HEAD
-
-
-=======
 import GameProgress from './game_progress';
 import PlayerNameForm from './player_name';
->>>>>>> master
 
 import './index.css'
 
@@ -125,11 +120,8 @@ class GameArea extends Component {
       team1Score: json.score1,
       team2Score: json.score2,
       gameTick: json.gameTick,
-<<<<<<< HEAD
       team1Completed: json.team1Completed,
       team2Completed: json.team2Completed
-=======
->>>>>>> master
     });
   }
 
@@ -187,13 +179,9 @@ class GameArea extends Component {
           t2Name={this.state.team2Name}
           isStarted={this.state.isStarted}
           seatsFull={this.state.seatsFull}
-<<<<<<< HEAD
-          seats={this.state.seats}
           team1Completed={this.state.team1Completed}
           team2Completed={this.state.team2Completed}
-=======
           seats={this.state.seats ? this.state.seats : []}
->>>>>>> master
         />
         <EnvelopeArea
           envelopes={this.state.envelopes ? this.state.envelopes.filter((i) => {

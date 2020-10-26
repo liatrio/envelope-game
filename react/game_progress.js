@@ -1,16 +1,9 @@
 import React, { Component } from 'react';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
-<<<<<<< HEAD
-import Col from 'react-bootstrap/Col'
-import CorkboardUrl, { ReactComponent as Corkboard} from './assets/corkboard.svg';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-=======
 import { ReactComponent as Corkboard } from './assets/corkboard.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
->>>>>>> master
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
-import ScaleText from "react-scale-text";
 
 import Minimap from './minimap'
 
