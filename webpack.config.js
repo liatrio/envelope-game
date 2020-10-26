@@ -35,6 +35,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: './react/index.html',
+      favicon: './react/assets/favicon.svg'
     }),
   ],
   mode: process.env.NODE_ENV || 'development',

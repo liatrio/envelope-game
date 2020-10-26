@@ -20,11 +20,23 @@ class Minimap extends Component {
   }
 
   render() {
-
     return (
       <Container fluid>
         <Row>
           <Col lg={false}>
+            <h1 class="board-title">FLOW</h1>
+            <h5>Team {this.props.t1Name} Progress</h5>
+            <h5>Money Earned: ${this.props.team1Score}</h5><br/> 
+            <h5>Total Completed: </h5>
+            <hr></hr>
+            <Row>
+              <Col>
+                  <div class="player-svg"></div>
+              </Col>
+              <Col>
+                  <div class="env-open-svg"></div>
+              </Col>
+            </Row>
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={0}
@@ -32,8 +44,7 @@ class Minimap extends Component {
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(0, true)}
             >
-            </MinimapStatus>
-            
+            </MinimapStatus>           
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={1}
@@ -41,8 +52,7 @@ class Minimap extends Component {
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(1, true)}
             >
-            </MinimapStatus>
-            
+            </MinimapStatus>            
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={2}
@@ -50,10 +60,25 @@ class Minimap extends Component {
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(2, true)}
             >
-            </MinimapStatus>
-            
+            </MinimapStatus>            
           </Col>
           <Col lg={false}>
+          <h1 class="board-title">BATCH</h1>
+          <h5>Team {this.props.t2Name} Progress</h5>
+            <h5>Money Earned: ${this.props.team2Score}</h5><br/> 
+            <h5>Total Completed: </h5> 
+            <hr></hr>
+            <Row>
+              <Col>
+                  <div class="player-svg"></div>
+              </Col>
+              <Col>
+                  <div class="env-open-svg"></div>
+              </Col>
+              <Col>
+                  <div class="env-ok-svg"></div>
+              </Col>
+            </Row>
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={0}
@@ -61,8 +86,7 @@ class Minimap extends Component {
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(0, false)}
             >
-            </MinimapStatus>
-            
+            </MinimapStatus>           
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={1}
@@ -71,7 +95,6 @@ class Minimap extends Component {
               displayName={this.getDisplayName(1, false)}
             >
             </MinimapStatus>
-            
             <MinimapStatus
               envelopes={this.props.envelopes}
               seatNumber={2}
@@ -79,10 +102,10 @@ class Minimap extends Component {
               gameTick={this.props.gameTick}
               displayName={this.getDisplayName(2, false)}
             >
-            </MinimapStatus>
-            
+            </MinimapStatus>          
           </Col>
         </Row>
+       
       </Container>
     );
   }

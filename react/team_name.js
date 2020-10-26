@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 
 class TeamNameForm extends Component {
@@ -30,8 +28,6 @@ class TeamNameForm extends Component {
 
   async setTeamNames() {
     this.setState({ waiting: true });
-    console.log(this.state.teamOneName);
-    console.log(this.state.teamTwoName);
 
     const teamOneRequest = {
       method: 'POST',
@@ -54,9 +50,6 @@ class TeamNameForm extends Component {
       })
     };
     await fetch('/api/set-team-name', teamTwoRequest);
-
-    console.log(teamOneRequest);
-    console.log(teamTwoRequest);
 
     this.setState({ waiting: false });
     this.props.toggleControls();
@@ -82,8 +75,9 @@ class TeamNameForm extends Component {
                 onChange={this.teamTwoChange}
               >
               </Form.Control>
+              <br></br>
               <Row className="justify-content-md-center">
-                <Button onClick={this.setTeamNames} disabled={this.state.waiting}>Update Team Names</Button>
+                <Button onClick={this.setTeamNames} disabled={this.state.waiting}>Update</Button>
               </Row>
             </Form.Group>
           </Col>

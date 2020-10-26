@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col'
-import CorkboardUrl, { ReactComponent as Corkboard} from './assets/corkboard.svg';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ReactComponent as Corkboard } from './assets/corkboard.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
-import ScaleText from "react-scale-text";
 
 import Minimap from './minimap'
-
 
 class GameProgress extends Component {
   constructor(props) {
@@ -21,7 +17,6 @@ class GameProgress extends Component {
     this.togglePlay = this.togglePlay.bind(this);
     this.seatsNotFull = this.seatsNotFull.bind(this);
   }
-
 
   async togglePlay() {
     this.setState({ disabled: true });
@@ -41,7 +36,6 @@ class GameProgress extends Component {
   }
 
   render() {
-    let ic = this.props.isStarted ? faPause : faPlay;
     const facilID = this.props.facilitatorId;
     return (
       <div>
@@ -52,14 +46,14 @@ class GameProgress extends Component {
         {facilID &&
               <Row className= "justify-content-md-center" style={{marginLeft: "0", marginRight: "0"}}>
                 <FontAwesomeIcon className="playIcon" 
-                icon={ic} 
+                icon={this.props.isStarted ? faPause : faPlay} 
                 onClick={this.props.seatsFull ? this.togglePlay : this.seatsNotFull} 
                 disabled={this.state.disabled} />
               </Row>
             }
 
             <Row style={{marginLeft: "0", marginRight: "0"}} className= "justify-content-md-center" >
-              {this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick % 60 < 10 ? 0 : ''}{this.props.gameTick ? this.props.gameTick % 60 : '0'}
+              <div class="display-time clock">{this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick % 60 < 10 ? 0 : ''}{this.props.gameTick ? this.props.gameTick % 60 : '0'}</div>
             </Row>
 
             <div className="leftColumn" style={{width: "35%", height: "150px", top: "8%", left: "52%", marginLeft: "-17.5%", position: "absolute"}}>
@@ -77,7 +71,7 @@ class GameProgress extends Component {
 
             </div>
         </div>
-        <div style={{width: "35%", top: "20%", left: "50%", marginLeft: "-17.5%", position: "absolute", overflow: "hidden"}}>
+        <div style={{width: "900px", top: "10px", left: "50%", transform: "translate(-50%)", position: "relative", overflow: "auto"}}>
           <Card.Img as={Corkboard} alt="Scoreboard"/>    
           <Card.ImgOverlay bsPrefix='card-img-overlay CardImgOverlay'>
             <Card.Body>
