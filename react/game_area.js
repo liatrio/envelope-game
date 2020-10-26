@@ -1,16 +1,21 @@
 import React, { Component } from 'react'
-import GameProgress from './game_progress';
-import Controls from './controls'
-import background, { ReactComponent as Background } from './assets/background.svg';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
-import table, {ReactComponent as Table} from './assets/table.svg';
+import Cookies from 'universal-cookie';
+
+import background from './assets/background.svg';
+import Controls from './controls'
+import { ReactComponent as Table } from './assets/table.svg';
 import EnvelopeArea from './envelope_area';
-import PlayerNameForm from './player_name';
 import FacilitatorControls from './facilitator_controls';
+<<<<<<< HEAD
 
 
+=======
+import GameProgress from './game_progress';
+import PlayerNameForm from './player_name';
+>>>>>>> master
 
 import './index.css'
 
@@ -18,8 +23,18 @@ class GameArea extends Component {
 
   constructor(props) {
     super(props);
-    this.gameId = props.match.params.gameId; 
-    this.intervalId = '';
+    this.gameId = props.match.params.gameId;
+    let isFacilitator = false;
+    let facilitatorId = null;
+    const cookies = new Cookies();
+    const facil = cookies.get('facilitatorInfo');
+    this.session = cookies.get('session');
+    if (facil) {
+      if (facil.game === this.gameId) {
+        isFacilitator = true;
+        facilitatorId = facil.id;
+      }
+    }
     this.state = {
       isStarted: false,
       seats: [],
@@ -29,8 +44,9 @@ class GameArea extends Component {
       seatsFull: false,
       seatId: null,
       mySeatNumber: null,
-      team1Name: 'Unnamed Team 1',
-      team2Name: 'Unnamed Team 2',
+      playerSeatId: null,
+      team1Name: '',
+      team2Name: '',
       envelopes: [],
       displayName: '',
       now: '',
@@ -44,23 +60,14 @@ class GameArea extends Component {
       joinGameControls: false,
       facilitatorControls: false,
       playerNameControls: false,
+      isFacilitator: isFacilitator,
+      facilitatorId: facilitatorId,
       isTeam1: null,
     }
-    this.setSeatId = this.setSeatId.bind(this);
+    this.intervalId = '';
     this.toggleJoinGame = this.toggleJoinGame.bind(this);
     this.togglePlayerName = this.togglePlayerName.bind(this);
     this.toggleFacilitatorControls = this.toggleFacilitatorControls.bind(this);
-
-  }
-
-  setSeatId(seat) {
-    console.log(seat);
-    this.setState({
-      seatId: seat.seatId,
-      mySeatNumber: seat.seatNumber,
-      isTeam1: seat.isTeam1,
-    });
-    console.log(this.state.seatId);
   }
 
   componentDidMount() {
@@ -73,8 +80,7 @@ class GameArea extends Component {
 
 
   async joinGame() {
-    const gameId = this.props.match.params.gameId;
-    const response = await fetch(`/api/join/${gameId}`)
+    const response = await fetch(`/api/join/${this.gameId}`)
     const json = await response.json();
     this.setState({
       isStarted: json.isStarted,
@@ -83,9 +89,24 @@ class GameArea extends Component {
       team2: json.team2,
       team1Name: json.team1Name,
       team2Name: json.team2Name,
-
     });
-    if (this.state.seats.every(s => s.isTaken === true && s.displayName !== null)) {
+    // check if we have selected a seat
+    const match = this.state.seats.find(s => {
+      return s.sessionId === this.session
+    });
+    if (match) {
+      this.setState({
+        seatId: match.seatId,
+        mySeatNumber: match.seatNumber,
+        isTeam1: match.isTeam1,
+      });
+    } else {
+      if (this.state.seatId) {
+        this.setState({ seatId: null });
+      }
+    }
+
+    if (this.state.seats.every(s => s.isTaken === true)) {
       this.setState({ seatsFull: true });
       clearInterval(this.intervalId);
       this.intervalId = setInterval(this.updateGame.bind(this), 1000);
@@ -93,9 +114,7 @@ class GameArea extends Component {
   }
 
   async updateGame() {
-    console.log("updateGame");
-    const gameId = this.props.match.params.gameId;
-    const response = await fetch(`/api/game-state/${gameId}`)
+    const response = await fetch(`/api/game-state/${this.gameId}`)
     const json = await response.json();
     this.setState({
       envelopes: json.envelopes,
@@ -106,8 +125,11 @@ class GameArea extends Component {
       team1Score: json.score1,
       team2Score: json.score2,
       gameTick: json.gameTick,
+<<<<<<< HEAD
       team1Completed: json.team1Completed,
       team2Completed: json.team2Completed
+=======
+>>>>>>> master
     });
   }
 
@@ -141,10 +163,10 @@ class GameArea extends Component {
             onClick={this.state.seatId ? this.togglePlayerName : this.toggleJoinGame}
             className={this.state.seatsFull && !this.state.playerSeatId ? "invisible" : "visible"}
           >
-            {this.state.seatId ? "Set Display Name" : "Join Game"}
+            {this.state.seat ? "Set Display Name" : "Join Game"}
           </Button>
 
-          {this.props.location.state && this.props.location.state.facilitatorId &&
+          {this.state.isFacilitator &&
             <Button
               onClick={this.toggleFacilitatorControls}
               variant="primary"
@@ -154,33 +176,38 @@ class GameArea extends Component {
           }
         </div>
         <GameProgress
-          facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
-          gameId={this.props.match.params.gameId}
+          facilitatorId={this.state.isFacilitator ? this.state.facilitatorId : ''}
+          gameId={this.gameId}
           gameTick={this.state.gameTick}
           team1Score={this.state.team1Score}
           team2Score={this.state.team2Score}
-          envelopes={this.state.envelopes}
+          envelopes={this.state.envelopes ? this.state.envelopes :  []}
           startTime={this.state.startTime}
           t1Name={this.state.team1Name}
           t2Name={this.state.team2Name}
           isStarted={this.state.isStarted}
           seatsFull={this.state.seatsFull}
+<<<<<<< HEAD
           seats={this.state.seats}
           team1Completed={this.state.team1Completed}
           team2Completed={this.state.team2Completed}
+=======
+          seats={this.state.seats ? this.state.seats : []}
+>>>>>>> master
         />
         <EnvelopeArea
-          envelopes={this.state.envelopes.filter((i) => {
+          envelopes={this.state.envelopes ? this.state.envelopes.filter((i) => {
             return i.seatNumber === this.state.mySeatNumber && i.isTeam1 === this.state.isTeam1
-          })}
+          }) : []}
+          isStarted={this.state.isStarted}
           teamId={this.state.teamId}
           gameId={this.gameId}
-          seat={this.state.seats.find(i => {
+          seat={this.state.seats ? this.state.seats.find(i => {
             return i.seatId === this.state.seatId;
-            })}
+          }) : null}
           seatNumber={this.state.mySeatNumber}
-        ></EnvelopeArea> 
-        <div style={{top: "65%", width: "60%", left: "20%", zIndex: 0,position: "absolute"}}>
+        ></EnvelopeArea>
+        <div style={{ top: "65%", width: "60%", left: "20%", zIndex: 0, position: "absolute" }}>
           <Table></Table>
         </div>
         <Modal
@@ -198,12 +225,11 @@ class GameArea extends Component {
             </Modal.Header>
             <Modal.Body>
               <Controls
-                facilitatorId={this.props.location.state ? this.props.location.state.facilitatorId : ''}
-                playerSeatId={this.state.seatId}
-                setSeatId={(seat) => this.setSeatId(seat)}
-                seats={this.state.seats}
+                playerSeat={this.state.playerSeat}
+                seatId={this.state.seatId}
+                seats={this.state.seats ? this.state.seats : []}
                 seatsFull={this.state.seatsFull}
-                gameId={this.props.match.params.gameId}
+                gameId={this.gameId}
                 show={this.state.joinGameControls}
                 toggleControls={this.toggleJoinGame}
               />
@@ -226,13 +252,13 @@ class GameArea extends Component {
             <Modal.Body>
               <PlayerNameForm
                 seatSuccess={true}
-                seatId={this.state.playerSeatId}
+                seatId={this.state.seatId}
                 toggleControls={this.togglePlayerName}
               />
             </Modal.Body>
           </Container>
         </Modal>
-        {this.props.location.state && this.props.location.state.facilitatorId &&
+        {this.state.isFacilitator &&
           <Modal
             show={this.state.facilitatorControls}
             size="lg"
@@ -247,10 +273,11 @@ class GameArea extends Component {
               </Modal.Header>
               <Modal.Body>
                 <FacilitatorControls
-                  seats={this.state.seats}
+                  isStarted={this.state.isStarted}
+                  seats={this.state.seats ? this.state.seats : []}
                   team1={this.state.team1}
                   team2={this.state.team2}
-                  facilitatorId={this.props.location.state.facilitatorId}
+                  facilitatorId={this.state.facilitatorId}
                   toggleControls={this.toggleFacilitatorControls}
                 />
               </Modal.Body>

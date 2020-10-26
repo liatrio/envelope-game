@@ -6,8 +6,6 @@ import Button from 'react-bootstrap/Button';
 
 import PlayerNameForm from './player_name';
 
-import IndexCard from './assets/index-card.svg';
-
 class Controls extends Component {
   constructor(props) {
     super(props);
@@ -33,8 +31,6 @@ class Controls extends Component {
     const response = await fetch(request);
     const json = await response.json();
     if (json.success) {
-      console.log(this.state.selectedSeatNumber);
-      this.props.setSeatId(seat);
       // seat selected successfully
       this.setState({ seatSuccess: true });
     } else {
@@ -52,6 +48,7 @@ class Controls extends Component {
     this.selectSeat(randomSeat);
   }
 
+
   getSeats(isTeamOne) {
     // if seat information has loaded
     if (this.props.seats.length !== 0) {
@@ -65,11 +62,11 @@ class Controls extends Component {
           <li key={s.seatId}>
             <Button
               className={s.isTaken ? "chairFilled" : "chairNotFilled"}
-              disabled={s.isTaken || this.state.settingSeat || this.props.playerSeatId}
+              disabled={s.isTaken || this.state.settingSeat || this.props.seatId}
               variant={this.state.seatSuccess && this.state.selectedSeat === s.seatId ? "success" : s.isTaken ? "secondary" : "primary"}
               onClick={() => this.selectSeat(s)}
             >
-              {this.state.selectedSeat === s.seatId ?
+              {this.state.selectedSeat === s.seatId && !this.props.seatId ?
                 <div>
                   <Spinner
                     as="span"
@@ -144,7 +141,7 @@ class Controls extends Component {
         </Row>
         <PlayerNameForm
           toggleControls={this.props.toggleControls}
-          seatId={this.state.selectedSeat}
+          seatId={this.props.seatId}
           seatSucees={this.state.seatSuccess}
         ></PlayerNameForm>
       </div>

@@ -7,8 +7,9 @@ class Homepage extends Component {
     this.state = {
       disabled: false,
       gameId: null,
-      facilitatorId: null
-    }
+      facilitatorId: null,
+      success: false,
+    };
     this.createGame = this.createGame.bind(this);
   }
 
@@ -19,10 +20,12 @@ class Homepage extends Component {
     this.setState({ disabled: true });
     const response = await fetch('/api/create')
     const json = await response.json();
-    this.setState({ gameId: json.game, facilitatorId: json.facilitator })
+    if (json.success) {
+      this.setState({ gameId: json.game, facilitatorId: json.facilitator, success: true })
+    }
   }
   render() {
-    if (this.state.gameId) {
+    if (this.state.gameId && this.state.success) {
       return <Redirect to={{ state: { facilitatorId: this.state.facilitatorId }, pathname: "/gamearea/" + this.state.gameId }} />
     }
     return (

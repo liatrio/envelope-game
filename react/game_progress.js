@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+<<<<<<< HEAD
 import Col from 'react-bootstrap/Col'
 import CorkboardUrl, { ReactComponent as Corkboard} from './assets/corkboard.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+=======
+import { ReactComponent as Corkboard } from './assets/corkboard.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+>>>>>>> master
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 import ScaleText from "react-scale-text";
 
 import Minimap from './minimap'
-
 
 class GameProgress extends Component {
   constructor(props) {
@@ -21,7 +24,6 @@ class GameProgress extends Component {
     this.togglePlay = this.togglePlay.bind(this);
     this.seatsNotFull = this.seatsNotFull.bind(this);
   }
-
 
   async togglePlay() {
     this.setState({ disabled: true });
@@ -41,7 +43,6 @@ class GameProgress extends Component {
   }
 
   render() {
-    let ic = this.props.isStarted ? faPause : faPlay;
     const facilID = this.props.facilitatorId;
     return (
       <div>
@@ -52,7 +53,7 @@ class GameProgress extends Component {
         {facilID &&
               <Row className= "justify-content-md-center" style={{marginLeft: "0", marginRight: "0"}}>
                 <FontAwesomeIcon className="playIcon" 
-                icon={ic} 
+                icon={this.props.isStarted ? faPause : faPlay} 
                 onClick={this.props.seatsFull ? this.togglePlay : this.seatsNotFull} 
                 disabled={this.state.disabled} />
               </Row>
