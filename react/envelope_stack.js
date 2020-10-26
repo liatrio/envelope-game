@@ -91,7 +91,7 @@ class EnvelopeStack extends Component {
             }
 
             {count <= 10 && count > 1 && 
-              <ToDoHalf/>
+              <ToDoHalf style={{display: "block"}}/>
             }
 
             {count === 1 &&
