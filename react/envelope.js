@@ -3,10 +3,10 @@ import React, { Component } from 'react'
 import { ReactComponent as ToDoFull } from './assets/stack_to-do_full.svg';
 import { ReactComponent as ToDoHalf } from './assets/stack_to-do_half.svg';
 import { ReactComponent as ToDoOne } from './assets/stack_to-do_one.svg';
-import { ReactComponent as EnvOpen } from './assets/envelope_open.svg';
-import { ReactComponent as EnvClosed } from './assets/envelope_closed.svg';
-import { ReactComponent as EnvOpenIndex } from './assets/envelope_open_index-card.svg';
-import { ReactComponent as EnvClosedOk } from './assets/envelope_ok.svg';
+import envOpen from './assets/envelope_open.svg';
+import envClosed from './assets/envelope_closed.svg';
+import envOpenIdx from './assets/envelope_open_index-card.svg';
+import envOk from './assets/envelope_ok.svg';
 
 import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
@@ -62,14 +62,15 @@ class Envelope extends Component {
 
   // helper function to return the right icon based on state
   getEnvelope() {
+    const svgStyle = { margin: "0 auto", maxWidth: "50px", minHeight: "60px" };
     if (!this.props.activeEnvelope) {
       return (
-        <EnvClosed
+        <img
           className="invisible"
-          style={{ margin: "0 auto", maxWidth: "50px" }}
+          style={svgStyle}
+          src={envClosed}
+          alt="Closed envelope"
           onClick={this.toggleOpen}
-          aria-controls="collapse-stamp-bar"
-          aria-expanded={this.state.open}
         />
       );
     }
@@ -77,38 +78,38 @@ class Envelope extends Component {
     switch (this.props.activeEnvelope.clientState) {
       case 1:
         return (
-          <EnvClosed
-            style={{ margin: "0 auto", maxWidth: "50px" }}
+          <img
+            style={svgStyle}
+            src={envClosed}
+            alt="Closed envelope"
             onClick={this.toggleOpen}
-            aria-controls="collapse-stamp-bar"
-            aria-expanded={this.state.open}
           />
         );
       case 2:
         return (
-          <EnvOpen
-            style={{ margin: "0 auto", maxWidth: "50px" }}
+          <img
+            style={svgStyle}
+            src={envOpen}
+            alt="Open envelope"
             onClick={this.toggleOpen}
-            aria-controls="collapse-stamp-bar"
-            aria-expanded={this.state.open}
           />
         );
       case 3:
         return (
-          <EnvOpenIndex
-            style={{ margin: "0 auto", maxWidth: "50px" }}
+          <img
+            style={svgStyle}
+            src={envOpenIdx}
+            alt="Closed envelope"
             onClick={this.toggleOpen}
-            aria-controls="collapse-stamp-bar"
-            aria-expanded={this.state.open}
           />
         );
       case 4:
         return (
-          <EnvClosedOk
-            style={{ margin: "0 auto", maxWidth: "50px" }}
+          <img
+            style={svgStyle}
+            src={envOk}
+            alt="Closed envelope"
             onClick={this.toggleOpen}
-            aria-controls="collapse-stamp-bar"
-            aria-expanded={this.state.open}
           />
         );
       default:
@@ -119,11 +120,10 @@ class Envelope extends Component {
   render() {
     const open = this.state.open;
     return (
-      <div style={{ width: "70%", textAlign: "center" }}>
+      <div style={this.props.isStarted ? { width: "70%", textAlign: "center" } : { width: "70%", textAlign: "center", opacity: "0.5" }}>
         {this.props.activeEnvelope ? `Stamp ${this.props.activeEnvelope.matchingStamp}` : "No envelope"}
         <br></br>
         {this.getEnvelope()}
-        {/* <EnvOpen style={{ margin: "0 auto", maxWidth: "50px" }} onClick={this.toggleOpen} aria-controls="collapse-stamp-bar" aria-expanded={open} /> */}
         <Fade
           in={open}
         >
@@ -148,8 +148,6 @@ class Envelope extends Component {
           </div>
 
         </Fade>
-        {this.props.activeEnvelope && this.props.activeEnvelope.envelopeId}
-        <br></br>
         <Button
           variant={this.props.activeEnvelope && this.props.activeEnvelope.stamped && !this.state.open ? "primary" : "secondary"}
           disabled={!(this.props.activeEnvelope && this.props.activeEnvelope.stamped && !this.state.open)}
