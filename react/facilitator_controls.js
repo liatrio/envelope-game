@@ -50,6 +50,7 @@ class FacilitatorControls extends Component {
               s.displayName
             }
             <br></br>
+            <br></br>
           </li>
         );
       });
@@ -70,49 +71,60 @@ class FacilitatorControls extends Component {
 
   render() {
     return (
-      <div>
-        <Row className="justify-content-md-center">
-
-          <Col>
-            <TeamNameForm
-              team1={this.props.team1}
-              team2={this.props.team2}
-              facilitatorId={this.props.facilitatorId}
-              toggleControls={this.props.toggleControls}
-            />
-          </Col>
-        </Row>
-        <Row className="justify-content-md-center">
-          Remove a player <br />
-        </Row>
-        <Row className="justify-content-md-center">
-
-          <Col md="auto">
-            Team 1 Seats
-            <br></br>
-            <ul className="chairColumn list-unstyled">
-              {this.getSeats(true)}
-            </ul>
-          </Col>
-          <Col md="auto">
-            <Spinner
-              as="span"
-              animation="border"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-              variant="primary"
-              className={this.props.seats.length === 0 ? "visible" : "invisible"}
-            />
-          </Col>
-          <Col md="auto">
-            Team 2 Seats
-            <br></br>
-            <ul className="chairColumn list-unstyled">
-              {this.getSeats(false)}
-            </ul>
-          </Col>
-        </Row >
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <Row className="justify-content-md-center">
+            <h5>Update Team Names</h5>
+          </Row>
+        </div>
+        <div class="modal-content">
+          <br></br>
+          <Row className="justify-content-md-center">
+            <Col>
+              <TeamNameForm
+                team1={this.props.team1}
+                team2={this.props.team2}
+                facilitatorId={this.props.facilitatorId}
+                toggleControls={this.props.toggleControls}
+              />
+            </Col>
+          </Row>
+        </div>
+        <div class="modal-header">
+          <Row className="justify-content-md-center">
+            <h5>Remove players</h5>
+          </Row>
+        </div>
+        <div class="modal-content">
+          <br></br>
+          <Row className="justify-content-md-center">
+            <Col md="auto">
+              <dt>Flow Players</dt>
+              <hr></hr>
+              <ul className="chairColumn list-unstyled">
+                {this.getSeats(true)}
+              </ul>
+            </Col>
+            <Col md="auto">
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                variant="primary"
+                className={this.props.seats.length === 0 ? "visible" : "invisible"}
+              />
+            </Col>
+            <Col md="auto">
+              <dt>Batch Players</dt>
+              <hr></hr>
+              <ul className="chairColumn list-unstyled">
+                {this.getSeats(false)}
+              </ul>
+            </Col>
+          </Row >
+        </div>
       </div>
     );
   }

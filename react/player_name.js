@@ -51,10 +51,11 @@ class PlayerNameForm extends Component {
           />
         </Form.Group>
         <Button 
+          variant="primary" size="lg" block
           onClick={this.setPlayerName} 
           disabled={this.state.waiting || !this.props.seatId}
         >
-          Submit
+          Game On
         </Button>
       </Col>
     );

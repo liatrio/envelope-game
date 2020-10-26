@@ -75,8 +75,9 @@ class TeamNameForm extends Component {
                 onChange={this.teamTwoChange}
               >
               </Form.Control>
+              <br></br>
               <Row className="justify-content-md-center">
-                <Button onClick={this.setTeamNames} disabled={this.state.waiting}>Update Team Names</Button>
+                <Button onClick={this.setTeamNames} disabled={this.state.waiting}>Update</Button>
               </Row>
             </Form.Group>
           </Col>

@@ -138,7 +138,7 @@ class GameArea extends Component {
       backgroundImage: `url(${background})`,
       backgroundRepeat: "no-repeat",
       backgroundAttachment: "fixed",
-      backgroundSize: "150%",
+      backgroundSize: "cover",
       backgroundPosition: "50% 50%",
       position: "relative",
       width: "100%",
@@ -189,7 +189,7 @@ class GameArea extends Component {
           }) : null}
           seatNumber={this.state.mySeatNumber}
         ></EnvelopeArea>
-        <div style={{ top: "65%", width: "60%", left: "20%", zIndex: 0, position: "absolute" }}>
+        <div style={{ top: "70%", width: "60%", left: "20%", zIndex: 0, position: "absolute" }}>
           <Table></Table>
         </div>
         <Modal
