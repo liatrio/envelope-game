@@ -189,7 +189,7 @@ class GameArea extends Component {
           }) : null}
           seatNumber={this.state.mySeatNumber}
         ></EnvelopeArea>
-        <div style={{ top: "65%", width: "60%", left: "20%", zIndex: 0, position: "absolute" }}>
+        <div style={{ top: "70%", width: "60%", left: "20%", zIndex: 0, position: "absolute" }}>
           <Table></Table>
         </div>
         <Modal
