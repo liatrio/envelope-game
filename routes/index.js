@@ -149,11 +149,8 @@ router.get('/api/game-state/:id', (req, res) => {
       res.send({ success: false });
     } else {
       res.send({
-<<<<<<< HEAD
         team1Completed: team_1_completed,
         team2Completed: team_2_completed,
-=======
->>>>>>> 63b1fbf87c7f2549022995f8b50f72b5b0cd8cb0
         gameId: result[0].game_id,
         startTime: result[0].start_time,
         isStarted: result[0].is_started === 1 ? true : false,

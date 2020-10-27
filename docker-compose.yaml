@@ -1,12 +1,7 @@
 version: '3.8'
 services:
   node:
-<<<<<<< HEAD
     build: .
-=======
-    image: node:14-alpine
-    working_dir: /home/node/app
->>>>>>> 63b1fbf87c7f2549022995f8b50f72b5b0cd8cb0
     environment: 
       - NODE_ENV=development
       - DB_HOST=db
@@ -24,11 +19,7 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=envelope-game
     volumes:
-<<<<<<< HEAD
       - ./charts/envelope-game/init.sql:/docker-entrypoint-initdb.d/init.sql
-=======
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
->>>>>>> 63b1fbf87c7f2549022995f8b50f72b5b0cd8cb0
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     expose:
