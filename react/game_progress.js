@@ -62,20 +62,6 @@ class GameProgress extends Component {
               <div class="display-time clock">{this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick % 60 < 10 ? 0 : ''}{this.props.gameTick ? this.props.gameTick % 60 : '0'}</div>
             </Row>
 
-            <div className="leftColumn" style={{width: "35%", height: "150px", top: "8%", left: "52%", marginLeft: "-17.5%", position: "absolute"}}>
-
-                    <h7>Team {this.props.t1Name}</h7><br></br>
-                    <h7>Money Earned: ${this.props.team1Score}</h7><br></br>
-                    <h7>Envelopes Completed: {this.getFinishedEnvelopes()}</h7>
-
-            </div>
-            <div className="rightColumn" style={{width: "35%", height: "150px", top: "8%", left: "70%", marginLeft: "-17.5%", position: "absolute"}}>
-
-                  <h7>Team {this.props.t2Name}</h7><br></br>
-                  <h7>Money Earned: ${this.props.team2Score}</h7><br></br>
-                  <h7>Envelopes Completed: {this.getFinishedEnvelopes()}</h7> 
-
-            </div>
         </div>
         <div style={{width: "900px", top: "10px", left: "50%", transform: "translate(-50%)", position: "relative", overflow: "auto"}}>
           <Card.Img as={Corkboard} alt="Scoreboard"/>    
