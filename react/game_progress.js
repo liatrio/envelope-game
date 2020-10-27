@@ -35,6 +35,12 @@ class GameProgress extends Component {
     this.setState({ seatsFullError: true });
   }
 
+  getFinishedEnvelopes() {
+    return this.props.envelopes.filter((e) => {
+      return (e.seatNumber === this.props.seatNumber && e.envelopeState === 5);
+    }).length;
+  }
+
   render() {
     const facilID = this.props.facilitatorId;
     return (
@@ -60,14 +66,14 @@ class GameProgress extends Component {
 
                     <h7>Team {this.props.t1Name}</h7><br></br>
                     <h7>Money Earned: ${this.props.team1Score}</h7><br></br>
-                    <h7>Envelopes Completed: {this.props.team1Completed}</h7>
+                    <h7>Envelopes Completed: {this.getFinishedEnvelopes()}</h7>
 
             </div>
             <div className="rightColumn" style={{width: "35%", height: "150px", top: "8%", left: "70%", marginLeft: "-17.5%", position: "absolute"}}>
 
                   <h7>Team {this.props.t2Name}</h7><br></br>
                   <h7>Money Earned: ${this.props.team2Score}</h7><br></br>
-                  <h7>Envelopes Completed: {this.props.team2Completed}</h7> 
+                  <h7>Envelopes Completed: {this.getFinishedEnvelopes()}</h7> 
 
             </div>
         </div>
