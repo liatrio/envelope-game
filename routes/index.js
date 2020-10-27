@@ -136,8 +136,9 @@ router.get('/api/join/:gameId', (req, res) => {
   });
 });
 
-router.get('/api/game-state/:id', (req, res) => {
-  let sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, is_started, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick
+router.get('/api/game-state/:gameId', (req, res) => {
+  let sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, GAME.is_started, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick,
+              GAME.team_1_completed, GAME.team_2_completed
              FROM ENVELOPES 
              INNER JOIN GAME ON GAME.game_id = ENVELOPES.game_id
              WHERE ENVELOPES.game_id = ${db.escape(req.params.gameId)}`;
@@ -150,8 +151,8 @@ router.get('/api/game-state/:id', (req, res) => {
       res.send({ success: false });
     } else {
       res.send({
-        team1Completed: team_1_completed,
-        team2Completed: team_2_completed,
+        team1Completed: result[0].team_1_completed,
+        team2Completed: result[0].team_2_completed,
         gameId: result[0].game_id,
         startTime: result[0].start_time,
         isStarted: result[0].is_started === 1 ? true : false,

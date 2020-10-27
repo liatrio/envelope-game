@@ -76,6 +76,8 @@ class GameProgress extends Component {
                 team1Score={this.props.team1Score}
                 team2Score={this.props.team2Score}
                 gameTick={this.props.gameTick}
+                team1Completed={this.props.team1Completed}
+                team2Completed={this.props.team2Completed}
               >
               </Minimap>
             </Card.Body>
