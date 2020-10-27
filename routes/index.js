@@ -40,11 +40,12 @@ router.get('/api/create', (req, res) => {
   });
 
   // create game instance
-  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick, team_1_completed, team_2_completed , facilitator_session, isstarted) VALUES ?';
-    [gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0, 0, 0, session, false];
+  values = [[gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0, 0, 0, session, false]];
+  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick, team_1_completed, team_2_completed , facilitator_session, is_started) VALUES ?';
+  
   db.query(sql, [values], function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("ERROR: Unable to create game " + err);
       createSuccess = false;
     }
   });
