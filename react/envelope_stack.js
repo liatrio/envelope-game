@@ -82,8 +82,8 @@ class EnvelopeStack extends Component {
     }
     return (
       <div style={{width: "15%", position: "relative"}}>
-        {this.props.stackType === 0 ? "Ready" : "Finished"}
-        <br></br>
+        {/* {this.props.stackType === 0 ? "Ready" : "Finished"}
+        <br></br> */}
         <Button
           variant={this.buttonVariant()}
           disabled={this.isDisabled()}
@@ -91,31 +91,33 @@ class EnvelopeStack extends Component {
           size="lg"
           style={{display: "contents"}}
         >
-          <div>
+          <div style={{position: "absolute", width: "100%", bottom: "15%"}}>
             {count > 10 && 
-              <ToDoFull style={{position: "absolute", width: "100%", bottom: "5%"}}/>
+              <ToDoFull/>
             }
 
             {count <= 10 && count > 1 && 
-              <ToDoHalf style={{position: "absolute", width: "100%", bottom: "5%"}}/>
+              <ToDoHalf />
             }
 
             {count === 1 &&
-              <ToDoOne style={{position: "absolute", width: "100%", bottom: "5%"}}/>
+              <ToDoOne />
             }
 
             {this.props.stackType === 1 && this.getFinishedEnvelopes().length === 1 &&
-              <ToDoOne style={{position: "absolute", width: "100%", bottom: "5%"}}/>
+              <ToDoOne />
             }
 
             {this.props.stackType === 1 && this.getFinishedEnvelopes().length > 1 &&
-              <ToDoHalf style={{position: "absolute", width: "100%", bottom: "5%"}}/>
+              <ToDoHalf/>
             }
             <br></br>
             <Badge pill variant="light" className="align-middle">
               {this.props.stackType === 0 ? count : this.getFinishedEnvelopes().length}
             </Badge>
           </div>
+          {this.props.stackType === 0 ? "Ready" : "Finished"}
+        <br></br>
         </Button>
       </div>
     );
