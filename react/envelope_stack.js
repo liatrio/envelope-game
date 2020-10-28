@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import {ReactComponent as ToDoFull} from './assets/stack_to-do_full.svg';
-import {ReactComponent as ToDoHalf} from './assets/stack_to-do_half.svg';
-import {ReactComponent as ToDoOne} from './assets/stack_to-do_one.svg';
+import { ReactComponent as ToDoFull } from './assets/stack_to-do_full.svg';
+import { ReactComponent as ToDoHalf } from './assets/stack_to-do_half.svg';
+import { ReactComponent as ToDoOne } from './assets/stack_to-do_one.svg';
 import Button from 'react-bootstrap/Button'
 import Badge from 'react-bootstrap/Badge'
 
@@ -35,13 +35,6 @@ class EnvelopeStack extends Component {
         return e === i.envelopeId
       });
     });
-  }
-
-  envelopeStackType() {
-    if (this.getFinishedEnvelopes() > 9) {
-      return 
-    }
-
   }
 
   buttonVariant() {
@@ -81,18 +74,18 @@ class EnvelopeStack extends Component {
       count = 0;
     }
     return (
-      <div style={{width: "15%"}}>
-        {this.props.stackType === 0 ? "Ready" : "Finished"}
+      <div style={{ width: "15%" }}>
+        {this.props.stackType === 0 ? "Ready Envelopes" : this.isDisabled() ? "Finished Envelopes" : "Pass Envelopes On"}
         <br></br>
         <Button
           variant={this.buttonVariant()}
           disabled={this.isDisabled()}
           onClick={this.updateStack}
           size="lg"
-          style={{display: "contents"}}
+          style={{ display: "contents" }}
         >
           <div >
-            <ToDoFull/>
+            <ToDoFull />
             <br></br>
             <Badge pill variant="light" className="align-middle">
               {this.props.stackType === 0 ? count : this.getFinishedEnvelopes().length}
