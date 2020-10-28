@@ -81,7 +81,7 @@ class EnvelopeStack extends Component {
       count = 0;
     }
     return (
-      <div style={{width: "15%"}}>
+      <div style={{width: "15%", position: "relative"}}>
         {this.props.stackType === 0 ? "Ready" : "Finished"}
         <br></br>
         <Button
@@ -91,8 +91,26 @@ class EnvelopeStack extends Component {
           size="lg"
           style={{display: "contents"}}
         >
-          <div >
-            <ToDoFull/>
+          <div style={{position: "absolute", width: "100%", bottom: "0"}}>
+            {count > 10 && 
+              <ToDoFull/>
+            }
+
+            {count <= 10 && count > 1 && 
+              <ToDoHalf />
+            }
+
+            {count === 1 &&
+              <ToDoOne />
+            }
+
+            {this.props.stackType === 1 && this.getFinishedEnvelopes().length === 1 &&
+              <ToDoOne />
+            }
+
+            {this.props.stackType === 1 && this.getFinishedEnvelopes().length > 1 &&
+              <ToDoHalf/>
+            }
             <br></br>
             <Badge pill variant="light" className="align-middle">
               {this.props.stackType === 0 ? count : this.getFinishedEnvelopes().length}
