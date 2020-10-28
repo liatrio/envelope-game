@@ -59,18 +59,20 @@ class GameArea extends Component {
       team1Completed: 0,
       team2Completed: 0,
     }
-    this.intervalId = '';
+    this.joinIntervalId = null;
+    this.gameIntervalId = null;
     this.toggleJoinGame = this.toggleJoinGame.bind(this);
     this.togglePlayerName = this.togglePlayerName.bind(this);
     this.toggleFacilitatorControls = this.toggleFacilitatorControls.bind(this);
   }
 
   componentDidMount() {
-    this.intervalId = setInterval(this.joinGame.bind(this), 1000);
+    this.joinIntervalId = setInterval(this.joinGame.bind(this), 1000);
   }
 
   componentWillUnmount() {
-    clearInterval(this.intervalID);
+    clearInterval(this.joinIntervalId);
+    clearInterval(this.gameIntervalId);
   }
 
 
@@ -103,8 +105,11 @@ class GameArea extends Component {
 
     if (this.state.seats.every(s => s.isTaken === true)) {
       this.setState({ seatsFull: true });
-      clearInterval(this.intervalId);
-      this.intervalId = setInterval(this.updateGame.bind(this), 1000);
+      if (!this.gameIntervalId) {
+        this.gameIntervalId = setInterval(this.updateGame.bind(this), 1000);
+      }
+    } else {
+      this.setState({ seatsFull: false });
     }
   }
 
@@ -153,9 +158,8 @@ class GameArea extends Component {
         <div className="justify-content-md-center">
           <Button
             onClick={this.state.seatId ? this.togglePlayerName : this.toggleJoinGame}
-            className={this.state.seatsFull && !this.state.playerSeatId ? "invisible" : "visible"}
           >
-            {this.state.seat ? "Set Display Name" : "Join Game"}
+            {this.state.seatId ? "Set Display Name" : "Join Game"}
           </Button>
 
           {this.state.isFacilitator &&
