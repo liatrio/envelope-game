@@ -56,6 +56,8 @@ class GameArea extends Component {
       isFacilitator: isFacilitator,
       facilitatorId: facilitatorId,
       isTeam1: null,
+      team1Completed: 0,
+      team2Completed: 0,
     }
     this.intervalId = '';
     this.toggleJoinGame = this.toggleJoinGame.bind(this);
@@ -118,6 +120,8 @@ class GameArea extends Component {
       team1Score: json.score1,
       team2Score: json.score2,
       gameTick: json.gameTick,
+      team1Completed: json.team1Completed,
+      team2Completed: json.team2Completed
     });
   }
 
@@ -175,6 +179,8 @@ class GameArea extends Component {
           t2Name={this.state.team2Name}
           isStarted={this.state.isStarted}
           seatsFull={this.state.seatsFull}
+          team1Completed={this.state.team1Completed}
+          team2Completed={this.state.team2Completed}
           seats={this.state.seats ? this.state.seats : []}
         />
         <EnvelopeArea

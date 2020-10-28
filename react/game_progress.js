@@ -35,11 +35,20 @@ class GameProgress extends Component {
     this.setState({ seatsFullError: true });
   }
 
+  getFinishedEnvelopes() {
+    return this.props.envelopes.filter((e) => {
+      return (e.seatNumber === this.props.seatNumber && e.envelopeState === 5);
+    }).length;
+  }
+
   render() {
     const facilID = this.props.facilitatorId;
     return (
       <div>
         <div>
+        {facilID && this.state.seatsFullError &&
+              <Row style={{marginLeft: "0", marginRight: "0"}} className= "justify-content-md-center">Error: Seats are not Full yet</Row>
+            }
         {facilID &&
               <Row className= "justify-content-md-center" style={{marginLeft: "0", marginRight: "0"}}>
                 <FontAwesomeIcon className="playIcon" 
@@ -48,12 +57,11 @@ class GameProgress extends Component {
                 disabled={this.state.disabled} />
               </Row>
             }
+
             <Row style={{marginLeft: "0", marginRight: "0"}} className= "justify-content-md-center" >
               <div class="display-time clock">{this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick % 60 < 10 ? 0 : ''}{this.props.gameTick ? this.props.gameTick % 60 : '0'}</div>
             </Row>
-            {facilID && this.state.seatsFullError &&
-              <Row style={{marginLeft: "0", marginRight: "0"}} className= "justify-content-md-center">Error: Seats are not Full yet</Row>
-            }
+
         </div>
         <div style={{width: "900px", top: "10px", left: "50%", transform: "translate(-50%)", position: "relative", overflow: "auto"}}>
           <Card.Img as={Corkboard} alt="Scoreboard"/>    
@@ -68,6 +76,8 @@ class GameProgress extends Component {
                 team1Score={this.props.team1Score}
                 team2Score={this.props.team2Score}
                 gameTick={this.props.gameTick}
+                team1Completed={this.props.team1Completed}
+                team2Completed={this.props.team2Completed}
               >
               </Minimap>
             </Card.Body>

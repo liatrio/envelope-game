@@ -27,7 +27,7 @@ class Minimap extends Component {
             <h1 class="board-title">FLOW</h1>
             <h5>Team {this.props.t1Name} Progress</h5>
             <h5>Money Earned: ${this.props.team1Score}</h5><br/> 
-            <h5>Total Completed: </h5>
+            <h5>Total Completed: {this.props.team1Completed}</h5>
             <hr></hr>
             <Row>
               <Col>
@@ -66,7 +66,7 @@ class Minimap extends Component {
           <h1 class="board-title">BATCH</h1>
           <h5>Team {this.props.t2Name} Progress</h5>
             <h5>Money Earned: ${this.props.team2Score}</h5><br/> 
-            <h5>Total Completed: </h5> 
+            <h5>Total Completed: {this.props.team2Completed}</h5> 
             <hr></hr>
             <Row>
               <Col>
