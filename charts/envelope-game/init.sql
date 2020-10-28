@@ -21,6 +21,8 @@ CREATE TABLE GAME
   facilitator_session VARCHAR(21) NOT NULL,
   team_1_id VARCHAR(16) NOT NULL,
   team_2_id VARCHAR(16) NOT NULL,
+  team_1_completed INT NOT NULL,
+  team_2_completed INT NOT NULL,
   score_1 INT NOT NULL,
   score_2 INT NOT NULL,
   PRIMARY KEY (game_id),
