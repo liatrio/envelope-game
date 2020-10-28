@@ -81,6 +81,7 @@ class Controls extends Component {
               }
             </Button>
             <br></br>
+            <br></br>
           </li>
         );
       });
@@ -104,8 +105,8 @@ class Controls extends Component {
       <div>
         <Row className="justify-content-md-center">
           <Col md="auto">
-            Team 1 Seats
-                      <br></br>
+            <dt>Flow Seats</dt>
+            <hr></hr>
             <ul className="chairColumn list-unstyled">
               {this.getSeats(true)}
             </ul>
@@ -122,8 +123,8 @@ class Controls extends Component {
             />
           </Col>
           <Col md="auto">
-            Team 2 Seats
-            <br></br>
+          <dt>Batch Seats</dt>
+          <hr></hr>
             <ul className="chairColumn list-unstyled">
               {this.getSeats(false)}
             </ul>
@@ -139,6 +140,7 @@ class Controls extends Component {
             Choose a random seat
           </Button>
         </Row>
+        <hr></hr>
         <PlayerNameForm
           toggleControls={this.props.toggleControls}
           seatId={this.props.seatId}

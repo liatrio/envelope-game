@@ -40,13 +40,12 @@ router.get('/api/create', (req, res) => {
   });
 
   // create game instance
-  values = [
-    [gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0, session, false]
-  ];
-  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick, facilitator_session, is_started) VALUES ?';
+  values = [[gameId, (seatIds.length / 2), facilitatorId, teamIds[0], teamIds[1], 0, 0, 0, 0, 0, session, false]];
+  sql = 'INSERT INTO GAME (game_id, total_stages, facilitator_id, team_1_id, team_2_id, score_1, score_2, game_tick, team_1_completed, team_2_completed , facilitator_session, is_started) VALUES ?';
+  
   db.query(sql, [values], function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("ERROR: Unable to create game " + err);
       createSuccess = false;
     }
   });
@@ -138,8 +137,8 @@ router.get('/api/join/:gameId', (req, res) => {
 });
 
 router.get('/api/game-state/:gameId', (req, res) => {
-  const sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, ENVELOPES.game_id, team_id, 
-             GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick, GAME.is_started
+  let sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, GAME.is_started, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick,
+              GAME.team_1_completed, GAME.team_2_completed
              FROM ENVELOPES 
              INNER JOIN GAME ON GAME.game_id = ENVELOPES.game_id
              WHERE ENVELOPES.game_id = ${db.escape(req.params.gameId)}`;
@@ -152,6 +151,8 @@ router.get('/api/game-state/:gameId', (req, res) => {
       res.send({ success: false });
     } else {
       res.send({
+        team1Completed: result[0].team_1_completed,
+        team2Completed: result[0].team_2_completed,
         gameId: result[0].game_id,
         startTime: result[0].start_time,
         isStarted: result[0].is_started === 1 ? true : false,

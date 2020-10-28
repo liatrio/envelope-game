@@ -56,6 +56,8 @@ class GameArea extends Component {
       isFacilitator: isFacilitator,
       facilitatorId: facilitatorId,
       isTeam1: null,
+      team1Completed: 0,
+      team2Completed: 0,
     }
     this.joinIntervalId = null;
     this.gameIntervalId = null;
@@ -123,6 +125,8 @@ class GameArea extends Component {
       team1Score: json.score1,
       team2Score: json.score2,
       gameTick: json.gameTick,
+      team1Completed: json.team1Completed,
+      team2Completed: json.team2Completed
     });
   }
 
@@ -143,7 +147,7 @@ class GameArea extends Component {
       backgroundImage: `url(${background})`,
       backgroundRepeat: "no-repeat",
       backgroundAttachment: "fixed",
-      backgroundSize: "150%",
+      backgroundSize: "cover",
       backgroundPosition: "50% 50%",
       position: "relative",
       width: "100%",
@@ -179,6 +183,8 @@ class GameArea extends Component {
           t2Name={this.state.team2Name}
           isStarted={this.state.isStarted}
           seatsFull={this.state.seatsFull}
+          team1Completed={this.state.team1Completed}
+          team2Completed={this.state.team2Completed}
           seats={this.state.seats ? this.state.seats : []}
         />
         <EnvelopeArea
@@ -193,7 +199,7 @@ class GameArea extends Component {
           }) : null}
           seatNumber={this.state.mySeatNumber}
         ></EnvelopeArea>
-        <div style={{ top: "65%", width: "60%", left: "20%", zIndex: 0, position: "absolute" }}>
+        <div style={{ top: "70%", width: "60%", left: "20%", zIndex: 0, position: "absolute" }}>
           <Table></Table>
         </div>
         <Modal
