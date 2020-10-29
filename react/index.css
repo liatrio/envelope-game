@@ -140,3 +140,8 @@ h5{
     position: relative;
     left: 45px;
 }
+
+.modal-90w{
+    width: 70vw !important;   
+    max-width: 70vw !important;
+}

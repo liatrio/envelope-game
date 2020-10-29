@@ -1,11 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
 import Cookies from 'universal-cookie';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+
 import background from './assets/background.svg';
-import Controls from './controls'
+import Controls from './controls';
+import Instructions from './instructions';
 import { ReactComponent as Table } from './assets/table.svg';
 import EnvelopeArea from './envelope_area';
 import FacilitatorControls from './facilitator_controls';
@@ -35,7 +39,6 @@ class GameArea extends Component {
       seats: [],
       team1: '',
       team2: '',
-      seconds: 0,
       seatsFull: false,
       seatId: null,
       mySeatNumber: null,
@@ -53,6 +56,7 @@ class GameArea extends Component {
       joinGameControls: false,
       facilitatorControls: false,
       playerNameControls: false,
+      showInstructions: false,
       isFacilitator: isFacilitator,
       facilitatorId: facilitatorId,
       isTeam1: null,
@@ -61,6 +65,7 @@ class GameArea extends Component {
     }
     this.joinIntervalId = null;
     this.gameIntervalId = null;
+    this.toggleInstructions = this.toggleInstructions.bind(this);
     this.toggleJoinGame = this.toggleJoinGame.bind(this);
     this.togglePlayerName = this.togglePlayerName.bind(this);
     this.toggleFacilitatorControls = this.toggleFacilitatorControls.bind(this);
@@ -142,6 +147,10 @@ class GameArea extends Component {
     this.setState({ facilitatorControls: !this.state.facilitatorControls });
   }
 
+  toggleInstructions() {
+    this.setState({ showInstructions: !this.state.showInstructions });
+  }
+
   render() {
     const style = {
       backgroundImage: `url(${background})`,
@@ -170,6 +179,14 @@ class GameArea extends Component {
               Facilitator Controls
           </Button>
           }
+          <Button
+            onClick={this.toggleInstructions}
+          >
+            <FontAwesomeIcon
+              icon={faInfoCircle}
+            />
+            Instructions
+          </Button>
         </div>
         <GameProgress
           facilitatorId={this.state.isFacilitator ? this.state.facilitatorId : ''}
@@ -228,7 +245,6 @@ class GameArea extends Component {
             </Modal.Body>
           </Container>
         </Modal>
-
         <Modal
           show={this.state.playerNameControls}
           size="lg"
@@ -276,6 +292,24 @@ class GameArea extends Component {
             </Container>
           </Modal>
         }
+        <Modal
+          dialogClassName="modal-90w"
+          show={this.state.showInstructions}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          onHide={this.toggleInstructions}
+        >
+            <Modal.Header closeButton>
+              <Modal.Title id="contained-modal-title-vcenter">
+                The Envelope Game
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Instructions 
+                homepage={false}
+              />
+            </Modal.Body>
+        </Modal>
       </div>
     );
   }
