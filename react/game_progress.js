@@ -59,7 +59,7 @@ class GameProgress extends Component {
             }
 
             <Row style={{marginLeft: "0", marginRight: "0"}} className= "justify-content-md-center" >
-              <div class="display-time clock">{this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick % 60 < 10 ? 0 : ''}{this.props.gameTick ? this.props.gameTick % 60 : '0'}</div>
+              <div className="display-time clock">{this.props.gameTick ? Math.floor(((this.props.gameTick % 3600) / 60)) : '0'}:{this.props.gameTick % 60 < 10 ? 0 : ''}{this.props.gameTick ? this.props.gameTick % 60 : '0'}</div>
             </Row>
 
         </div>
