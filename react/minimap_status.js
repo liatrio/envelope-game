@@ -33,19 +33,19 @@ class MinimapStatus extends Component {
     
     if (this.props.isTeam1) {
       return (
-        <div class="player-stats">
-          <div class="display-name">{this.props.displayName ? this.props.displayName : 'Player'}</div>
-          <div class="display-count">{this.props.envelopes ? this.getReadyEnveleopes() : 0}</div>
+        <div className="player-stats">
+          <div className="display-name">{this.props.displayName ? this.props.displayName : 'Player'}</div>
+          <div className="display-count">{this.props.envelopes ? this.getReadyEnveleopes() : 0}</div>
       </div>
       );
     }
 
     return (
       <div>
-         <div class="player-stats">
-            <div class="display-name">{this.props.displayName ? this.props.displayName : 'Player'}</div>
-            <div class="display-count batch-count-1">{this.props.envelopes ? this.getReadyEnveleopes() : 0}</div>
-            <div class="display-count batch-count-2">{this.props.envelopes ? this.getFinishedEnvelopes() : 0}</div>
+         <div className="player-stats">
+            <div className="display-name">{this.props.displayName ? this.props.displayName : 'Player'}</div>
+            <div className="display-count batch-count-1">{this.props.envelopes ? this.getReadyEnveleopes() : 0}</div>
+            <div className="display-count batch-count-2">{this.props.envelopes ? this.getFinishedEnvelopes() : 0}</div>
           </div>
       </div>
     );
