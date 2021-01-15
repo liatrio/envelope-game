@@ -3,6 +3,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 import TeamNameForm from './team_name';
 
@@ -10,10 +11,12 @@ class FacilitatorControls extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      seatRemoveDisable: new Array(props.seats.length).fill(false)
+      seatRemoveDisable: new Array(props.seats.length).fill(false),
+      buggedEnvelopeModal: false
     };
     this.getSeats = this.getSeats.bind(this);
     this.emptySeat = this.emptySeat.bind(this);
+    this.setBuggedEnvelopes = this.setBuggedEnvelopes.bind(this);
   }
 
   async emptySeat(seatId, idx) {
@@ -24,6 +27,10 @@ class FacilitatorControls extends Component {
     s = this.state.seatRemoveDisable;
     s[idx] = false;
     this.setState({ seatRemoveDisable: s });
+  }
+  setBuggedEnvelopes() {
+    console.log("in bug")
+    this.setState({buggedEnvelopeModal: !this.state.buggedEnvelopeModal});
   }
 
   getSeats(isTeamOne) {
@@ -41,7 +48,7 @@ class FacilitatorControls extends Component {
               className={s.isTaken ? "visible" : "invisible"}
               variant="danger"
               disabled={this.state.seatRemoveDisable[idx] || this.props.isStarted}
-              onClick={() => this.emptySeat(s.seatId, idx)}
+              // onClick={() => this.emptySeat(s.seatId, idx)}
             >
               X
             </Button>
@@ -72,6 +79,30 @@ class FacilitatorControls extends Component {
   render() {
     return (
       <div class="modal-dialog">
+        <div class="modal-content">
+        <Row className="justify-content-md-center">
+            <Button
+              onClick={this.setBuggedEnvelopes}
+              variant="primary"
+            >
+                Create Bug in Envelopes
+            </Button>
+            <Modal show={this.state.buggedEnvelopeModal} onHide={this.setBuggedEnvelopes}>
+            <Modal.Header closeButton>
+              <Modal.Title>Select which envelope to change</Modal.Title>
+            </Modal.Header>
+            <Modal.Body></Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.setBuggedEnvelopes}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={this.setBuggedEnvelopes}>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </Row>
+        </div>
         <div class="modal-header">
           <Row className="justify-content-md-center">
             <h5>Update Team Names</h5>
