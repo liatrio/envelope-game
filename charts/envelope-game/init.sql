@@ -59,6 +59,7 @@ CREATE TABLE ENVELOPES
   team_id VARCHAR(16) NOT NULL,
   game_id VARCHAR(16) NOT NULL,
   is_team_1 BOOLEAN NOT NULL,
+  is_changed BOOLEAN NOT NULL,
   PRIMARY KEY (envelope_id),
   FOREIGN KEY (team_id) REFERENCES TEAMS(team_id),
   FOREIGN KEY (game_id) REFERENCES GAME(game_id)
