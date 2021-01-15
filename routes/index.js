@@ -45,7 +45,7 @@ router.get('/api/create', (req, res) => {
   
   db.query(sql, [values], function (err, result) {
     if (err) {
-      console.log("ERROR: Unable to create game " + err);
+      console.log("ERROR - Unable to create game:" + err);
       createSuccess = false;
     }
   });
@@ -62,20 +62,20 @@ router.get('/api/create', (req, res) => {
   sql = 'INSERT INTO SEATS (seat_id, seat_number, envelopes_completed, envelopes_ready, is_taken, game_id, team_id) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("ERROR - Unable to insert into seats: " + err);
       createSuccess = false;
     }
   });
 
   values = [];
   for (let i = 0; i < numEnvelopes; i++) {
-    values[i] = [nanoid(16), 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[0], 0, true];
-    values[i + numEnvelopes] = [nanoid(16), 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[1], 0, false];
+    values[i] = [nanoid(16), 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[0], 0, true, false];
+    values[i + numEnvelopes] = [nanoid(16), 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[1], 0, false, false];
   }
-  sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id, seat_number, is_team_1) VALUES ?';
+  sql = 'INSERT INTO ENVELOPES (envelope_id, envelope_state, matching_stamp, game_id, team_id, seat_number, is_team_1, is_changed) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("ERROR - Unable to insert into ENVELOPES: " + err);
       createSuccess = false;
     }
   });
@@ -102,7 +102,7 @@ router.get('/api/join/:gameId', (req, res) => {
 
   db.query(sql, function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("ERROR - Unable to select join game information: " + err);
       res.send({ game: null });
     } else if (result.length === 0 || !result || !result[0] || !result[0].game_id) {
       // handle any invalid queries
@@ -144,7 +144,7 @@ router.get('/api/game-state/:gameId', (req, res) => {
              WHERE ENVELOPES.game_id = ${db.escape(req.params.gameId)}`;
   db.query(sql, function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("ERROR - Unable to get game-state information from db " + err);
       res.send({ success: false });
     } else if (!result || !result[0] || !result[0].game_id) {
       console.log(`Game not found - in /api/game-state/${req.params.gameId}`);
@@ -185,7 +185,7 @@ router.post('/api/set-team-name', (req, res) => {
 
   db.query(sql, function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("ERROR - Unable to set team name: " + err);
       res.send({ success: false });
     } else if (result.changedRows !== 1) {
       res.send({ success: false });
@@ -202,7 +202,7 @@ router.post('/api/set-player-name', (req, res) => {
 
   db.query(sql, function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("ERROR - Unable to set player name: " + err);
       res.send({ success: false });
     } else if (result.changedRows !== 1) {
       res.send({ success: false });
@@ -221,7 +221,7 @@ router.get('/api/choose-seat/:teamId/:seatId', (req, res) => {
              AND is_taken = 0`;
   db.query(sql, function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("ERROR - Unabel to choose seat: " + err);
       res.send({ success: false });
     } else if (result.changedRows !== 1) {
       res.send({ success: false });
@@ -238,7 +238,7 @@ router.get('/api/update-envelope/:gameId/:envelopeId/:state', (req, res) => {
              AND envelope_id = ${db.escape(req.params.envelopeId)}`;
   db.query(sql, function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("ERROR - Unable to update envelope: " + err);
       res.send({ success: false });
     } else {
       res.send({ success: true });
@@ -256,7 +256,7 @@ router.post('/api/move-envelope', (req, res) => {
 
   db.query(sql, [req.body.envelopes], function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("ERROR - Unable to move envelopes: " + err);
       res.send({ success: false });
     } else if (result.changedRows !== req.body.envelopes.length) {
       res.send({ success: false });
@@ -274,7 +274,7 @@ router.get('/api/start-game/:facilitatorId/:gameId', (req, res) => {
              AND game_id = ${db.escape(req.params.gameId)}`;
   db.query(sql, function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("ERROR - Unable to start game timer: " + err);
       res.send({ success: false });
     } else if (result.changedRows !== 1) {
       res.send({ success: false });
@@ -293,7 +293,7 @@ router.get('/api/stop-game/:facilitatorId/:gameId', (req, res) => {
              AND game_id = ${db.escape(req.params.gameId)}`;
   db.query(sql, function (err, result) {
     if (err) {
-      console.log(err);
+      console.log("ERROR - Unable to stop game timer: " + err);
       res.send({ success: false });
     } else if (result.changedRows !== 1) {
       res.send({ success: false });
@@ -315,7 +315,7 @@ router.get('/api/remove-player/:seatId', (req, res) => {
              AND GAME.facilitator_session = ${db.escape(session)}`;
     db.query(sql, function (err, result) {
       if (err) {
-        console.log(err);
+        console.log("ERROR - Unable to remove player: " + err);
         res.send({ success: false });
       } else if (result.changedRows === 1) {
         res.send({ success: true });
@@ -338,7 +338,7 @@ router.get('/api/fill-seats', (req, res) => {
 
     db.query(sql, function (err, result) {
       if (err) {
-        console.log(err);
+        console.log("ERROR - Unable to fill seats: " + err);
         res.send({ success: false });
       } else if (result.changedRows === 0) {
         res.send({ success: false });
