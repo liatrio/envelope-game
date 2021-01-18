@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { ReactComponent as EnvOk } from './assets/envelope_ok.svg';
+import { ReactComponent as EnvClosed } from './assets/envelope_closed.svg';
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -12,11 +14,13 @@ class FacilitatorControls extends Component {
     super(props);
     this.state = {
       seatRemoveDisable: new Array(props.seats.length).fill(false),
-      buggedEnvelopeModal: false
+      buggedEnvelopeModal: false,
+      activeChangedEnvelope: new Array(props.envelopes.length).fill(false),
     };
     this.getSeats = this.getSeats.bind(this);
     this.emptySeat = this.emptySeat.bind(this);
     this.setBuggedEnvelopes = this.setBuggedEnvelopes.bind(this);
+    this.setActive = this.setActive.bind(this);
   }
 
   async emptySeat(seatId, idx) {
@@ -31,6 +35,23 @@ class FacilitatorControls extends Component {
   setBuggedEnvelopes() {
     console.log("in bug")
     this.setState({buggedEnvelopeModal: !this.state.buggedEnvelopeModal});
+  }
+
+  setActive(index) {
+    // let array = new Array(this.state.activeChangedEnvelope.length).fill(false);
+    // console.log("in");
+    // this.setState({activeChangedEnvelope: array});
+    // console.log("after first setstate");
+    let s = this.state.activeChangedEnvelope;
+    for (let i = 0; i < this.state.activeChangedEnvelope.length; i++) {
+      if (i === index) {
+        s[i] = true;
+      } else {
+        s[i] = false;
+      }
+    }
+    //s[index] = true;
+    this.setState({activeChangedEnvelope: s})
   }
 
   getSeats(isTeamOne) {
@@ -77,6 +98,11 @@ class FacilitatorControls extends Component {
   }
 
   render() {
+    let team1Envelopes = this.props.envelopes.filter(item => item.isTeam1 === true);
+    team1Envelopes = team1Envelopes.filter(seatFilter => seatFilter.seatNumber === 3);
+    //this.setState({activeChangedEnvelope: array})
+    let team2Envelopes = this.props.envelopes.filter(item => item.isTeam1 === false);
+    team2Envelopes = team2Envelopes.filter(seatFilter => seatFilter.seatNumber === 3);
     return (
       <div class="modal-dialog">
         <div class="modal-content">
@@ -91,13 +117,58 @@ class FacilitatorControls extends Component {
             <Modal.Header closeButton>
               <Modal.Title>Select which envelope to change</Modal.Title>
             </Modal.Header>
-            <Modal.Body></Modal.Body>
+            <Modal.Body>
+              <Row className="justify-content-md-center">
+              <Col md="auto">
+                <dt>Flow Envelopes</dt>
+                <hr></hr>
+                <ul>
+                  {team1Envelopes.map((list, index) =>
+                  <li>
+                    <Button
+                      style={{ display: "contents" }}
+                      onClick={() => this.setActive(index)}
+                    >
+                      <div style={{color: "black"}}>
+                        {this.state.activeChangedEnvelope[index]  ? 
+                          <EnvOk /> :
+                          <EnvClosed />
+                        }
+                        Envelope {index + 1}  
+                      </div>
+                    </Button>
+                    <br/>
+                  </li>
+                  )}
+                </ul> 
+              </Col>
+              <Col md="auto">
+                <dt>Batch Envelopes</dt>
+                <hr></hr>
+                <ul>
+                {team2Envelopes.map((list, index) =>
+                  <li>
+                    <Button
+                      style={{ display: "contents" }}
+                    >
+                      <div style={{color: "black"}}>
+                        <EnvOk />
+                        Envelope {index + 1}  
+                      </div>
+                    </Button>
+                    <br/>
+                  </li>
+                )}
+                </ul>
+              </Col>
+              </Row >
+            </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={this.setBuggedEnvelopes}>
                 Close
               </Button>
               <Button variant="primary" onClick={this.setBuggedEnvelopes}>
-                Save Changes
+                Submit Changes
               </Button>
             </Modal.Footer>
           </Modal>

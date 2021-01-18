@@ -281,6 +281,7 @@ class GameArea extends Component {
               </Modal.Header>
               <Modal.Body>
                 <FacilitatorControls
+                  envelopes={this.state.envelopes ? this.state.envelopes :  []}
                   isStarted={this.state.isStarted}
                   seats={this.state.seats ? this.state.seats : []}
                   team1={this.state.team1}
