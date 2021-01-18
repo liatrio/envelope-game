@@ -21,6 +21,7 @@ class FacilitatorControls extends Component {
     this.emptySeat = this.emptySeat.bind(this);
     this.setBuggedEnvelopes = this.setBuggedEnvelopes.bind(this);
     this.setActive = this.setActive.bind(this);
+    this.enableDebug = this.enableDebug.bind(this);
   }
 
   async emptySeat(seatId, idx) {
@@ -52,6 +53,12 @@ class FacilitatorControls extends Component {
     }
     //s[index] = true;
     this.setState({activeChangedEnvelope: s})
+  }
+
+  async enableDebug(){
+    console.log("enableDebug Called.");
+    await fetch('/api/fill-seats/');
+    
   }
 
   getSeats(isTeamOne) {
@@ -175,11 +182,16 @@ class FacilitatorControls extends Component {
         </Row>
         </div>
         <div class="modal-header">
+          
           <Row className="justify-content-md-center">
             <h5>Update Team Names</h5>
           </Row>
         </div>
         <div class="modal-content">
+          <Button
+            disabled = {false}
+            onClick={() => this.enableDebug()} 
+          >Debug Button</Button>
           <br></br>
           <Row className="justify-content-md-center">
             <Col>
