@@ -86,12 +86,10 @@ class FacilitatorControls extends Component {
           </Row>
         </div>
         <div class="modal-content">
-        <Button
+          <Button
             disabled = {false}
             onClick={() => this.enableDebug()} 
-            > 
-            Debug Button
-            </Button>
+            >Debug Button</Button>
           <br></br>
           <Row className="justify-content-md-center">
             <Col>
