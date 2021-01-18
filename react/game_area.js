@@ -122,7 +122,6 @@ class GameArea extends Component {
     const response = await fetch(`/api/game-state/${this.gameId}`)
     const json = await response.json();
     json.envelopes.sort((a, b) => (a.groupNumber > b.groupNumber) ? 1 : -1);
-    console.log("Line 128 ");
     this.setState({
       envelopes: json.envelopes,
       team1: json.team1,
