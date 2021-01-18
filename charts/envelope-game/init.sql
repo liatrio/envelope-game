@@ -51,6 +51,7 @@ CREATE TABLE SEATS
 CREATE TABLE ENVELOPES
 (
   seat_number INT NOT NULL,
+  group_number INT NOT NULL,
   envelope_id VARCHAR(16) NOT NULL,
   envelope_state INT NOT NULL,
   matching_stamp INT NOT NULL,
