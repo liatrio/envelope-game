@@ -39,7 +39,6 @@ class FacilitatorControls extends Component {
     this.setState({ seatRemoveDisable: s });
   }
   toggleBugModal() {
-    //console.log("in bug")
     this.setState({buggedEnvelopeModal: !this.state.buggedEnvelopeModal});
   }
 
@@ -61,7 +60,6 @@ class FacilitatorControls extends Component {
   }
 
   setActiveTeam2(index) {
-    console.log(index);
     let s = this.state.activeChangedTeam2;
     for (let i = 0; i < this.state.activeChangedTeam2.length; i++) {
       if (i === index) {
@@ -126,13 +124,9 @@ class FacilitatorControls extends Component {
     let batchSize = 5;
     let team1Envelopes = this.props.envelopes.filter(item => item.isTeam1 === true);
     team1Envelopes = team1Envelopes.filter(seatFilter => seatFilter.seatNumber === 3);
-    //this.setState({activeChangedEnvelope: array})
     let team2Envelopes = this.props.envelopes.filter(item => item.isTeam1 === false);
     team2Envelopes = team2Envelopes.filter(seatFilter => seatFilter.seatNumber === 3);
-    let batch = team2Envelopes.filter((e, i) => team2Envelopes.findIndex(a => a.groupNumber === e.groupNumber) === i);
-    console.log(team1Envelopes);
-    //console.log(team2Envelopes);
-    //console.log(batch);
+    //let batch = team2Envelopes.filter((e, i) => team2Envelopes.findIndex(a => a.groupNumber === e.groupNumber) === i);
     return (
       <div class="modal-dialog">
         <div class="modal-content">
@@ -161,6 +155,75 @@ class FacilitatorControls extends Component {
                     >
                       <div style={{color: "black"}}>
                         {this.state.activeChangedTeam1[index]  ? 
+                          <EnvOk /> :
+                          <EnvClosed />
+                        }
+                        Envelope {index + 1}  
+                      </div>
+                    </Button>
+                    <br/>
+                  </li>
+                  )}
+                </ul> 
+              </Col>}
+              {team1Envelopes.length >= 5 && <Col md="auto">
+                <dt>Flow Envelopes</dt>
+                <hr></hr>
+                <ul style={{listStyleType: "none"}}>
+                  {team1Envelopes.slice(batchSize, batchSize * 2).map((list, index) =>
+                  <li>
+                    <Button
+                      style={{ display: "contents" }}
+                      onClick={() => this.setActiveTeam1(index + (batchSize * 2))}
+                    >
+                      <div style={{color: "black"}}>
+                        {this.state.activeChangedTeam1[index + (batchSize * 2)]  ? 
+                          <EnvOk /> :
+                          <EnvClosed />
+                        }
+                        Envelope {index + 1}  
+                      </div>
+                    </Button>
+                    <br/>
+                  </li>
+                  )}
+                </ul> 
+              </Col>}
+              {team1Envelopes.length >= 10 && <Col md="auto">
+                <dt>Flow Envelopes</dt>
+                <hr></hr>
+                <ul style={{listStyleType: "none"}}>
+                  {team1Envelopes.slice(batchSize * 2, batchSize * 3).map((list, index) =>
+                  <li>
+                    <Button
+                      style={{ display: "contents" }}
+                      onClick={() => this.setActiveTeam1(index+ (batchSize * 3))}
+                    >
+                      <div style={{color: "black"}}>
+                        {this.state.activeChangedTeam1[index + (batchSize * 3)]  ? 
+                          <EnvOk /> :
+                          <EnvClosed />
+                        }
+                        Envelope {index + 1}  
+                      </div>
+                    </Button>
+                    <br/>
+                  </li>
+                  )}
+                </ul> 
+              </Col>}
+              {team1Envelopes.length >= 15 && <Col md="auto">
+                <dt>Flow Envelopes</dt>
+                <hr></hr>
+                <ul style={{listStyleType: "none"}}>
+                  {team1Envelopes.slice(batchSize * 3, batchSize * 4).map((list, index) =>
+                  <li>
+                    <Button
+                      style={{ display: "contents" }}
+                      onClick={() => this.setActiveTeam1(index + (batchSize * 4))}
+                    >
+                      <div style={{color: "black"}}>
+                        {this.state.activeChangedTeam1[index + (batchSize * 4)]  ? 
                           <EnvOk /> :
                           <EnvClosed />
                         }
