@@ -83,10 +83,10 @@ router.get('/api/create', (req, res) => {
 
   values = [];
   for (let i = 0; i < numEnvelopes; i++) {
-    values[i] = [nanoid(16), i, 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[0], 0, true, false];
-    values[i + numEnvelopes] = [nanoid(16), groupNum[i], 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[1], 0, false, false];
+    values[i] = [nanoid(16), i, 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[0], 0, true, false, false];
+    values[i + numEnvelopes] = [nanoid(16), groupNum[i], 0, Math.random() * (numEnvelopes - 1) + 1, gameId, teamIds[1], 0, false, false, false];
   }
-  sql = 'INSERT INTO ENVELOPES (envelope_id, group_number, envelope_state, matching_stamp, game_id, team_id, seat_number, is_team_1, is_changed) VALUES ?';
+  sql = 'INSERT INTO ENVELOPES (envelope_id, group_number, envelope_state, matching_stamp, game_id, team_id, seat_number, is_team_1, is_changed, prev_completed) VALUES ?';
   db.query(sql, [values], function (err, result) {
     if (err) {
       console.log("ERROR - Unable to insert into ENVELOPES: " + err);
@@ -151,7 +151,7 @@ router.get('/api/join/:gameId', (req, res) => {
 });
 
 router.get('/api/game-state/:gameId', (req, res) => {
-  let sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, is_changed, group_number, GAME.is_started, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick,
+  let sql = `SELECT envelope_id, envelope_state, seat_number, is_team_1, envelope_end, matching_stamp, is_changed, prev_completed, group_number, GAME.is_started, ENVELOPES.game_id, team_id, GAME.team_1_id, GAME.team_2_id, GAME.score_1, GAME.score_2, GAME.game_tick,
               GAME.team_1_completed, GAME.team_2_completed
              FROM ENVELOPES 
              INNER JOIN GAME ON GAME.game_id = ENVELOPES.game_id
@@ -178,7 +178,8 @@ router.get('/api/game-state/:gameId', (req, res) => {
         envelopes: result.map((i) => {
           return ({
             envelopeId: i.envelope_id,
-            isChanged: i.is_changed,
+            isChanged: i.is_changed === 1 ? true : false,
+            prevCompleted: i.prev_completed === 1 ? true : false,
             groupNumber: i.group_number,
             matchingStamp: i.matching_stamp,
             envelopeState: i.envelope_state,
@@ -267,12 +268,30 @@ router.get('/api/update-envelope/:gameId/:envelopeId/:state', (req, res) => {
 router.post('/api/move-envelope', (req, res) => {
   const sql = `UPDATE ENVELOPES 
              SET seat_number = ${db.escape(req.body.nextSeat)}, 
-                 envelope_state = 0 
+                envelope_state = 0,
+                prev_completed = IF(${db.escape(req.body.nextSeat)} = 3, true, false)
              WHERE envelope_id IN (?)`;
 
   db.query(sql, [req.body.envelopes], function (err, result) {
     if (err) {
       console.log("ERROR - Unable to move envelopes: " + err);
+      res.send({ success: false });
+    } else if (result.changedRows !== req.body.envelopes.length) {
+      res.send({ success: false });
+    } else {
+      res.send({ success: true });
+    }
+  });
+});
+
+router.post('/api/set-changed', (req, res) => {
+  const sql = `UPDATE ENVELOPES 
+             SET is_changed = true,
+             WHERE envelope_id IN (?)`;
+
+  db.query(sql, [req.body.envelopes], function (err, result) {
+    if (err) {
+      console.log("ERROR - Unable to set changed state on envelopes: " + err);
       res.send({ success: false });
     } else if (result.changedRows !== req.body.envelopes.length) {
       res.send({ success: false });
