@@ -1,12 +1,7 @@
 import React, { Component } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLongArrowAltLeft, faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons'
-
-
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-
 import MinimapStatus from './minimap_status'
 
 class Minimap extends Component {
