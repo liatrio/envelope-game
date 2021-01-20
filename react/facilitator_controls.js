@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { ReactComponent as EnvOk } from './assets/envelope_ok.svg';
-import { ReactComponent as EnvClosed } from './assets/envelope_bugged.png';
+import { ReactComponent as EnvClosed } from './assets/envelope_closed.svg';
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
