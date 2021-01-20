@@ -43,7 +43,7 @@ class FacilitatorControls extends Component {
   }
 
   async setBuggedEnvelopes() {
-    //await fetch (`/api/setBugged/`)
+    // ENG-1
   }
 
   setActiveTeam1(index) {
@@ -92,7 +92,7 @@ class FacilitatorControls extends Component {
               className={s.isTaken ? "visible" : "invisible"}
               variant="danger"
               disabled={this.state.seatRemoveDisable[idx] || this.props.isStarted}
-              // onClick={() => this.emptySeat(s.seatId, idx)}
+              onClick={() => this.emptySeat(s.seatId, idx)}
             >
               X
             </Button>
@@ -121,12 +121,14 @@ class FacilitatorControls extends Component {
   }
 
   render() {
+    // can change this batch size if needed
     let batchSize = 5;
+    // filter to find finished envelopes (seat number = 3)
     let team1Envelopes = this.props.envelopes.filter(item => item.isTeam1 === true);
     team1Envelopes = team1Envelopes.filter(seatFilter => seatFilter.seatNumber === 3);
     let team2Envelopes = this.props.envelopes.filter(item => item.isTeam1 === false);
     team2Envelopes = team2Envelopes.filter(seatFilter => seatFilter.seatNumber === 3);
-    //let batch = team2Envelopes.filter((e, i) => team2Envelopes.findIndex(a => a.groupNumber === e.groupNumber) === i);
+    let batch = team2Envelopes.filter((e, i) => team2Envelopes.findIndex(a => a.groupNumber === e.groupNumber) === i);
     return (
       <div class="modal-dialog">
         <div class="modal-content">
@@ -165,8 +167,9 @@ class FacilitatorControls extends Component {
                   </li>
                   )}
                 </ul> 
-              </Col>}
-              {team1Envelopes.length >= 5 && <Col md="auto">
+              </Col>
+              }
+              {team1Envelopes.length > 5 && <Col md="auto">
                 <dt>Flow Envelopes</dt>
                 <hr></hr>
                 <ul style={{listStyleType: "none"}}>
@@ -181,15 +184,16 @@ class FacilitatorControls extends Component {
                           <EnvOk /> :
                           <EnvClosed />
                         }
-                        Envelope {index + 1}  
+                        Envelope {index + batchSize + 1}  
                       </div>
                     </Button>
                     <br/>
                   </li>
                   )}
                 </ul> 
-              </Col>}
-              {team1Envelopes.length >= 10 && <Col md="auto">
+              </Col>
+              }
+              {team1Envelopes.length > 10 && <Col md="auto">
                 <dt>Flow Envelopes</dt>
                 <hr></hr>
                 <ul style={{listStyleType: "none"}}>
@@ -204,15 +208,16 @@ class FacilitatorControls extends Component {
                           <EnvOk /> :
                           <EnvClosed />
                         }
-                        Envelope {index + 1}  
+                        Envelope {index + (batchSize * 2) + 1}  
                       </div>
                     </Button>
                     <br/>
                   </li>
                   )}
                 </ul> 
-              </Col>}
-              {team1Envelopes.length >= 15 && <Col md="auto">
+              </Col>
+              }
+              {team1Envelopes.length > 15 && <Col md="auto">
                 <dt>Flow Envelopes</dt>
                 <hr></hr>
                 <ul style={{listStyleType: "none"}}>
@@ -227,15 +232,16 @@ class FacilitatorControls extends Component {
                           <EnvOk /> :
                           <EnvClosed />
                         }
-                        Envelope {index + 1}  
+                        Envelope {index (batchSize * 3) + 1}  
                       </div>
                     </Button>
                     <br/>
                   </li>
                   )}
                 </ul> 
-              </Col>}
-              <Col md="auto">
+              </Col>
+              }
+              {batch.length >= 1 && <Col md="auto">
                 <dt>Batch Envelopes</dt>
                 <hr></hr>
                 <ul style={{listStyleType: "none"}}>
@@ -261,7 +267,8 @@ class FacilitatorControls extends Component {
                 )}
                 </ul>
               </Col>
-              <Col md="auto">
+              }
+              {batch.length >= 2 && <Col md="auto">
                 <dt>Batch Envelopes</dt>
                 <hr></hr>
                 <ul style={{listStyleType: "none"}}>
@@ -287,7 +294,8 @@ class FacilitatorControls extends Component {
                 )}
                 </ul>
               </Col>
-              <Col md="auto">
+              }
+              {batch.length >= 3 && <Col md="auto">
                 <dt>Batch Envelopes</dt>
                 <hr></hr>
                 <ul style={{listStyleType: "none"}}>
@@ -313,7 +321,8 @@ class FacilitatorControls extends Component {
                 )}
                 </ul>
               </Col>
-              <Col md="auto">
+              }
+              {batch.length >= 4 && <Col md="auto">
                 <dt>Batch Envelopes</dt>
                 <hr></hr>
                 <ul style={{listStyleType: "none"}}>
@@ -339,6 +348,7 @@ class FacilitatorControls extends Component {
                 )}
                 </ul>
               </Col>
+              }
               </Row >
             </Modal.Body>
             <Modal.Footer>
