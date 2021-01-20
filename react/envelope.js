@@ -71,7 +71,7 @@ class Envelope extends Component {
         />
       );
     }
-
+    
     switch (this.props.activeEnvelope.clientState) {
       case 1:
         return (
