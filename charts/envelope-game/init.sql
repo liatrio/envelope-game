@@ -55,6 +55,7 @@ CREATE TABLE ENVELOPES
   envelope_id VARCHAR(16) NOT NULL,
   envelope_state INT NOT NULL,
   matching_stamp INT NOT NULL,
+  prev_completed BOOLEAN NOT NULL,
   envelope_start DATETIME,
   envelope_end DATETIME,
   team_id VARCHAR(16) NOT NULL,
