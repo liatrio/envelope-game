@@ -43,7 +43,7 @@ class FacilitatorControls extends Component {
   }
 
   async setBuggedEnvelopes() {
-    // ENG-1
+    // skeleton for after other ticket is finished
   }
 
   setActiveTeam1(index) {
