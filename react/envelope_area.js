@@ -66,6 +66,7 @@ class EnvelopeArea extends Component {
   }
 
   advanceEnvelopeSeat(envelopes) {
+    console.log(envelopes);
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

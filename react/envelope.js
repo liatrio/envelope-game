@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import envOpen from './assets/envelope_open.svg';
 import envClosed from './assets/envelope_closed.svg';
+import envChanged from './assets/envelope_bugged.svg';
 import envOpenIdx from './assets/envelope_open_index-card.svg';
 import envOk from './assets/envelope_ok.svg';
 
@@ -77,7 +78,7 @@ class Envelope extends Component {
         return (
           <img
             style={svgStyle}
-            src={envClosed}
+            src={this.props.activeEnvelope.isChanged? envChanged : envClosed}
             alt="Closed envelope"
             onClick={this.toggleOpen}
           />

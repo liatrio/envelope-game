@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { ReactComponent as EnvOk } from './assets/envelope_ok.svg';
-import { ReactComponent as EnvClosed } from './assets/envelope_closed.svg';
+import { ReactComponent as EnvBugged } from './assets/envelope_bugged.svg';
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -18,7 +18,8 @@ class FacilitatorControls extends Component {
       activeChangedTeam1: new Array(props.envelopes.length).fill(false),
       activeChangedTeam2: new Array(props.envelopes.length).fill(false),
       selectedTeam1Id: null,
-      selectedTeam2Id: null
+      selectedTeam2Id: null,
+      team2Batch: null
     };
     this.getSeats = this.getSeats.bind(this);
     this.emptySeat = this.emptySeat.bind(this);
@@ -27,6 +28,7 @@ class FacilitatorControls extends Component {
     this.setBuggedEnvelopes = this.setBuggedEnvelopes.bind(this);
     this.toggleBugModal = this.toggleBugModal.bind(this);
     this.enableDebug = this.enableDebug.bind(this);
+    this.resetEnvelopes = this.resetEnvelopes.bind(this);
   }
 
   async emptySeat(seatId, idx) {
@@ -43,11 +45,45 @@ class FacilitatorControls extends Component {
   }
 
   async setBuggedEnvelopes() {
-    const selection = []
+    let selection = []
+    let movedEnvelopes = []
+    for (let i = 0; i < this.state.team2Batch.length; i++) {
+      movedEnvelopes.push(this.state.team2Batch[i]);
+    }
+    movedEnvelopes.push(this.state.selectedTeam1Id);
     selection.push(this.state.selectedTeam1Id);
-    selection.push(this.state.selectedTeam2Id);
+    for (let i = 0; i < this.state.selectedTeam2Id.length; i++) {
+      selection.push(this.state.selectedTeam2Id[i]);
+    }
+    console.log("in submit");
     console.log(selection);
+    console.log(movedEnvelopes);
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          envelopes: selection,
+        })
+      };
+      fetch('/api/set-changed', requestOptions);
+    this.resetEnvelopes(movedEnvelopes);
+    //move-envelope(selection)
     // skeleton for after other ticket is finished
+  }
+
+  resetEnvelopes(envelopes) {
+    console.log(envelopes);
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        envelopes: envelopes,
+        gameId: this.props.gameId,
+        teamId: this.props.teamId,
+        nextSeat: 0
+      })
+    };
+    fetch('/api/move-envelope', requestOptions);
   }
 
   setActiveTeam1(index, envelopeId) {
@@ -64,10 +100,18 @@ class FacilitatorControls extends Component {
     this.setState({selectedTeam1Id: envelopeId})
   }
 
-  setActiveTeam2(index, envelopeSlice) {
-    //let idArray = 
+  setActiveTeam2(index, envelopeSlice, offset) {
+    console.log(index);
+    const selectedIndex = index - offset;
+    let idArray = []; 
+    let selectedTeam2 = [];
+    selectedTeam2.push(envelopeSlice[selectedIndex].envelopeId);
     console.log(envelopeSlice);
+    for (let i = 0; i < envelopeSlice.length; i++) {
+      idArray.push(envelopeSlice[i].envelopeId);
+    }
 
+    console.log(idArray);
     let s = this.state.activeChangedTeam2;
     for (let i = 0; i < this.state.activeChangedTeam2.length; i++) {
       if (i === index) {
@@ -77,7 +121,8 @@ class FacilitatorControls extends Component {
       }
     }
     this.setState({activeChangedTeam2: s})
-    this.setState({selectedTeam2Id: envelopeSlice})
+    this.setState({team2Batch: idArray})
+    this.setState({selectedTeam2Id: selectedTeam2})
   }
   async enableDebug(){
     console.log("enableDebug Called.");
@@ -129,7 +174,7 @@ class FacilitatorControls extends Component {
   }
 
   render() {
-    console.log(this.props.envelopes);
+    //console.log(this.props.envelopes);
     // can change this batch size if needed
     let batchSize = 5;
     // filter to find finished envelopes (seat number = 3)
@@ -168,8 +213,8 @@ class FacilitatorControls extends Component {
                     >
                       <div style={{color: "black"}}>
                         {this.state.activeChangedTeam1[index]  ? 
-                          <EnvOk /> :
-                          <EnvClosed />
+                          <EnvBugged /> :
+                          <EnvOk />
                         }
                         Envelope {index + 1}  
                       </div>
@@ -192,8 +237,8 @@ class FacilitatorControls extends Component {
                     >
                       <div style={{color: "black"}}>
                         {this.state.activeChangedTeam1[index + (batchSize * 2)]  ? 
-                          <EnvOk /> :
-                          <EnvClosed />
+                          <EnvBugged /> :
+                          <EnvOk />
                         }
                         Envelope {index + batchSize + 1}  
                       </div>
@@ -216,8 +261,8 @@ class FacilitatorControls extends Component {
                     >
                       <div style={{color: "black"}}>
                         {this.state.activeChangedTeam1[index + (batchSize * 3)]  ? 
-                          <EnvOk /> :
-                          <EnvClosed />
+                          <EnvBugged /> :
+                          <EnvOk />
                         }
                         Envelope {index + (batchSize * 2) + 1}  
                       </div>
@@ -240,8 +285,8 @@ class FacilitatorControls extends Component {
                     >
                       <div style={{color: "black"}}>
                         {this.state.activeChangedTeam1[index + (batchSize * 4)]  ? 
-                          <EnvOk /> :
-                          <EnvClosed />
+                          <EnvBugged /> :
+                          <EnvOk />
                         }
                         Envelope {index (batchSize * 3) + 1}  
                       </div>
@@ -263,12 +308,12 @@ class FacilitatorControls extends Component {
                     }
                     <Button
                       style={{ display: "contents" }}
-                      onClick={() => this.setActiveTeam2(index, team2Envelopes.slice(0, batchSize))}
+                      onClick={() => this.setActiveTeam2(index, team2Envelopes.slice(0, batchSize), batchSize * 0)}
                     >
                       <div style={{color: "black"}}>
                       {this.state.activeChangedTeam2[index]  ? 
-                          <EnvOk /> :
-                          <EnvClosed />
+                          <EnvBugged /> :
+                          <EnvOk />
                         }
                         Envelope {index + 1}  
                       </div>
@@ -290,12 +335,12 @@ class FacilitatorControls extends Component {
                     }
                     <Button
                       style={{ display: "contents" }}
-                      onClick={() => this.setActiveTeam2(index + batchSize)}
+                      onClick={() => this.setActiveTeam2(index + batchSize, team2Envelopes.slice(batchSize * 1, batchSize * 2), batchSize * 1)}
                     >
                       <div style={{color: "black"}}>
                       {this.state.activeChangedTeam2[index + batchSize]  ? 
-                          <EnvOk /> :
-                          <EnvClosed />
+                          <EnvBugged /> :
+                          <EnvOk />
                         }
                         Envelope {index + 1}  
                       </div>
@@ -317,12 +362,12 @@ class FacilitatorControls extends Component {
                     }
                     <Button
                       style={{ display: "contents" }}
-                      onClick={() => this.setActiveTeam2(index + (batchSize * 2))}
+                      onClick={() => this.setActiveTeam2(index + (batchSize * 2), team2Envelopes.slice(batchSize * 2, batchSize * 3), batchSize * 2)}
                     >
                       <div style={{color: "black"}}>
                       {this.state.activeChangedTeam2[index + (batchSize * 2)]  ? 
-                          <EnvOk /> :
-                          <EnvClosed />
+                          <EnvBugged /> :
+                          <EnvOk />
                         }
                         Envelope {index + 1}  
                       </div>
@@ -344,12 +389,12 @@ class FacilitatorControls extends Component {
                     }
                     <Button
                       style={{ display: "contents" }}
-                      onClick={() => this.setActiveTeam2(index + (batchSize * 3))}
+                      onClick={() => this.setActiveTeam2(index + (batchSize * 3), team2Envelopes.slice(batchSize * 3, batchSize * 4), batchSize * 3)}
                     >
                       <div style={{color: "black"}}>
                       {this.state.activeChangedTeam2[index + (batchSize * 3)]  ? 
-                          <EnvOk /> :
-                          <EnvClosed />
+                          <EnvBugged /> :
+                          <EnvOk />
                         }
                         Envelope {index + 1}  
                       </div>

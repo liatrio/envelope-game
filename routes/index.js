@@ -269,7 +269,7 @@ router.post('/api/move-envelope', (req, res) => {
   const sql = `UPDATE ENVELOPES 
              SET seat_number = ${db.escape(req.body.nextSeat)}, 
                 envelope_state = 0,
-                prev_completed = IF(${db.escape(req.body.nextSeat)} = 3, true, false)
+                prev_completed = IF(${db.escape(req.body.nextSeat)} = 3, true, IF(prev_completed = true, true, false))
              WHERE envelope_id IN (?)`;
 
   db.query(sql, [req.body.envelopes], function (err, result) {
@@ -287,7 +287,7 @@ router.post('/api/move-envelope', (req, res) => {
 // set the chosen envelopes to changed
 router.post('/api/set-changed', (req, res) => {
   const sql = `UPDATE ENVELOPES 
-             SET is_changed = IF(is_changed = false, true, false),
+             SET is_changed = true
              WHERE envelope_id IN (?)`;
 
   db.query(sql, [req.body.envelopes], function (err, result) {
@@ -297,6 +297,7 @@ router.post('/api/set-changed', (req, res) => {
     } else if (result.changedRows !== req.body.envelopes.length) {
       res.send({ success: false });
     } else {
+      console.log("success??????????")
       res.send({ success: true });
     }
   });
