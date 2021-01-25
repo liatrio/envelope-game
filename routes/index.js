@@ -297,8 +297,6 @@ router.post('/api/set-changed', (req, res) => {
     } else if (result.changedRows !== req.body.envelopes.length) {
       res.send({ success: false });
     } else {
-      console.log("success??????????")
-      console.log(result);
       res.send({ success: true });
     }
   });
@@ -375,7 +373,7 @@ router.get('/api/fill-seats', (req, res) => {
                AND GAME.facilitator_session = ${db.escape(session)}`;
 
     db.query(sql, function (err, result) {
-      console.log("Debug Activated\n");
+      console.log("Debug Activated");
       if (err) {
         console.log("ERROR - Unable to fill seats: " + err);
         res.send({ success: false });

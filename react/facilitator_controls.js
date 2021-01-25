@@ -55,9 +55,6 @@ class FacilitatorControls extends Component {
     for (let i = 0; i < this.state.selectedTeam2Id.length; i++) {
       selection.push(this.state.selectedTeam2Id[i]);
     }
-    console.log("in submit");
-    console.log(selection);
-    console.log(movedEnvelopes);
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -65,9 +62,7 @@ class FacilitatorControls extends Component {
           envelopes: selection,
         })
       };
-    console.log("before fetch");
     fetch('/api/set-changed', requestOptions);
-    console.log("after fetch");
     this.resetEnvelopes(movedEnvelopes);
     this.props.checkFinishedEnvelopes();
     //move-envelope(selection)
@@ -75,7 +70,6 @@ class FacilitatorControls extends Component {
   }
 
   resetEnvelopes(envelopes) {
-    console.log(envelopes);
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -90,7 +84,6 @@ class FacilitatorControls extends Component {
   }
 
   setActiveTeam1(index, envelopeId) {
-    console.log(envelopeId);
     let s = this.state.activeChangedTeam1;
     for (let i = 0; i < this.state.activeChangedTeam1.length; i++) {
       if (i === index) {
@@ -104,17 +97,13 @@ class FacilitatorControls extends Component {
   }
 
   setActiveTeam2(index, envelopeSlice, offset) {
-    console.log(index);
     const selectedIndex = index - offset;
     let idArray = []; 
     let selectedTeam2 = [];
     selectedTeam2.push(envelopeSlice[selectedIndex].envelopeId);
-    console.log(envelopeSlice);
     for (let i = 0; i < envelopeSlice.length; i++) {
       idArray.push(envelopeSlice[i].envelopeId);
     }
-
-    console.log(idArray);
     let s = this.state.activeChangedTeam2;
     for (let i = 0; i < this.state.activeChangedTeam2.length; i++) {
       if (i === index) {
@@ -128,9 +117,7 @@ class FacilitatorControls extends Component {
     this.setState({selectedTeam2Id: selectedTeam2})
   }
   async enableDebug(){
-    console.log("enableDebug Called.");
-    await fetch('/api/fill-seats/');
-    
+    await fetch('/api/fill-seats/'); 
   }
 
   getSeats(isTeamOne) {
@@ -177,12 +164,10 @@ class FacilitatorControls extends Component {
   }
 
   render() {
-    //console.log(this.props.envelopes);
     // can change this batch size if needed
     let batchSize = 5;
     // filter to find finished envelopes (seat number = 3)
     let team1Envelopes = this.props.envelopes.filter(item => item.isTeam1 === true);
-    //console.log(team1Envelopes[0].envelopeId);
     team1Envelopes = team1Envelopes.filter(seatFilter => seatFilter.seatNumber === 3);
     let team2Envelopes = this.props.envelopes.filter(item => item.isTeam1 === false);
     team2Envelopes = team2Envelopes.filter(seatFilter => seatFilter.seatNumber === 3);

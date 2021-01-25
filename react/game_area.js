@@ -141,16 +141,11 @@ class GameArea extends Component {
       team1Completed: json.team1Completed,
       team2Completed: json.team2Completed
     });
-    // console.log(this.state.envelopes.filter(item => item.prevCompleted === true));
-    //console.log("Before Function: ");
-    //console.log(this.state.finishedEnvelopes);
     this.checkFinishedEnvelopes();
-    //console.log("After Function: ");
-    //console.log(this.state.finishedEnvelopes);
   }
 
   checkFinishedEnvelopes(){
-    let finishedTemp = this.state.finishedEnvelopes; // P-note: Set this as a new Set instead of an array so that we don't change finishedEnvelopes.
+    let finishedTemp = this.state.finishedEnvelopes;
     let prevCompleted = this.state.envelopes.filter(item => item.prevCompleted === true)
     
     for (let i = 0; i < prevCompleted.length; i++) {
@@ -158,7 +153,7 @@ class GameArea extends Component {
           finishedTemp.delete(prevCompleted[i].envelopeId);
           
         }
-      this.setState({finishedEnvelopes: finishedTemp}); // P-note: I think we changed it from a Set to an Array, so the function didn't exist
+      this.setState({finishedEnvelopes: finishedTemp});
     }
   }
 
@@ -179,17 +174,14 @@ class GameArea extends Component {
   }
 
   setActiveEnvelope() {
-    console.log(this.state.envelopes);
     let envelopes=this.state.envelopes ? this.state.envelopes.filter((i) => {
       return i.seatNumber === this.state.mySeatNumber && i.isTeam1 === this.state.isTeam1
     }) : [];
     if (envelopes && this.state.activeEnvelope === null && envelopes.length > 0) {
       // find an envelope that is not the active envelope and is not in the finished envelope set
-      console.log(this.state.finishedEnvelopes);
       let unfinishedEnvelopes = envelopes.filter((e) => {
         return !this.state.finishedEnvelopes.has(e.envelopeId);
       });
-      console.log(unfinishedEnvelopes);
       if (unfinishedEnvelopes.length > 0) {
         unfinishedEnvelopes[0].complete = false;
         unfinishedEnvelopes[0].stamped = false;
@@ -198,12 +190,10 @@ class GameArea extends Component {
         unfinishedEnvelopes[0].checked = Array(5).fill(false, 0, 5);
         unfinishedEnvelopes[0].clientState = 1;
         this.setState({activeEnvelope: unfinishedEnvelopes[0]});
-        console.log(unfinishedEnvelopes[0]);
 
         this.updateActiveEnvelope(unfinishedEnvelopes[0]);
       }
     }
-    console.log(this.state.activeEnvelope);
   }
 
   // updates the active envelope's states

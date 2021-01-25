@@ -26,20 +26,10 @@ class Envelope extends Component {
   // handles checking the stamp to see if its correct
   // has a two second cooldown on clicking a button before it can be completed
   checkStamp(num) {
-    console.log("Inside CheckStamp");
-    let envelope = this.props.activeEnvelope;
-    console.log(this.props.activeEnvelope);
-    // update which stamps have been checked
-    console.log("Before the If Statement");
-    console.log(envelope);
-    console.log(this.props.activeEnvelope.prevCompleted === true && this.props.activeEnvelope.isChanged === true && this.props.activeEnvelope.seatNumber === 2);
     if (this.props.activeEnvelope.prevCompleted === true && this.props.activeEnvelope.isChanged === true && this.props.activeEnvelope.seatNumber === 2) {
-      //await fetch('/api/set-changed/envelope.envelope_id');
-      console.log("Inside the IF Statement");
       this.fixBug(this.props.activeEnvelope);
       this.props.activeEnvelope.isChanged = false;
     }
-    console.log("After the if statement");
     this.props.activeEnvelope.checked[num] = true;
     this.props.updateActiveEnvelope(this.props.activeEnvelope);
     this.setState({ waiting: true });
@@ -57,8 +47,6 @@ class Envelope extends Component {
 
   async fixBug(envelope) {
     let filteredEnv = envelope.envelopeId;
-    console.log("The ID we are changing is: ");
-    console.log(filteredEnv);
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -67,7 +55,6 @@ class Envelope extends Component {
       })
     };
     await fetch('/api/set-changed/', requestOptions);
-    console.log("Changing to false");
   }
 
   toggleOpen() {
