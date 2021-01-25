@@ -20,26 +20,54 @@ class Envelope extends Component {
     this.checkStamp = this.checkStamp.bind(this);
     this.toggleOpen = this.toggleOpen.bind(this);
     this.getEnvelope = this.getEnvelope.bind(this);
+    this.fixBug = this.fixBug.bind(this);
   }
 
   // handles checking the stamp to see if its correct
   // has a two second cooldown on clicking a button before it can be completed
   checkStamp(num) {
+    console.log("Inside CheckStamp");
     let envelope = this.props.activeEnvelope;
+    console.log(this.props.activeEnvelope);
     // update which stamps have been checked
-    envelope.checked[num] = true;
-    this.props.updateActiveEnvelope(envelope);
+    console.log("Before the If Statement");
+    console.log(envelope);
+    console.log(this.props.activeEnvelope.prevCompleted === true && this.props.activeEnvelope.isChanged === true && this.props.activeEnvelope.seatNumber === 2);
+    if (this.props.activeEnvelope.prevCompleted === true && this.props.activeEnvelope.isChanged === true && this.props.activeEnvelope.seatNumber === 2) {
+      //await fetch('/api/set-changed/envelope.envelope_id');
+      console.log("Inside the IF Statement");
+      this.fixBug(this.props.activeEnvelope);
+      this.props.activeEnvelope.isChanged = false;
+    }
+    console.log("After the if statement");
+    this.props.activeEnvelope.checked[num] = true;
+    this.props.updateActiveEnvelope(this.props.activeEnvelope);
     this.setState({ waiting: true });
     setTimeout(() => {
-      if (num === envelope.matchingStamp) {
-        envelope.clientState = 3;
-        envelope.stamped = true;
+      if (num === this.props.activeEnvelope.matchingStamp) {
+        this.props.activeEnvelope.clientState = 3;
+        this.props.activeEnvelope.stamped = true;
         this.setState({ waiting: false });
-        this.props.updateActiveEnvelope(envelope);
+        this.props.updateActiveEnvelope(this.props.activeEnvelope);
       } else {
         this.setState({ waiting: false });
       }
     }, 500);
+  }
+
+  async fixBug(envelope) {
+    let filteredEnv = envelope.envelopeId;
+    console.log("The ID we are changing is: ");
+    console.log(filteredEnv);
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        envelopes: filteredEnv,
+      })
+    };
+    await fetch('/api/set-changed/', requestOptions);
+    console.log("Changing to false");
   }
 
   toggleOpen() {
@@ -87,7 +115,7 @@ class Envelope extends Component {
         return (
           <img
             style={svgStyle}
-            src={envOpen}
+            src={this.props.activeEnvelope.isChanged? envChanged : envOpen}
             alt="Open envelope"
             onClick={this.toggleOpen}
           />
@@ -96,7 +124,7 @@ class Envelope extends Component {
         return (
           <img
             style={svgStyle}
-            src={envOpenIdx}
+            src={this.props.activeEnvelope.isChanged? envChanged : envOpenIdx}
             alt="Closed envelope"
             onClick={this.toggleOpen}
           />
@@ -105,7 +133,7 @@ class Envelope extends Component {
         return (
           <img
             style={svgStyle}
-            src={envOk}
+            src={this.props.activeEnvelope.isChanged? envChanged : envOk}
             alt="Closed envelope"
             onClick={this.toggleOpen}
           />

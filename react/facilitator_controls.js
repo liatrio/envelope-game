@@ -65,8 +65,11 @@ class FacilitatorControls extends Component {
           envelopes: selection,
         })
       };
-      fetch('/api/set-changed', requestOptions);
+    console.log("before fetch");
+    fetch('/api/set-changed', requestOptions);
+    console.log("after fetch");
     this.resetEnvelopes(movedEnvelopes);
+    this.props.checkFinishedEnvelopes();
     //move-envelope(selection)
     // skeleton for after other ticket is finished
   }
@@ -181,7 +184,6 @@ class FacilitatorControls extends Component {
     let team1Envelopes = this.props.envelopes.filter(item => item.isTeam1 === true);
     //console.log(team1Envelopes[0].envelopeId);
     team1Envelopes = team1Envelopes.filter(seatFilter => seatFilter.seatNumber === 3);
-    
     let team2Envelopes = this.props.envelopes.filter(item => item.isTeam1 === false);
     team2Envelopes = team2Envelopes.filter(seatFilter => seatFilter.seatNumber === 3);
     let batch = team2Envelopes.filter((e, i) => team2Envelopes.findIndex(a => a.groupNumber === e.groupNumber) === i);

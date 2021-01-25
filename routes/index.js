@@ -287,7 +287,7 @@ router.post('/api/move-envelope', (req, res) => {
 // set the chosen envelopes to changed
 router.post('/api/set-changed', (req, res) => {
   const sql = `UPDATE ENVELOPES 
-             SET is_changed = true
+             SET is_changed = IF(is_changed = true, false, true)
              WHERE envelope_id IN (?)`;
 
   db.query(sql, [req.body.envelopes], function (err, result) {
@@ -298,6 +298,7 @@ router.post('/api/set-changed', (req, res) => {
       res.send({ success: false });
     } else {
       console.log("success??????????")
+      console.log(result);
       res.send({ success: true });
     }
   });
