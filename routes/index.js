@@ -200,7 +200,7 @@ router.post('/api/set-team-name', (req, res) => {
              WHERE team_id = ?
              AND facilitator_session = ?`;
 
-  db.query(sql, [req.body.teamName, eq.body.teamId, session],function (err, result) {
+  db.query(sql, [req.body.teamName, req.body.teamId, session],function (err, result) {
     if (err) {
       console.log("ERROR - Unable to set team name: " + err);
       res.send({ success: false });
