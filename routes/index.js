@@ -112,9 +112,9 @@ router.get('/api/join/:gameId', (req, res) => {
                FROM SEATS 
                INNER JOIN GAME on GAME.game_id = SEATS.game_id 
                INNER JOIN TEAMS on TEAMS.team_id = SEATS.team_id 
-               WHERE SEATS.game_id = ${db.escape(req.params.gameId)};`
+               WHERE SEATS.game_id = ?`;
 
-  db.query(sql, function (err, result) {
+  db.query(sql, [req.params.gameId] , function (err, result) {
     if (err) {
       console.log("ERROR - Unable to select join game information: " + err);
       res.send({ game: null });
@@ -155,8 +155,8 @@ router.get('/api/game-state/:gameId', (req, res) => {
               GAME.team_1_completed, GAME.team_2_completed
              FROM ENVELOPES 
              INNER JOIN GAME ON GAME.game_id = ENVELOPES.game_id
-             WHERE ENVELOPES.game_id = ${db.escape(req.params.gameId)}`;
-  db.query(sql, function (err, result) {
+             WHERE ENVELOPES.game_id = ?`;
+  db.query(sql, [req.params.gameId], function (err, result) {
     if (err) {
       console.log("ERROR - Unable to get game-state information from db " + err);
       res.send({ success: false });
@@ -196,11 +196,11 @@ router.get('/api/game-state/:gameId', (req, res) => {
 router.post('/api/set-team-name', (req, res) => {
   const session = req.universalCookies.get('session');
   const sql = `UPDATE TEAMS INNER JOIN GAME on GAME.team_1_id = team_id or GAME.team_2_id = team_id
-             SET team_name = ${db.escape(req.body.teamName)}
-             WHERE team_id = ${db.escape(req.body.teamId)}
-             AND facilitator_session = ${db.escape(session)}`;
+             SET team_name = ?
+             WHERE team_id = ?
+             AND facilitator_session = ?`;
 
-  db.query(sql, function (err, result) {
+  db.query(sql, [req.body.teamName, req.body.teamId, session],function (err, result) {
     if (err) {
       console.log("ERROR - Unable to set team name: " + err);
       res.send({ success: false });
@@ -214,10 +214,10 @@ router.post('/api/set-team-name', (req, res) => {
 
 router.post('/api/set-player-name', (req, res) => {
   const sql = `UPDATE SEATS
-                SET display_name = ${db.escape(req.body.displayName)}
-                WHERE seat_id = ${db.escape(req.body.seatId)}`;
+                SET display_name = ?
+                WHERE seat_id = ?`;
 
-  db.query(sql, function (err, result) {
+  db.query(sql, [req.body.displayName, req.body.seatId],function (err, result) {
     if (err) {
       console.log("ERROR - Unable to set player name: " + err);
       res.send({ success: false });
@@ -232,11 +232,11 @@ router.post('/api/set-player-name', (req, res) => {
 router.get('/api/choose-seat/:teamId/:seatId', (req, res) => {
   const session = req.universalCookies.get('session');
   const sql = `UPDATE SEATS SET 
-             is_taken = 1, session_id = ${db.escape(session)}
-             WHERE seat_id = ${db.escape(req.params.seatId)}
-             AND team_id = ${db.escape(req.params.teamId)} 
+             is_taken = 1, session_id = ?
+             WHERE seat_id = ?
+             AND team_id = ?
              AND is_taken = 0`;
-  db.query(sql, function (err, result) {
+  db.query(sql, [session, req.params.seatId, req.params.teamId],function (err, result) {
     if (err) {
       console.log("ERROR - Unabel to choose seat: " + err);
       res.send({ success: false });
@@ -250,10 +250,10 @@ router.get('/api/choose-seat/:teamId/:seatId', (req, res) => {
 
 router.get('/api/update-envelope/:gameId/:envelopeId/:state', (req, res) => {
   const sql = `UPDATE ENVELOPES
-             SET envelope_state = ${db.escape(req.params.state)}
-             WHERE game_id = ${db.escape(req.params.gameId)}
-             AND envelope_id = ${db.escape(req.params.envelopeId)}`;
-  db.query(sql, function (err, result) {
+             SET envelope_state = ?
+             WHERE game_id = ?
+             AND envelope_id = ?`;
+  db.query(sql, [req.params.state, req.params.gameId, req.params.envelopeId],function (err, result) {
     if (err) {
       console.log("ERROR - Unable to update envelope: " + err);
       res.send({ success: false });
@@ -267,12 +267,12 @@ router.get('/api/update-envelope/:gameId/:envelopeId/:state', (req, res) => {
 // used to advance an envelope to the next seat
 router.post('/api/move-envelope', (req, res) => {
   const sql = `UPDATE ENVELOPES 
-             SET seat_number = ${db.escape(req.body.nextSeat)}, 
+             SET seat_number = ?, 
                 envelope_state = 0,
-                prev_completed = IF(${db.escape(req.body.nextSeat)} = 3, true, IF(prev_completed = true, true, false))
+                prev_completed = IF( ? = 3, true, IF(prev_completed = true, true, false))
              WHERE envelope_id IN (?)`;
 
-  db.query(sql, [req.body.envelopes], function (err, result) {
+  db.query(sql, [req.body.nextSeat, req.body.nextSeat, req.body.envelopes], function (err, result) {
     if (err) {
       console.log("ERROR - Unable to move envelopes: " + err);
       res.send({ success: false });
@@ -305,10 +305,10 @@ router.post('/api/set-changed', (req, res) => {
 router.get('/api/start-game/:facilitatorId/:gameId', (req, res) => {
   const session = req.universalCookies.get('session');
   const sql = `UPDATE GAME
-             SET is_started = ${true}
-             WHERE facilitator_session = ${db.escape(session)}
-             AND game_id = ${db.escape(req.params.gameId)}`;
-  db.query(sql, function (err, result) {
+             SET is_started = true
+             WHERE facilitator_session = ?
+             AND game_id = ?`;
+  db.query(sql, [session, req.params.gameId], function (err, result) {
     if (err) {
       console.log("ERROR - Unable to start game timer: " + err);
       res.send({ success: false });
@@ -324,10 +324,10 @@ router.get('/api/start-game/:facilitatorId/:gameId', (req, res) => {
 router.get('/api/stop-game/:facilitatorId/:gameId', (req, res) => {
   const session = req.universalCookies.get('session');
   const sql = `UPDATE GAME
-             SET is_started = ${false}
-             WHERE facilitator_session = ${db.escape(session)}
-             AND game_id = ${db.escape(req.params.gameId)}`;
-  db.query(sql, function (err, result) {
+             SET is_started = false
+             WHERE facilitator_session = ?
+             AND game_id = ?`;
+  db.query(sql, [session, req.params.gameId],function (err, result) {
     if (err) {
       console.log("ERROR - Unable to stop game timer: " + err);
       res.send({ success: false });
@@ -346,10 +346,10 @@ router.get('/api/remove-player/:seatId', (req, res) => {
   if (facil) {
     const sql = `UPDATE SEATS
              INNER JOIN GAME ON SEATS.game_id = GAME.game_id
-             SET SEATS.is_taken = 0, SEATS.session_id = ${null}, SEATS.display_name = ${null}
-             WHERE SEATS.seat_id = ${db.escape(req.params.seatId)}
-             AND GAME.facilitator_session = ${db.escape(session)}`;
-    db.query(sql, function (err, result) {
+             SET SEATS.is_taken = 0, SEATS.session_id = null, SEATS.display_name = null
+             WHERE SEATS.seat_id = ?
+             AND GAME.facilitator_session = ?`;
+    db.query(sql, [req.params.seatId, session], function (err, result) {
       if (err) {
         console.log("ERROR - Unable to remove player: " + err);
         res.send({ success: false });
@@ -369,10 +369,10 @@ router.get('/api/fill-seats', (req, res) => {
     const sql = `UPDATE SEATS
                INNER JOIN GAME ON SEATS.game_id = GAME.game_id
                SET is_taken = 1
-               WHERE SEATS.game_id = ${db.escape(facil.game)}
-               AND GAME.facilitator_session = ${db.escape(session)}`;
+               WHERE SEATS.game_id = ?
+               AND GAME.facilitator_session = ?`;
 
-    db.query(sql, function (err, result) {
+    db.query(sql, [facil.game, session], function (err, result) {
       console.log("Debug Activated");
       if (err) {
         console.log("ERROR - Unable to fill seats: " + err);
