@@ -74,6 +74,7 @@ class GameArea extends Component {
     this.updateActiveEnvelope = this.updateActiveEnvelope.bind(this);
     this.advanceEnvelopeSeat = this.advanceEnvelopeSeat.bind(this);
     this.togglePlayerName = this.togglePlayerName.bind(this);
+    this.createStartEnvelope = this.createStartEnvelope.bind(this);
     this.toggleFacilitatorControls = this.toggleFacilitatorControls.bind(this);
     this.checkFinishedEnvelopes = this.checkFinishedEnvelopes.bind(this);
   }
@@ -182,20 +183,24 @@ class GameArea extends Component {
       let unfinishedEnvelopes = envelopes.filter((e) => {
         return !this.state.finishedEnvelopes.has(e.envelopeId);
       });
+      
       if (unfinishedEnvelopes.length > 0) {
-        unfinishedEnvelopes[0].complete = false;
-        unfinishedEnvelopes[0].stamped = false;
-        unfinishedEnvelopes[0].envelopeState = 1;
-        unfinishedEnvelopes[0].random = Array.from(Array(5), (x, i) => i + unfinishedEnvelopes[0].matchingStamp).sort(() => Math.random() - 0.5);
-        unfinishedEnvelopes[0].checked = Array(5).fill(false, 0, 5);
-        unfinishedEnvelopes[0].clientState = 1;
-        this.setState({activeEnvelope: unfinishedEnvelopes[0]});
-
-        this.updateActiveEnvelope(unfinishedEnvelopes[0]);
+        this.createStartEnvelope(unfinishedEnvelopes);
       }
     }
   }
 
+  createStartEnvelope(unfinishedEnvelopes){
+    unfinishedEnvelopes[0].complete = false;
+    unfinishedEnvelopes[0].stamped = false;
+    unfinishedEnvelopes[0].envelopeState = 1;
+    unfinishedEnvelopes[0].random = Array.from(Array(5), (x, i) => i + unfinishedEnvelopes[0].matchingStamp).sort(() => Math.random() - 0.5);
+    unfinishedEnvelopes[0].checked = Array(5).fill(false, 0, 5);
+    unfinishedEnvelopes[0].clientState = 1;
+    this.setState({activeEnvelope: unfinishedEnvelopes[0]});
+
+    this.updateActiveEnvelope(unfinishedEnvelopes[0]);
+  }
   // updates the active envelope's states
   // 0 is on todo stack
   // 1 is closed, active envelope
@@ -210,7 +215,6 @@ class GameArea extends Component {
   }
 
   advanceEnvelopeSeat(envelopes) {
-    console.log(envelopes);
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
