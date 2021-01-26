@@ -188,7 +188,6 @@ class GameArea extends Component {
       
       if (unfinishedEnvelopes.length > 0) {
         if (unfinishedEnvelopes[0].prevCompleted && !unfinishedEnvelopes[0].isChanged) {
-          console.log("Inside the if statement");
           this.createFinishedEnvelope(unfinishedEnvelopes);
         }
         else {
@@ -211,8 +210,6 @@ class GameArea extends Component {
   }
 
   createFinishedEnvelope(unfinishedEnvelopes){
-    console.log("Inside the finished function");
-    console.log(unfinishedEnvelopes[0]);
     unfinishedEnvelopes[0].complete = true;
     unfinishedEnvelopes[0].stamped = true;
     unfinishedEnvelopes[0].envelopeState = 4;
@@ -220,8 +217,6 @@ class GameArea extends Component {
     unfinishedEnvelopes[0].checked = Array(5).fill(true, 0, 5);
     unfinishedEnvelopes[0].clientState = 4;
     this.setState({activeEnvelope: unfinishedEnvelopes[0]});
-    console.log("after state set");
-    console.log(unfinishedEnvelopes[0]);
 
     this.updateActiveEnvelope(unfinishedEnvelopes[0]);
   }
