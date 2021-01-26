@@ -112,7 +112,7 @@ router.get('/api/join/:gameId', (req, res) => {
                FROM SEATS 
                INNER JOIN GAME on GAME.game_id = SEATS.game_id 
                INNER JOIN TEAMS on TEAMS.team_id = SEATS.team_id 
-               WHERE SEATS.game_id = ?;`
+               WHERE SEATS.game_id = ?`;
 
   db.query(sql, [req.params.gameId] , function (err, result) {
     if (err) {
