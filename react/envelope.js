@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import envOpen from './assets/envelope_open.svg';
 import envClosed from './assets/envelope_closed.svg';
+import envChanged from './assets/envelope_bugged.svg';
 import envOpenIdx from './assets/envelope_open_index-card.svg';
 import envOk from './assets/envelope_ok.svg';
 
@@ -19,48 +20,67 @@ class Envelope extends Component {
     this.checkStamp = this.checkStamp.bind(this);
     this.toggleOpen = this.toggleOpen.bind(this);
     this.getEnvelope = this.getEnvelope.bind(this);
+    this.fixBug = this.fixBug.bind(this);
+    
   }
 
   // handles checking the stamp to see if its correct
   // has a two second cooldown on clicking a button before it can be completed
   checkStamp(num) {
-    let envelope = this.props.activeEnvelope;
-    // update which stamps have been checked
-    envelope.checked[num] = true;
-    this.props.updateActiveEnvelope(envelope);
+    const {activeEnvelope, updateActiveEnvelope} = this.props;
+    const thirdSeat = 2;
+    if (activeEnvelope.prevCompleted && activeEnvelope.isChanged && activeEnvelope.seatNumber === thirdSeat) {
+      this.fixBug(activeEnvelope);
+      activeEnvelope.isChanged = false;
+    }
+    activeEnvelope.checked[num] = true;
+    updateActiveEnvelope(activeEnvelope);
     this.setState({ waiting: true });
     setTimeout(() => {
-      if (num === envelope.matchingStamp) {
-        envelope.clientState = 3;
-        envelope.stamped = true;
+      if (num === activeEnvelope.matchingStamp) {
+        activeEnvelope.clientState = 3;
+        activeEnvelope.stamped = true;
         this.setState({ waiting: false });
-        this.props.updateActiveEnvelope(envelope);
+        updateActiveEnvelope(activeEnvelope);
       } else {
         this.setState({ waiting: false });
       }
     }, 500);
   }
 
+  async fixBug(envelope) {
+    let filteredEnv = envelope.envelopeId;
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        envelopes: filteredEnv,
+      })
+    };
+    await fetch('/api/set-changed/', requestOptions);
+  }
+
   toggleOpen() {
+    const {activeEnvelope, updateActiveEnvelope, isStarted} = this.props;    
     // disable if game isn't running
-    if (!this.props.isStarted) return;
+    if (!isStarted) return;
     const open = this.state.open;
-    let envelope = this.props.activeEnvelope;
-    if (open && envelope.stamped) {
-      envelope.clientState = 4;
-      this.props.updateActiveEnvelope(envelope);
+    if (open && activeEnvelope.stamped) {
+      activeEnvelope.clientState = 4;
+      updateActiveEnvelope(activeEnvelope);
       this.setState({ open: !open });
-    } else if (!open && !this.props.activeEnvelope.stamped) {
-      envelope.clientState = 2;
-      this.props.updateActiveEnvelope(envelope);
+    } else if (!open && !activeEnvelope.stamped) {
+      activeEnvelope.clientState = 2;
+      updateActiveEnvelope(activeEnvelope);
       this.setState({ open: !open });
     }
   }
 
   // helper function to return the right icon based on state
   getEnvelope() {
+    const {activeEnvelope} = this.props;
     const svgStyle = { margin: "0 auto", maxWidth: "50px", minHeight: "60px" };
-    if (!this.props.activeEnvelope) {
+    if (!activeEnvelope) {
       return (
         <img
           className="invisible"
@@ -71,13 +91,19 @@ class Envelope extends Component {
         />
       );
     }
-    
-    switch (this.props.activeEnvelope.clientState) {
+    // envelope states
+    // 0 is on todo stack
+    // 1 is closed, active envelope
+    // 2 is open active envelope
+    // 3 stamped open envelope
+    // 4 is stamped closed envelope
+    // 5 is completed for that person
+    switch (activeEnvelope.clientState) {
       case 1:
         return (
           <img
             style={svgStyle}
-            src={envClosed}
+            src={activeEnvelope.isChanged? envChanged : envClosed}
             alt="Closed envelope"
             onClick={this.toggleOpen}
           />
@@ -86,7 +112,7 @@ class Envelope extends Component {
         return (
           <img
             style={svgStyle}
-            src={envOpen}
+            src={activeEnvelope.isChanged? envChanged : envOpen}
             alt="Open envelope"
             onClick={this.toggleOpen}
           />
@@ -95,7 +121,7 @@ class Envelope extends Component {
         return (
           <img
             style={svgStyle}
-            src={envOpenIdx}
+            src={activeEnvelope.isChanged? envChanged : envOpenIdx}
             alt="Closed envelope"
             onClick={this.toggleOpen}
           />
@@ -104,7 +130,7 @@ class Envelope extends Component {
         return (
           <img
             style={svgStyle}
-            src={envOk}
+            src={activeEnvelope.isChanged? envChanged : envOk}
             alt="Closed envelope"
             onClick={this.toggleOpen}
           />
@@ -115,24 +141,24 @@ class Envelope extends Component {
   }
 
   render() {
-    const open = this.state.open;
+    const {isTeam1, finishActiveEnvelope, activeEnvelope, isStarted} = this.props;
     return (
       <div style={this.props.isStarted ? { width: "70%", textAlign: "center" } : { width: "70%", textAlign: "center", opacity: "0.5" }}>
-        {this.props.activeEnvelope ? `Stamp ${this.props.activeEnvelope.matchingStamp}` : "No envelope"}
+        {activeEnvelope ? `Stamp ${activeEnvelope.matchingStamp}` : "No envelope"}
         <br></br>
         {this.getEnvelope()}
-        <Fade
-          in={open}
+        <Fade 
+          in={this.state.open}
         >
           <div id="collapse-stamp-bar">
             <ButtonGroup aria-label="collapse-stamp-bar" className={this.state.open ? "visible" : "invisible"}>
-              {this.props.activeEnvelope ? this.props.activeEnvelope.random.map((i) => {
-                const variant = i === this.props.activeEnvelope.matchingStamp ? "success" : "danger";
+              {activeEnvelope ? activeEnvelope.random.map((i) => {
+                const variant = i === activeEnvelope.matchingStamp ? "success" : "danger";
                 return (
                   <Button
                     key={i}
-                    variant={this.props.activeEnvelope.checked[i] ? variant : "primary"}
-                    disabled={this.state.waiting || this.props.activeEnvelope.checked[i] || !this.props.isStarted}
+                    variant={activeEnvelope.checked[i] ? variant : "primary"}
+                    disabled={this.state.waiting || activeEnvelope.checked[i] || !isStarted}
                     onClick={() => this.checkStamp(i)}
                   >
                     {i}
@@ -146,12 +172,12 @@ class Envelope extends Component {
 
         </Fade>
         <Button
-          variant={this.props.activeEnvelope && this.props.activeEnvelope.stamped && !this.state.open ? "primary" : "secondary"}
-          disabled={!(this.props.activeEnvelope && this.props.activeEnvelope.stamped && !this.state.open)}
-          onClick={() => this.props.finishActiveEnvelope()}
+          variant={activeEnvelope && activeEnvelope.stamped && !this.state.open ? "primary" : "secondary"}
+          disabled={!(activeEnvelope && activeEnvelope.stamped && !this.state.open)}
+          onClick={() => finishActiveEnvelope()}
         >
           {
-            this.props.is_team_1 ?
+            isTeam1 ?
               "Send to next person" :
               "Finish envelope"
           }

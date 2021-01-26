@@ -62,13 +62,21 @@ class GameArea extends Component {
       isTeam1: null,
       team1Completed: 0,
       team2Completed: 0,
+      finishedEnvelopes: new Set(),
+      activeEnvelope: null,
     }
     this.joinIntervalId = null;
     this.gameIntervalId = null;
     this.toggleInstructions = this.toggleInstructions.bind(this);
     this.toggleJoinGame = this.toggleJoinGame.bind(this);
+    this.finishActiveEnvelope = this.finishActiveEnvelope.bind(this);
+    this.setActiveEnvelope = this.setActiveEnvelope.bind(this);
+    this.updateActiveEnvelope = this.updateActiveEnvelope.bind(this);
+    this.advanceEnvelopeSeat = this.advanceEnvelopeSeat.bind(this);
     this.togglePlayerName = this.togglePlayerName.bind(this);
+    this.createStartEnvelope = this.createStartEnvelope.bind(this);
     this.toggleFacilitatorControls = this.toggleFacilitatorControls.bind(this);
+    this.checkFinishedEnvelopes = this.checkFinishedEnvelopes.bind(this);
   }
 
   componentDidMount() {
@@ -134,6 +142,90 @@ class GameArea extends Component {
       team1Completed: json.team1Completed,
       team2Completed: json.team2Completed
     });
+    this.checkFinishedEnvelopes();
+  }
+
+  checkFinishedEnvelopes(){
+    let finishedTemp = this.state.finishedEnvelopes;
+    let prevCompleted = this.state.envelopes.filter(item => item.prevCompleted === true)
+    
+    for (let i = 0; i < prevCompleted.length; i++) {
+        if (this.state.finishedEnvelopes.has(prevCompleted[i].envelopeId) && prevCompleted[i].seatNumber === 3) {
+          finishedTemp.delete(prevCompleted[i].envelopeId);
+          
+        }
+      this.setState({finishedEnvelopes: finishedTemp});
+    }
+  }
+
+  async finishActiveEnvelope() {
+    let seat = this.state.seats ? this.state.seats.find(i => {
+      return i.seatId === this.state.seatId;
+    }) : null;
+    let finished = this.state.finishedEnvelopes;
+    finished.add(this.state.activeEnvelope.envelopeId);
+    if (seat.isTeam1) {
+      this.advanceEnvelopeSeat([this.state.activeEnvelope.envelopeId]);
+    } else {
+      let envelope = this.state.activeEnvelope;
+      envelope.clientState = 5;
+      await this.updateActiveEnvelope(envelope);
+    }
+    this.setState({ activeEnvelope: null, finishedEnvelopes: finished });
+  }
+
+  setActiveEnvelope() {
+    let envelopes=this.state.envelopes ? this.state.envelopes.filter((i) => {
+      return i.seatNumber === this.state.mySeatNumber && i.isTeam1 === this.state.isTeam1
+    }) : [];
+    if (envelopes && this.state.activeEnvelope === null && envelopes.length > 0) {
+      // find an envelope that is not the active envelope and is not in the finished envelope set
+      let unfinishedEnvelopes = envelopes.filter((e) => {
+        return !this.state.finishedEnvelopes.has(e.envelopeId);
+      });
+      
+      if (unfinishedEnvelopes.length > 0) {
+        this.createStartEnvelope(unfinishedEnvelopes);
+      }
+    }
+  }
+
+  createStartEnvelope(unfinishedEnvelopes){
+    unfinishedEnvelopes[0].complete = false;
+    unfinishedEnvelopes[0].stamped = false;
+    unfinishedEnvelopes[0].envelopeState = 1;
+    unfinishedEnvelopes[0].random = Array.from(Array(5), (x, i) => i + unfinishedEnvelopes[0].matchingStamp).sort(() => Math.random() - 0.5);
+    unfinishedEnvelopes[0].checked = Array(5).fill(false, 0, 5);
+    unfinishedEnvelopes[0].clientState = 1;
+    this.setState({activeEnvelope: unfinishedEnvelopes[0]});
+
+    this.updateActiveEnvelope(unfinishedEnvelopes[0]);
+  }
+  // updates the active envelope's states
+  // 0 is on todo stack
+  // 1 is closed, active envelope
+  // 2 is open active envelope
+  // 3 stamped open envelope
+  // 4 is stamped closed envelope
+  // 5 is completed for that person
+  async updateActiveEnvelope(envelope) {
+    this.setState({ activeEnvelope: envelope });
+    const request = `/api/update-envelope/${this.state.gameId}/${envelope.envelopeId}/${envelope.clientState}`;
+    fetch(request);
+  }
+
+  advanceEnvelopeSeat(envelopes) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        envelopes: envelopes,
+        gameId: this.gameId,
+        teamId: this.state.envelopes.teamId,
+        nextSeat: this.state.mySeatNumber + 1,
+      })
+    };
+    fetch('/api/move-envelope', requestOptions);
   }
 
   toggleJoinGame() {
@@ -212,6 +304,12 @@ class GameArea extends Component {
           isStarted={this.state.isStarted}
           teamId={this.state.teamId}
           gameId={this.gameId}
+          finishedEnvelopes={this.state.finishedEnvelopes}
+          activeEnvelope={this.state.activeEnvelope}
+          finishActiveEnvelope={this.finishActiveEnvelope}
+          setActiveEnvelope={this.setActiveEnvelope}
+          updateActiveEnvelope={this.updateActiveEnvelope}
+          advanceEnvelopeSeat={this.advanceEnvelopeSeat}
           seat={this.state.seats ? this.state.seats.find(i => {
             return i.seatId === this.state.seatId;
           }) : null}
@@ -289,6 +387,7 @@ class GameArea extends Component {
                   team2={this.state.team2}
                   facilitatorId={this.state.facilitatorId}
                   toggleControls={this.toggleFacilitatorControls}
+                  checkFinishedEnvelopes={this.checkFinishedEnvelopes}
                 />
               </Modal.Body>
             </Container>
