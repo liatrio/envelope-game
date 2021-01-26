@@ -15,6 +15,7 @@ class FacilitatorControls extends Component {
     this.state = {
       seatRemoveDisable: new Array(props.seats.length).fill(false),
       buggedEnvelopeModal: false,
+      selectionError: false,
       activeChangedTeam1: new Array(props.envelopes.length).fill(false),
       activeChangedTeam2: new Array(props.envelopes.length).fill(false),
       selectedTeam1Id: null,
@@ -27,6 +28,8 @@ class FacilitatorControls extends Component {
     this.setActiveTeam2 = this.setActiveTeam2.bind(this);
     this.setBuggedEnvelopes = this.setBuggedEnvelopes.bind(this);
     this.toggleBugModal = this.toggleBugModal.bind(this);
+    this.setSelectionError = this.setSelectionError.bind(this);
+    this.setSelectionFalse = this.setSelectionFalse.bind(this);
     this.enableDebug = this.enableDebug.bind(this);
     this.resetEnvelopes = this.resetEnvelopes.bind(this);
   }
@@ -45,6 +48,9 @@ class FacilitatorControls extends Component {
   }
 
   async setBuggedEnvelopes() {
+    if (this.state.selectedTeam1Id && this.state.selectedTeam2Id) {
+      this.setState({selectionError: false});
+    }
     const movedEnvelopes = [...this.state.team2Batch, this.state.selectedTeam1Id];
     const changedEnvelopes = [this.state.selectedTeam1Id, ...this.state.selectedTeam2Id];
       const requestOptions = {
@@ -57,6 +63,7 @@ class FacilitatorControls extends Component {
     await fetch('/api/set-changed', requestOptions);
     this.resetEnvelopes(movedEnvelopes);
     this.props.checkFinishedEnvelopes();
+    
     //move-envelope(selection)
     // skeleton for after other ticket is finished
   }
@@ -73,6 +80,14 @@ class FacilitatorControls extends Component {
       })
     };
     fetch('/api/move-envelope', requestOptions);
+    const resetTeam1Array = [...this.state.activeChangedTeam1].fill(false);
+    const resetTeam2Array = [...this.state.activeChangedTeam2].fill(false);
+    this.setState({selectedTeam1Id: null,
+      selectedTeam2Id: null,
+      team2Batch: null,
+      activeChangedTeam1: resetTeam1Array,
+      activeChangedTeam2: resetTeam2Array
+    });
   }
 
   setActiveTeam1(index, envelopeId) {
@@ -106,6 +121,15 @@ class FacilitatorControls extends Component {
   async enableDebug(){
     await fetch('/api/fill-seats/'); 
   }
+
+  setSelectionError() {
+    this.setState({selectionError: true });
+  }
+
+  setSelectionFalse() {
+    this.setState({selectionError: false });
+  }
+  
 
   getSeats(isTeamOne) {
     // if seat information has loaded
@@ -386,9 +410,19 @@ class FacilitatorControls extends Component {
               <Button variant="secondary" onClick={this.toggleBugModal}>
                 Close
               </Button>
-              <Button variant="primary" onClick={this.setBuggedEnvelopes}>
+              <Button variant="primary" onClick={this.state.selectedTeam1Id && this.state.selectedTeam2Id ? this.setBuggedEnvelopes : this.setSelectionError}>
                 Submit Changes
               </Button>
+              <Modal show={this.state.selectionError} onHide={this.setSelectionFalse}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Selection Error</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Row className="justify-content-md-center">
+                    Please select one envelope from Flow and Batch
+                  </Row>
+                </Modal.Body>
+              </Modal>
             </Modal.Footer>
           </Modal>
         </Row>
