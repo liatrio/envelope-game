@@ -77,6 +77,8 @@ class GameArea extends Component {
     this.createStartEnvelope = this.createStartEnvelope.bind(this);
     this.toggleFacilitatorControls = this.toggleFacilitatorControls.bind(this);
     this.checkFinishedEnvelopes = this.checkFinishedEnvelopes.bind(this);
+    this.createStartEnvelope = this.createStartEnvelope.bind(this);
+    this.createFinishedEnvelope = this.createFinishedEnvelope.bind(this);
   }
 
   componentDidMount() {
@@ -185,7 +187,12 @@ class GameArea extends Component {
       });
       
       if (unfinishedEnvelopes.length > 0) {
-        this.createStartEnvelope(unfinishedEnvelopes);
+        if (unfinishedEnvelopes[0].prevCompleted && !unfinishedEnvelopes[0].isChanged) {
+          this.createFinishedEnvelope(unfinishedEnvelopes);
+        }
+        else {
+          this.createStartEnvelope(unfinishedEnvelopes);
+        }
       }
     }
   }
@@ -197,6 +204,18 @@ class GameArea extends Component {
     unfinishedEnvelopes[0].random = Array.from(Array(5), (x, i) => i + unfinishedEnvelopes[0].matchingStamp).sort(() => Math.random() - 0.5);
     unfinishedEnvelopes[0].checked = Array(5).fill(false, 0, 5);
     unfinishedEnvelopes[0].clientState = 1;
+    this.setState({activeEnvelope: unfinishedEnvelopes[0]});
+
+    this.updateActiveEnvelope(unfinishedEnvelopes[0]);
+  }
+
+  createFinishedEnvelope(unfinishedEnvelopes){
+    unfinishedEnvelopes[0].complete = true;
+    unfinishedEnvelopes[0].stamped = true;
+    unfinishedEnvelopes[0].envelopeState = 4;
+    unfinishedEnvelopes[0].random = Array.from(Array(5), (x, i) => i + unfinishedEnvelopes[0].matchingStamp).sort(() => Math.random() - 0.5);
+    unfinishedEnvelopes[0].checked = Array(5).fill(true, 0, 5);
+    unfinishedEnvelopes[0].clientState = 4;
     this.setState({activeEnvelope: unfinishedEnvelopes[0]});
 
     this.updateActiveEnvelope(unfinishedEnvelopes[0]);
