@@ -29,7 +29,7 @@ class FacilitatorControls extends Component {
     this.setBuggedEnvelopes = this.setBuggedEnvelopes.bind(this);
     this.toggleBugModal = this.toggleBugModal.bind(this);
     this.setSelectionError = this.setSelectionError.bind(this);
-    this.setSelectionFalse = this.setSelectionFalse.bind(this);
+    //this.setSelectionFalse = this.setSelectionFalse.bind(this);
     this.enableDebug = this.enableDebug.bind(this);
     this.resetEnvelopes = this.resetEnvelopes.bind(this);
   }
@@ -122,13 +122,13 @@ class FacilitatorControls extends Component {
     await fetch('/api/fill-seats/'); 
   }
 
-  setSelectionError() {
-    this.setState({selectionError: true });
+  setSelectionError(arg) {
+    this.setState({selectionError: arg });
   }
 
-  setSelectionFalse() {
-    this.setState({selectionError: false });
-  }
+  // setSelectionFalse() {
+  //   this.setState({selectionError: false });
+  // }
   
 
   getSeats(isTeamOne) {
@@ -410,10 +410,10 @@ class FacilitatorControls extends Component {
               <Button variant="secondary" onClick={this.toggleBugModal}>
                 Close
               </Button>
-              <Button variant="primary" onClick={this.state.selectedTeam1Id && this.state.selectedTeam2Id ? this.setBuggedEnvelopes : this.setSelectionError}>
+              <Button variant="primary" onClick={this.state.selectedTeam1Id && this.state.selectedTeam2Id ? this.setBuggedEnvelopes : () => this.setSelectionError(true)}>
                 Submit Changes
               </Button>
-              <Modal show={this.state.selectionError} onHide={this.setSelectionFalse}>
+              <Modal show={this.state.selectionError} onHide={() => this.setSelectionError(false)}>
                 <Modal.Header closeButton>
                   <Modal.Title>Selection Error</Modal.Title>
                 </Modal.Header>
