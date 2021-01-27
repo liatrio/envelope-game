@@ -29,7 +29,6 @@ class FacilitatorControls extends Component {
     this.setBuggedEnvelopes = this.setBuggedEnvelopes.bind(this);
     this.toggleBugModal = this.toggleBugModal.bind(this);
     this.setSelectionError = this.setSelectionError.bind(this);
-    //this.setSelectionFalse = this.setSelectionFalse.bind(this);
     this.enableDebug = this.enableDebug.bind(this);
     this.resetEnvelopes = this.resetEnvelopes.bind(this);
   }
@@ -125,12 +124,7 @@ class FacilitatorControls extends Component {
   setSelectionError(arg) {
     this.setState({selectionError: arg });
   }
-
-  // setSelectionFalse() {
-  //   this.setState({selectionError: false });
-  // }
   
-
   getSeats(isTeamOne) {
     // if seat information has loaded
     if (this.props.seats.length !== 0) {
