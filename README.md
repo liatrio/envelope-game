@@ -1,15 +1,26 @@
 # Envelope Game
-![alt text](screenshot.png)
+![alt text](./react/assets/screencap.png)
+### Setup
+Install the required dependencies with npm:
+```
+npm install
+docker-compose build
+```
 ### Live Demo
-<https://envelope-game.herokuapp.com/>
+<https://www.EnvelopeGame.com/>
 
-### Local
+### Running Locally
 You can also run it locally with docker compose
 ```
 docker-compose up -d
 ```
 and view it at
 
-<http://localhost:8080/>
+<http://localhost:3000/>
 
-or you can just open public/index.html in a browser :)
+### Development Notes
+If you make a change to the database you'll need to run: 
+```
+docker-compose down
+```
+before running it locally.
