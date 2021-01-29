@@ -47,6 +47,9 @@ ingress:
 istio:
   enabled: true
   host: envelope-game
+  gateway:
+    name: "istio-system/app-gateway"
+    create: false
 
 resources: 
   requests:

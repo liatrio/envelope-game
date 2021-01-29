@@ -24,6 +24,8 @@ pipeline {
       environment {
         NAMESPACE = "${env.stagingNamespace}"
         INGRESS_HOST = "envelope-game.${env.stagingDomain}"
+        INGRESS_GATEWAY_CREATE = false
+        INGRESS_GATEWAY_NAME = "istio-system/app-gateway"
       }
       steps {
         container('skaffold') {
@@ -58,6 +60,8 @@ pipeline {
       environment {
         NAMESPACE = "${env.productionNamespace}"
         INGRESS_HOST = "envelope-game.${env.productionDomain}"
+        INGRESS_GATEWAY_CREATE = true
+        INGRESS_GATEWAY_NAME = "envelope-game-gateway"
       }
       steps {
         container('skaffold') {

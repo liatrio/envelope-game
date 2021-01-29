@@ -13,7 +13,9 @@ deploy:
       artifactOverrides:
         image.name: envelope-game
       setValueTemplates:
-        istio.host: "{{ .INGRESS_HOST }}" 
+        istio.host: "{{ .INGRESS_HOST }}"
+        istio.gateway.create: "{{ .INGRESS_GATEWAY_CREATE }}"
+        istio.gateway.name: "{{ .INGRESS_GATEWAY_NAME }}"
 portForward:
 - resourceType: service
   resourceName: envelope-game

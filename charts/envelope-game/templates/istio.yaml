@@ -7,7 +7,7 @@ spec:
   hosts:
   - {{ .Values.istio.host }}
   gateways:
-  - istio-system/app-gateway
+  - {{ .Values.istio.gateway.name }}
   http:
   - match:
     - uri:
@@ -17,4 +17,20 @@ spec:
         host: {{ include "envelope-game.fullname" . }}
         port:
           number: {{ .Values.service.port }}
+---
+{{ if .Values.istio.gateway.create }}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ .Values.istio.gateway.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - {{ .Values.istio.host }}
+{{ end }}
 {{ end }}
