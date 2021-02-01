@@ -6,8 +6,13 @@ Install the required dependencies with npm:
 npm install
 docker-compose build
 ```
+### Dependencies
+Terraform
+Skaffold
+Helm
+
 ### Live Demo
-<https://www.EnvelopeGame.com/>
+<https://www.envelopegame.com/>
 
 ### Running Locally
 You can also run it locally with docker compose
