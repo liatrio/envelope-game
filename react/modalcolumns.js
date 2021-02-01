@@ -34,23 +34,24 @@ class ModalColumns extends Component {
 
     render() {
         const resultTeam = this.chunkEnvelopesByBatchSize(this.props.batchSize, this.props.teamEnvelopes);
+        const {title, batchSize} = this.props;
         return (
-            resultTeam.map((list, index, newArray) =>
-                <Col md="auto" style={{borderRightStyle: this.props.title === "Flow" && index === resultTeam.length - 1 ? 'solid' : '', display: 'inline-block'}}>
+            resultTeam.map((_, index, columns) =>
+                <Col md ="auto">
                     <ul style={{ listStyleType: "none" }}>
-                        {newArray[index].map((val, i) =>
+                        {columns[index].map((_, i) =>
                             <li style={{width: "80.14px", height: "96.08px"}}>
                                 <Button
                                     style={{ display: "contents" }}
-                                    onClick={() => this.props.setActiveTeam(index, newArray[index], i, this.props.batchSize)}
+                                    onClick={() => this.props.setActiveTeam(index, columns[index], i, batchSize)}
                                 >
                                     <div style={{ color: "black" }}>
-                                        {this.props.activeChangedTeam[(index * this.props.batchSize) + i] ?
+                                        {this.props.activeChangedTeam[(index * batchSize) + i] ?
                                             <EnvBugged /> :
                                             <EnvOk />
                                         }
-                        {this.props.title === "Batch" && <div>Envelope {i + 1}</div>}
-                        {this.props.title === "Flow" && <div>Envelope {(index * this.props.batchSize) + i + 1}</div>}
+                        {title === "Batch" && <div>Envelope {i + 1}</div>}
+                        {title === "Flow" && <div>Envelope {(index * batchSize) + i + 1}</div>}
                                     </div>
                                 </Button>
                                 <br />

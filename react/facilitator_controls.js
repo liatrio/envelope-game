@@ -202,6 +202,7 @@ class FacilitatorControls extends Component {
                     activeChangedTeam={this.state.activeChangedTeam1}
                     title={"Flow"}
                     />
+                    <div style={{borderLeft: '6px solid black', height: '500px'}}></div>
                     <ModalColumns
                     teamEnvelopes={team2Envelopes}
                     batchSize={this.state.batchSize}
