@@ -141,7 +141,12 @@ h5{
     left: 45px;
 }
 
-.modal-90w{
+.modal-70w{
     width: 70vw !important;   
     max-width: 70vw !important;
+}
+
+.modal-90w{
+    width: 90vw !important;   
+    max-width: 90vw !important;
 }

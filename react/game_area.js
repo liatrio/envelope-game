@@ -413,7 +413,7 @@ class GameArea extends Component {
           </Modal>
         }
         <Modal
-          dialogClassName="modal-90w"
+          dialogClassName="modal-70w"
           show={this.state.showInstructions}
           size="lg"
           aria-labelledby="contained-modal-title-vcenter"

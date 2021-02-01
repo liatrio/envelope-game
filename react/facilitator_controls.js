@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
@@ -186,22 +187,30 @@ class FacilitatorControls extends Component {
               <Modal.Title>Select which envelope to change</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Row className="justify-content-md-center">
-                <ModalColumns
-                teamEnvelopes={team1Envelopes}
-                batchSize={this.state.batchSize}
-                setActiveTeam={this.setActiveTeam1}
-                activeChangedTeam={this.state.activeChangedTeam1}
-                title={"Flow"}
-                />
-                <ModalColumns
-                teamEnvelopes={team2Envelopes}
-                batchSize={this.state.batchSize}
-                setActiveTeam={this.setActiveTeam2}
-                activeChangedTeam={this.state.activeChangedTeam2}
-                title={"Batch"}
-                />
-              </Row >
+              <Row>
+                <Col className="justify-content-md-center" style={{textAlign: "center", fontWeight: "bold"}}>Flow
+                </Col>
+                <Col className="justify-content-md-center" style={{textAlign: "center", fontWeight: "bold"}}>Batch
+                </Col>
+              </Row>
+              <Container fluid style={{textAlign: 'justify'}}>
+                <Row className="justify-content-md-center">
+                    <ModalColumns
+                    teamEnvelopes={team1Envelopes}
+                    batchSize={this.state.batchSize}
+                    setActiveTeam={this.setActiveTeam1}
+                    activeChangedTeam={this.state.activeChangedTeam1}
+                    title={"Flow"}
+                    />
+                    <ModalColumns
+                    teamEnvelopes={team2Envelopes}
+                    batchSize={this.state.batchSize}
+                    setActiveTeam={this.setActiveTeam2}
+                    activeChangedTeam={this.state.activeChangedTeam2}
+                    title={"Batch"}
+                    />
+                </Row>
+              </Container>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={this.toggleBugModal}>

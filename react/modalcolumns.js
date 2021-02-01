@@ -36,12 +36,10 @@ class ModalColumns extends Component {
         const resultTeam = this.chunkEnvelopesByBatchSize(this.props.batchSize, this.props.teamEnvelopes);
         return (
             resultTeam.map((list, index, newArray) =>
-                <Col md="auto">
-                    <dt>{this.props.title} {this.props.title === "Batch" && index + 1} Envelopes</dt>
-                    <hr></hr>
+                <Col md="auto" style={{borderRightStyle: this.props.title === "Flow" && index === resultTeam.length - 1 ? 'solid' : '', display: 'inline-block'}}>
                     <ul style={{ listStyleType: "none" }}>
                         {newArray[index].map((val, i) =>
-                            <li>
+                            <li style={{width: "80.14px", height: "96.08px"}}>
                                 <Button
                                     style={{ display: "contents" }}
                                     onClick={() => this.props.setActiveTeam(index, newArray[index], i, this.props.batchSize)}
