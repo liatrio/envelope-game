@@ -15,8 +15,7 @@ class FacilitatorControls extends Component {
       seatRemoveDisable: new Array(props.seats.length).fill(false),
       buggedEnvelopeModal: false,
       selectionError: false,
-      activeChangedTeam1: new Array(props.envelopes.length).fill(false),
-      activeChangedTeam2: new Array(props.envelopes.length).fill(false),
+      facilitatorSelectedEnvelopes: new Array(props.envelopes.length).fill(false),
       selectedTeam1Id: null,
       selectedTeam2Id: null,
       team2Batch: null,
@@ -24,8 +23,7 @@ class FacilitatorControls extends Component {
     };
     this.getSeats = this.getSeats.bind(this);
     this.emptySeat = this.emptySeat.bind(this);
-    this.setActiveTeam1 = this.setActiveTeam1.bind(this);
-    this.setActiveTeam2 = this.setActiveTeam2.bind(this);
+    this.setSelectedEnvelope = this.setSelectedEnvelope.bind(this);
     this.setBuggedEnvelopes = this.setBuggedEnvelopes.bind(this);
     this.toggleBugModal = this.toggleBugModal.bind(this);
     this.setSelectionError = this.setSelectionError.bind(this);
@@ -51,7 +49,7 @@ class FacilitatorControls extends Component {
       this.setState({selectionError: false});
     }
     const movedEnvelopes = [...this.state.team2Batch, this.state.selectedTeam1Id];
-    const changedEnvelopes = [this.state.selectedTeam1Id, ...this.state.selectedTeam2Id];
+    const changedEnvelopes = [this.state.selectedTeam1Id, this.state.selectedTeam2Id];
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -79,43 +77,34 @@ class FacilitatorControls extends Component {
       })
     };
     fetch('/api/move-envelope', requestOptions);
-    const resetTeam1Array = [...this.state.activeChangedTeam1].fill(false);
-    const resetTeam2Array = [...this.state.activeChangedTeam2].fill(false);
+    const resetTeam1Array = [...this.state.facilitatorSelectedEnvelopes].fill(false);
     this.setState({selectedTeam1Id: null,
       selectedTeam2Id: null,
       team2Batch: null,
-      activeChangedTeam1: resetTeam1Array,
-      activeChangedTeam2: resetTeam2Array
+      facilitatorSelectedEnvelopes: resetTeam1Array,
     });
   }
 
-  setActiveTeam1(index, envelopeSlice, j, batchSize) {
-    const selectedIndex = index * batchSize + j;
-    let s = this.state.activeChangedTeam1;
-    for (let i = 0; i < this.state.activeChangedTeam1.length; i++) {
+  setSelectedEnvelope(index, envelopeSlice, envelopeSliceIndex, batchSize) {
+    const selectedEnv = this.state.facilitatorSelectedEnvelopes;
+    const selectedIndex = (envelopeSlice[0].isTeam1 ? index * batchSize + envelopeSliceIndex : index * batchSize + envelopeSliceIndex + selectedEnv.length / 2);
+    const teamSliceLength = (envelopeSlice[0].isTeam1 ? selectedEnv.length / 2 : selectedEnv.length);
+    let i = (envelopeSlice[0].isTeam1 ? 0 : (selectedEnv.length / 2));
+    for (; i < teamSliceLength; i++) {
       if (i === selectedIndex) {
-        s[i] = true;
+        selectedEnv[i] = true;
       } else {
-        s[i] = false;
+        selectedEnv[i] = false;
       }
     }
-    this.setState({activeChangedTeam1: s, selectedTeam1Id: envelopeSlice[j].envelopeId})
+    if (envelopeSlice[0].isTeam1) {
+      this.setState({facilitatorSelectedEnvelopes: selectedEnv, selectedTeam1Id: envelopeSlice[envelopeSliceIndex].envelopeId})
+    } else {
+      const idArray = [...Array.from(envelopeSlice, o => o.envelopeId)];
+      this.setState({facilitatorSelectedEnvelopes: selectedEnv, team2Batch: idArray, selectedTeam2Id: envelopeSlice[envelopeSliceIndex].envelopeId})
+    }
   }
 
-  setActiveTeam2(index, envelopeSlice, j, batchSize) {
-    const selectedIndex = index * batchSize + j;
-    const selectedTeam2 = [envelopeSlice[j].envelopeId]; 
-    const idArray = [...Array.from(envelopeSlice, o => o.envelopeId)];   
-    let s = this.state.activeChangedTeam2;
-    for (let i = 0; i < this.state.activeChangedTeam2.length; i++) {
-      if (i === selectedIndex) {
-        s[i] = true;
-      } else {
-        s[i] = false;
-      }
-    }
-    this.setState({activeChangedTeam2: s, team2Batch: idArray, selectedTeam2Id: selectedTeam2})
-  }
   async enableDebug(){
     await fetch('/api/fill-seats/'); 
   }
@@ -170,8 +159,9 @@ class FacilitatorControls extends Component {
   render() {
     const filterTeam1 = (isTeam1) => (item) => item.isTeam1 === isTeam1;
     const seat3Filter = (item) => item.seatNumber === 3;
-    const team1Envelopes = this.props.envelopes.filter(filterTeam1(true)).filter(seat3Filter);
-    const team2Envelopes = this.props.envelopes.filter(filterTeam1(false)).filter(seat3Filter);
+    const {envelopes} = this.props;
+    const team1Envelopes = envelopes.filter(filterTeam1(true)).filter(seat3Filter);
+    const team2Envelopes = envelopes.filter(filterTeam1(false)).filter(seat3Filter);
     return (
       <div className="modal-dialog">
         <div className="modal-content">
@@ -198,16 +188,16 @@ class FacilitatorControls extends Component {
                     <ModalColumns
                     teamEnvelopes={team1Envelopes}
                     batchSize={this.state.batchSize}
-                    setActiveTeam={this.setActiveTeam1}
-                    activeChangedTeam={this.state.activeChangedTeam1}
+                    setActiveTeam={this.setSelectedEnvelope}
+                    facilitatorSelectedEnvelopes={this.state.facilitatorSelectedEnvelopes.slice(0, envelopes.length / 2)}
                     title={"Flow"}
                     />
                     <div style={{borderLeft: '6px solid black', height: '500px'}}></div>
                     <ModalColumns
                     teamEnvelopes={team2Envelopes}
                     batchSize={this.state.batchSize}
-                    setActiveTeam={this.setActiveTeam2}
-                    activeChangedTeam={this.state.activeChangedTeam2}
+                    setActiveTeam={this.setSelectedEnvelope}
+                    facilitatorSelectedEnvelopes={this.state.facilitatorSelectedEnvelopes.slice(envelopes.length / 2, envelopes.length)}
                     title={"Batch"}
                     />
                 </Row>

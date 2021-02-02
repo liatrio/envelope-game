@@ -12,7 +12,11 @@ class ModalColumns extends Component {
         }
         this.chunkEnvelopesByBatchSize = this.chunkEnvelopesByBatchSize.bind(this);
     }
-
+    /*
+    Function to split envelopes into a 2d array 
+    input: envelopes of either batch or flow team [1, 2, 3, etc]
+    output: chunked into batches in 2d array up to batch size at each index [[1, 2, 3, etc], [1, 2, 3, etc]]
+    */
     chunkEnvelopesByBatchSize(batchSize, envelopes) {
         return envelopes.reduce((acc, curValue) => {
             if (acc.length !== 0 && acc[acc.length - 1].length < batchSize) {
@@ -33,8 +37,8 @@ class ModalColumns extends Component {
     }
 
     render() {
-        const resultTeam = this.chunkEnvelopesByBatchSize(this.props.batchSize, this.props.teamEnvelopes);
         const {title, batchSize} = this.props;
+        const resultTeam = this.chunkEnvelopesByBatchSize(batchSize, this.props.teamEnvelopes);
         return (
             resultTeam.map((_, index, columns) =>
                 <Col md ="auto">
@@ -46,7 +50,7 @@ class ModalColumns extends Component {
                                     onClick={() => this.props.setActiveTeam(index, columns[index], i, batchSize)}
                                 >
                                     <div style={{ color: "black" }}>
-                                        {this.props.activeChangedTeam[(index * batchSize) + i] ?
+                                        {this.props.facilitatorSelectedEnvelopes[(index * batchSize) + i] ?
                                             <EnvBugged /> :
                                             <EnvOk />
                                         }
