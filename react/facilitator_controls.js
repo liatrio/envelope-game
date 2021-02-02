@@ -77,19 +77,20 @@ class FacilitatorControls extends Component {
       })
     };
     fetch('/api/move-envelope', requestOptions);
-    const resetTeam1Array = [...this.state.facilitatorSelectedEnvelopes].fill(false);
+    const resetSelectedArray = [...this.state.facilitatorSelectedEnvelopes].fill(false);
     this.setState({selectedTeam1Id: null,
       selectedTeam2Id: null,
       team2Batch: null,
-      facilitatorSelectedEnvelopes: resetTeam1Array,
+      facilitatorSelectedEnvelopes: resetSelectedArray,
     });
   }
 
   setSelectedEnvelope(index, envelopeSlice, envelopeSliceIndex, batchSize) {
+    const isTeam1 = envelopeSlice[0].isTeam1;
     const selectedEnv = this.state.facilitatorSelectedEnvelopes;
-    const selectedIndex = (envelopeSlice[0].isTeam1 ? index * batchSize + envelopeSliceIndex : index * batchSize + envelopeSliceIndex + selectedEnv.length / 2);
-    const teamSliceLength = (envelopeSlice[0].isTeam1 ? selectedEnv.length / 2 : selectedEnv.length);
-    let i = (envelopeSlice[0].isTeam1 ? 0 : (selectedEnv.length / 2));
+    const selectedIndex = (isTeam1 ? index * batchSize + envelopeSliceIndex : index * batchSize + envelopeSliceIndex + selectedEnv.length / 2);
+    const teamSliceLength = (isTeam1 ? selectedEnv.length / 2 : selectedEnv.length);
+    let i = (isTeam1 ? 0 : (selectedEnv.length / 2));
     for (; i < teamSliceLength; i++) {
       if (i === selectedIndex) {
         selectedEnv[i] = true;
@@ -97,7 +98,7 @@ class FacilitatorControls extends Component {
         selectedEnv[i] = false;
       }
     }
-    if (envelopeSlice[0].isTeam1) {
+    if (isTeam1) {
       this.setState({facilitatorSelectedEnvelopes: selectedEnv, selectedTeam1Id: envelopeSlice[envelopeSliceIndex].envelopeId})
     } else {
       const idArray = [...Array.from(envelopeSlice, o => o.envelopeId)];
