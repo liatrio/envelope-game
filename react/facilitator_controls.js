@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
-import { ReactComponent as EnvOk } from './assets/envelope_ok.svg';
-import { ReactComponent as EnvBugged } from './assets/envelope_bugged.svg';
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
 import TeamNameForm from './team_name';
+import ModalColumns from './modalcolumns';
 
 class FacilitatorControls extends Component {
   constructor(props) {
@@ -16,16 +15,15 @@ class FacilitatorControls extends Component {
       seatRemoveDisable: new Array(props.seats.length).fill(false),
       buggedEnvelopeModal: false,
       selectionError: false,
-      activeChangedTeam1: new Array(props.envelopes.length).fill(false),
-      activeChangedTeam2: new Array(props.envelopes.length).fill(false),
+      facilitatorSelectedEnvelopes: new Array(props.envelopes.length).fill(false),
       selectedTeam1Id: null,
       selectedTeam2Id: null,
-      team2Batch: null
+      team2Batch: null,
+      batchSize: 5
     };
     this.getSeats = this.getSeats.bind(this);
     this.emptySeat = this.emptySeat.bind(this);
-    this.setActiveTeam1 = this.setActiveTeam1.bind(this);
-    this.setActiveTeam2 = this.setActiveTeam2.bind(this);
+    this.setSelectedEnvelope = this.setSelectedEnvelope.bind(this);
     this.setBuggedEnvelopes = this.setBuggedEnvelopes.bind(this);
     this.toggleBugModal = this.toggleBugModal.bind(this);
     this.setSelectionError = this.setSelectionError.bind(this);
@@ -51,7 +49,7 @@ class FacilitatorControls extends Component {
       this.setState({selectionError: false});
     }
     const movedEnvelopes = [...this.state.team2Batch, this.state.selectedTeam1Id];
-    const changedEnvelopes = [this.state.selectedTeam1Id, ...this.state.selectedTeam2Id];
+    const changedEnvelopes = [this.state.selectedTeam1Id, this.state.selectedTeam2Id];
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -79,44 +77,35 @@ class FacilitatorControls extends Component {
       })
     };
     fetch('/api/move-envelope', requestOptions);
-    const resetTeam1Array = [...this.state.activeChangedTeam1].fill(false);
-    const resetTeam2Array = [...this.state.activeChangedTeam2].fill(false);
+    const resetSelectedArray = [...this.state.facilitatorSelectedEnvelopes].fill(false);
     this.setState({selectedTeam1Id: null,
       selectedTeam2Id: null,
       team2Batch: null,
-      activeChangedTeam1: resetTeam1Array,
-      activeChangedTeam2: resetTeam2Array
+      facilitatorSelectedEnvelopes: resetSelectedArray,
     });
   }
 
-  setActiveTeam1(index, envelopeId) {
-    let s = this.state.activeChangedTeam1;
-    for (let i = 0; i < this.state.activeChangedTeam1.length; i++) {
-      if (i === index) {
-        s[i] = true;
+  setSelectedEnvelope(index, envelopeSlice, envelopeSliceIndex, batchSize) {
+    const isTeam1 = envelopeSlice[0].isTeam1;
+    const selectedEnv = this.state.facilitatorSelectedEnvelopes;
+    const selectedIndex = (isTeam1 ? index * batchSize + envelopeSliceIndex : index * batchSize + envelopeSliceIndex + selectedEnv.length / 2);
+    const teamSliceLength = (isTeam1 ? selectedEnv.length / 2 : selectedEnv.length);
+    let i = (isTeam1 ? 0 : (selectedEnv.length / 2));
+    for (; i < teamSliceLength; i++) {
+      if (i === selectedIndex) {
+        selectedEnv[i] = true;
       } else {
-        s[i] = false;
+        selectedEnv[i] = false;
       }
     }
-    this.setState({activeChangedTeam1: s, selectedTeam1Id: envelopeId})
+    if (isTeam1) {
+      this.setState({facilitatorSelectedEnvelopes: selectedEnv, selectedTeam1Id: envelopeSlice[envelopeSliceIndex].envelopeId})
+    } else {
+      const idArray = [...Array.from(envelopeSlice, o => o.envelopeId)];
+      this.setState({facilitatorSelectedEnvelopes: selectedEnv, team2Batch: idArray, selectedTeam2Id: envelopeSlice[envelopeSliceIndex].envelopeId})
+    }
   }
 
-  setActiveTeam2(index, envelopeSlice, offset) {
-    const selectedIndex = index - offset;
-    const selectedTeam2 = [envelopeSlice[selectedIndex].envelopeId]; 
-    const idArray = [...Array.from(envelopeSlice, o => o.envelopeId)];   
-    let s = this.state.activeChangedTeam2;
-    for (let i = 0; i < this.state.activeChangedTeam2.length; i++) {
-      if (i === index) {
-        s[i] = true;
-      } else {
-        s[i] = false;
-      }
-    }
-    this.setState({activeChangedTeam2: s})
-    this.setState({team2Batch: idArray})
-    this.setState({selectedTeam2Id: selectedTeam2})
-  }
   async enableDebug(){
     await fetch('/api/fill-seats/'); 
   }
@@ -169,18 +158,14 @@ class FacilitatorControls extends Component {
   }
 
   render() {
-    // can change this batch size if needed
-    let batchSize = 5;
-    // filter to find finished envelopes (seat number = 3)
-    const colNumber = [0, 1, 2, 3, 4];
-    let team1Envelopes = this.props.envelopes.filter(item => item.isTeam1 === true);
-    team1Envelopes = team1Envelopes.filter(seatFilter => seatFilter.seatNumber === 3);
-    let team2Envelopes = this.props.envelopes.filter(item => item.isTeam1 === false);
-    team2Envelopes = team2Envelopes.filter(seatFilter => seatFilter.seatNumber === 3);
-    let batch = team2Envelopes.filter((e, i) => team2Envelopes.findIndex(a => a.groupNumber === e.groupNumber) === i);
+    const filterTeam1 = (isTeam1) => (item) => item.isTeam1 === isTeam1;
+    const seat3Filter = (item) => item.seatNumber === 3;
+    const {envelopes} = this.props;
+    const team1Envelopes = envelopes.filter(filterTeam1(true)).filter(seat3Filter);
+    const team2Envelopes = envelopes.filter(filterTeam1(false)).filter(seat3Filter);
     return (
-      <div class="modal-dialog">
-        <div class="modal-content">
+      <div className="modal-dialog">
+        <div className="modal-content">
         <Row className="justify-content-md-center">
             <Button
               onClick={this.toggleBugModal}
@@ -193,212 +178,31 @@ class FacilitatorControls extends Component {
               <Modal.Title>Select which envelope to change</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Row className="justify-content-md-center">
-              {team1Envelopes.length >= 1 && <Col md="auto">
-                <dt>Flow Envelopes</dt>
-                <hr></hr>
-                <ul style={{listStyleType: "none"}}>
-                  {team1Envelopes.slice(0, batchSize * colNumber[1]).map((list, index) =>
-                  <li>
-                    <Button
-                      style={{ display: "contents" }}
-                      onClick={() => this.setActiveTeam1(index, team1Envelopes[index].envelopeId)}
-                    >
-                      <div style={{color: "black"}}>
-                        {this.state.activeChangedTeam1[index]  ? 
-                          <EnvBugged /> :
-                          <EnvOk />
-                        }
-                        Envelope {index + 1}  
-                      </div>
-                    </Button>
-                    <br/>
-                  </li>
-                  )}
-                </ul> 
-              </Col>
-              }
-              {team1Envelopes.length > 5 && <Col md="auto">
-                <dt>Flow Envelopes</dt>
-                <hr></hr>
-                <ul style={{listStyleType: "none"}}>
-                  {team1Envelopes.slice(batchSize * colNumber[1], batchSize * colNumber[2]).map((list, index) =>
-                  <li>
-                    <Button
-                      style={{ display: "contents" }}
-                      onClick={() => this.setActiveTeam1(index + (batchSize * colNumber[2]), team1Envelopes[index + (batchSize * colNumber[2])].envelopeId)}
-                    >
-                      <div style={{color: "black"}}>
-                        {this.state.activeChangedTeam1[index + (batchSize * colNumber[2])]  ? 
-                          <EnvBugged /> :
-                          <EnvOk />
-                        }
-                        Envelope {index + batchSize + 1}  
-                      </div>
-                    </Button>
-                    <br/>
-                  </li>
-                  )}
-                </ul> 
-              </Col>
-              }
-              {team1Envelopes.length > 10 && <Col md="auto">
-                <dt>Flow Envelopes</dt>
-                <hr></hr>
-                <ul style={{listStyleType: "none"}}>
-                  {team1Envelopes.slice(batchSize * colNumber[2], batchSize * colNumber[3]).map((list, index) =>
-                  <li>
-                    <Button
-                      style={{ display: "contents" }}
-                      onClick={() => this.setActiveTeam1(index + (batchSize * colNumber[3]), team1Envelopes[index + (batchSize * colNumber[3])].envelopeId)}
-                    >
-                      <div style={{color: "black"}}>
-                        {this.state.activeChangedTeam1[index + (batchSize * colNumber[3])]  ? 
-                          <EnvBugged /> :
-                          <EnvOk />
-                        }
-                        Envelope {index + (batchSize * colNumber[2]) + 1}  
-                      </div>
-                    </Button>
-                    <br/>
-                  </li>
-                  )}
-                </ul> 
-              </Col>
-              }
-              {team1Envelopes.length > 15 && <Col md="auto">
-                <dt>Flow Envelopes</dt>
-                <hr></hr>
-                <ul style={{listStyleType: "none"}}>
-                  {team1Envelopes.slice(batchSize * colNumber[3], batchSize * colNumber[4]).map((list, index) =>
-                  <li>
-                    <Button
-                      style={{ display: "contents" }}
-                      onClick={() => this.setActiveTeam1(index + (batchSize * colNumber[4]))}
-                    >
-                      <div style={{color: "black"}}>
-                        {this.state.activeChangedTeam1[index + (batchSize * colNumber[4])]  ? 
-                          <EnvBugged /> :
-                          <EnvOk />
-                        }
-                        Envelope {index (batchSize * colNumber[3]) + 1}  
-                      </div>
-                    </Button>
-                    <br/>
-                  </li>
-                  )}
-                </ul> 
-              </Col>
-              }
-              {batch.length >= 1 && <Col md="auto">
-                <dt>Batch Envelopes</dt>
-                <hr></hr>
-                <ul style={{listStyleType: "none"}}>
-                {team2Envelopes.slice(0, batchSize).map((list, index) =>
-                  <li>
-                    {index % 5 === 0 && 
-                    <h5>Batch {list.groupNumber}</h5>
-                    }
-                    <Button
-                      style={{ display: "contents" }}
-                      onClick={() => this.setActiveTeam2(index, team2Envelopes.slice(0, batchSize * colNumber[1]), batchSize * colNumber[0])}
-                    >
-                      <div style={{color: "black"}}>
-                      {this.state.activeChangedTeam2[index]  ? 
-                          <EnvBugged /> :
-                          <EnvOk />
-                        }
-                        Envelope {index + 1}  
-                      </div>
-                    </Button>
-                    <br/>
-                  </li>
-                )}
-                </ul>
-              </Col>
-              }
-              {batch.length >= 2 && <Col md="auto">
-                <dt>Batch Envelopes</dt>
-                <hr></hr>
-                <ul style={{listStyleType: "none"}}>
-                {team2Envelopes.slice(batchSize * 1, batchSize * colNumber[2]).map((list, index) =>
-                  <li>
-                    {index % 5 === 0 && 
-                    <h5>Batch {list.groupNumber}</h5>
-                    }
-                    <Button
-                      style={{ display: "contents" }}
-                      onClick={() => this.setActiveTeam2(index + batchSize, team2Envelopes.slice(batchSize * 1, batchSize * colNumber[2]), batchSize * 1)}
-                    >
-                      <div style={{color: "black"}}>
-                      {this.state.activeChangedTeam2[index + batchSize]  ? 
-                          <EnvBugged /> :
-                          <EnvOk />
-                        }
-                        Envelope {index + 1}  
-                      </div>
-                    </Button>
-                    <br/>
-                  </li>
-                )}
-                </ul>
-              </Col>
-              }
-              {batch.length >= 3 && <Col md="auto">
-                <dt>Batch Envelopes</dt>
-                <hr></hr>
-                <ul style={{listStyleType: "none"}}>
-                {team2Envelopes.slice(batchSize * colNumber[2], batchSize * colNumber[3]).map((list, index) =>
-                  <li>
-                    {index % 5 === 0 && 
-                    <h5>Batch {list.groupNumber}</h5>
-                    }
-                    <Button
-                      style={{ display: "contents" }}
-                      onClick={() => this.setActiveTeam2(index + (batchSize * colNumber[2]), team2Envelopes.slice(batchSize * colNumber[2], batchSize * colNumber[3]), batchSize * colNumber[2])}
-                    >
-                      <div style={{color: "black"}}>
-                      {this.state.activeChangedTeam2[index + (batchSize * colNumber[2])]  ? 
-                          <EnvBugged /> :
-                          <EnvOk />
-                        }
-                        Envelope {index + 1}  
-                      </div>
-                    </Button>
-                    <br/>
-                  </li>
-                )}
-                </ul>
-              </Col>
-              }
-              {batch.length >= 4 && <Col md="auto">
-                <dt>Batch Envelopes</dt>
-                <hr></hr>
-                <ul style={{listStyleType: "none"}}>
-                {team2Envelopes.slice(batchSize * colNumber[3], batchSize * colNumber[4]).map((list, index) =>
-                  <li>
-                    {index % 5 === 0 && 
-                    <h5>Batch {list.groupNumber}</h5>
-                    }
-                    <Button
-                      style={{ display: "contents" }}
-                      onClick={() => this.setActiveTeam2(index + (batchSize * colNumber[3]), team2Envelopes.slice(batchSize * colNumber[3], batchSize * colNumber[4]), batchSize * colNumber[3])}
-                    >
-                      <div style={{color: "black"}}>
-                      {this.state.activeChangedTeam2[index + (batchSize * colNumber[3])]  ? 
-                          <EnvBugged /> :
-                          <EnvOk />
-                        }
-                        Envelope {index + 1}  
-                      </div>
-                    </Button>
-                    <br/>
-                  </li>
-                )}
-                </ul>
-              </Col>
-              }
-              </Row >
+              <Row>
+                <Col className="justify-content-md-center" style={{textAlign: "center", fontWeight: "bold"}}>Flow
+                </Col>
+                <Col className="justify-content-md-center" style={{textAlign: "center", fontWeight: "bold"}}>Batch
+                </Col>
+              </Row>
+              <Container fluid style={{textAlign: 'justify'}}>
+                <Row className="justify-content-md-center">
+                    <ModalColumns
+                    teamEnvelopes={team1Envelopes}
+                    batchSize={this.state.batchSize}
+                    setActiveTeam={this.setSelectedEnvelope}
+                    facilitatorSelectedEnvelopes={this.state.facilitatorSelectedEnvelopes.slice(0, envelopes.length / 2)}
+                    title={"Flow"}
+                    />
+                    <div style={{borderLeft: '6px solid black', height: '500px'}}></div>
+                    <ModalColumns
+                    teamEnvelopes={team2Envelopes}
+                    batchSize={this.state.batchSize}
+                    setActiveTeam={this.setSelectedEnvelope}
+                    facilitatorSelectedEnvelopes={this.state.facilitatorSelectedEnvelopes.slice(envelopes.length / 2, envelopes.length)}
+                    title={"Batch"}
+                    />
+                </Row>
+              </Container>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={this.toggleBugModal}>
@@ -427,7 +231,7 @@ class FacilitatorControls extends Component {
             <h5>Update Team Names</h5>
           </Row>
         </div>
-        <div class="modal-content">
+        <div className="modal-content">
           <Button
             disabled = {false}
             onClick={() => this.enableDebug()} 
@@ -449,7 +253,7 @@ class FacilitatorControls extends Component {
             <h5>Remove players</h5>
           </Row>
         </div>
-        <div class="modal-content">
+        <div className="modal-content">
           <br></br>
           <Row className="justify-content-md-center">
             <Col md="auto">
