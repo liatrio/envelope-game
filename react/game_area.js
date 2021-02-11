@@ -229,7 +229,7 @@ class GameArea extends Component {
   // 5 is completed for that person
   async updateActiveEnvelope(envelope) {
     this.setState({ activeEnvelope: envelope });
-    const request = `/api/update-envelope/${this.state.gameId}/${envelope.envelopeId}/${envelope.clientState}`;
+    const request = `/api/update-envelope/${this.gameId}/${envelope.envelopeId}/${envelope.clientState}`;
     fetch(request);
   }
 
