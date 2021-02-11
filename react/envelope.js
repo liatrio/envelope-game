@@ -21,11 +21,10 @@ class Envelope extends Component {
     this.toggleOpen = this.toggleOpen.bind(this);
     this.getEnvelope = this.getEnvelope.bind(this);
     this.fixBug = this.fixBug.bind(this);
+    this.stampEnvelope = this.stampEnvelope.bind(this);
     
   }
 
-  // handles checking the stamp to see if its correct
-  // has a two second cooldown on clicking a button before it can be completed
   checkStamp(num) {
     const {activeEnvelope, updateActiveEnvelope} = this.props;
     const thirdSeat = 2;
@@ -37,14 +36,7 @@ class Envelope extends Component {
     updateActiveEnvelope(activeEnvelope);
     this.setState({ waiting: true });
     setTimeout(() => {
-      if (num === activeEnvelope.matchingStamp) {
-        activeEnvelope.clientState = 3;
-        activeEnvelope.stamped = true;
-        this.setState({ waiting: false });
-        updateActiveEnvelope(activeEnvelope);
-      } else {
-        this.setState({ waiting: false });
-      }
+      this.stampEnvelope(num, activeEnvelope);
     }, 500);
   }
 
@@ -58,6 +50,18 @@ class Envelope extends Component {
       })
     };
     await fetch('/api/set-changed/', requestOptions);
+  }
+
+  stampEnvelope(num, activeEnvelope){
+    const {updateActiveEnvelope} = this.props;
+    if (num === activeEnvelope.matchingStamp) {
+      activeEnvelope.clientState = 3;
+      activeEnvelope.stamped = true;
+      this.setState({ waiting: false });
+      updateActiveEnvelope(activeEnvelope);
+    } else {
+      this.setState({ waiting: false });
+    }
   }
 
   toggleOpen() {
