@@ -1,0 +1,25 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: envelope-game
+  description: The Envelope Game is a simple demonstration that shows the benefits of continuous flow delivery over a traditional large-batch delivery.
+  annotations:
+    github.com/project-slug: liatrio/envelope-game
+  tags:
+    - node
+    - react
+    - sql
+    - website
+    - dojo
+  links:
+    - url: http://envelope-game.staging.apps.lead.prod.liatr.io/
+      title: Envelope Game Staging Deployment
+      icon: dashboard
+    - url: http://envelope-game.prod.apps.lead.prod.liatr.io/
+      title: Envelope Game Production Deployment
+      icon: dashboard
+    
+spec:
+  type: website
+  lifecycle: unknown
+  owner: Liatrio
