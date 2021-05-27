@@ -1,0 +1,34 @@
+{{- if .Values.cert.enabled -}}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: envelopegame
+spec:
+  acme:
+    email: cloudservices@liatr.io
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: envelopegame-issuer-account-key
+    solvers:
+    - selector:
+        dnsNames: 
+        - envelopegame.com
+      dns01:
+        route53:
+          hostedZoneID: Z04422993QVTF8GKFMWBB
+          region: us-east-1
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: envelopegame
+spec:
+  secretName: envelopegame-cert
+  dnsNames:
+  - envelopegame.com
+  privateKey:
+    rotationPolicy: Always
+  issuerRef:
+    name: envelopegame
+    kind: Issuer
+{{- end }}

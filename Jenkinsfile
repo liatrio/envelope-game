@@ -57,13 +57,13 @@ pipeline {
       }
       environment {
         NAMESPACE = "${env.productionNamespace}"
-        INGRESS_HOST = "envelope-game.${env.productionDomain}"
+        INGRESS_HOST = "envelopegame.com"
       }
       steps {
         container('skaffold') {
           unstash 'build'
           sh "helm repo add bitnami https://charts.bitnami.com/bitnami"
-          sh "skaffold deploy -a image.json -n ${NAMESPACE}"
+          sh "skaffold deploy -a image.json -n ${NAMESPACE} -p prod"
         }
         stageMessage "Successfully deployed to production:\n${env.INGRESS_HOST}/"
       }
