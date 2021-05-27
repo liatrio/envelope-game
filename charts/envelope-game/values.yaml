@@ -35,18 +35,21 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: envelope-game.local
+    - host: envelopegame.com
       paths: 
         - /
       
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls: 
+    - secretName: envelopegame-cert
+      hosts:
+        - envelopegame.com
 
 istio:
   enabled: true
   host: envelope-game
+
+cert:
+  enabled: false
 
 resources: 
   requests:
