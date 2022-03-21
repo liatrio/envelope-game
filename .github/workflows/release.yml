@@ -7,7 +7,9 @@ on:
     paths:
       - "**/charts/*"
       - ".github/workflows/release.yml"
-      - "**.js"
+      - "lib/*.js"
+      - "react/*.js"
+      - "routes/*.js"
       - ".releaserc.yaml"
   workflow_dispatch: {}
 

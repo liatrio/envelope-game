@@ -8,5 +8,9 @@ plugins:
   - path: '@semantic-release/github'
     failComment: false
     successComment: false
+  - path: '@semantic-release/git'
+    assets:
+      - package.json
+      - charts/envelope-game/Chart.yaml
 
    
