@@ -8,9 +8,15 @@ plugins:
   - path: '@semantic-release/github'
     failComment: false
     successComment: false
+    assets:
+      - path: 'envelope-*.tgz'
+        label: Helm Chart
   - path: '@semantic-release/git'
     assets:
       - package.json
       - charts/envelope-game/Chart.yaml
-
-   
+  - path: '@liatrio/semantic-release-helm'
+    github:
+      pagesBranch: gh-pages
+    charts:
+      - charts/envelope-game
