@@ -1,0 +1,12 @@
+branches:
+  - main
+repositoryUrl: 'git@github.com:liatrio/envelope-game.git'
+preset: conventionalcommits
+plugins:
+  - '@semantic-release/commit-analyzer'
+  - '@semantic-release/release-notes-generator'
+  - path: '@semantic-release/github'
+    failComment: false
+    successComment: false
+
+   
