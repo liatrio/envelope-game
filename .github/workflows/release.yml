@@ -19,10 +19,6 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
-    outputs:
-      changed: ${{ steps.release.outputs.changed }}
-      previousVersion: ${{ steps.release.outputs.previousVersion }}
-      newVersion: ${{ steps.release.outputs.newVersion }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -32,4 +28,4 @@ jobs:
         id: release
         uses: liatrio/github-actions/conventional-release@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CR_PAT }}
