@@ -1,5 +1,5 @@
 branches:
-  - main
+  - master
 repositoryUrl: 'git@github.com:liatrio/envelope-game.git'
 preset: conventionalcommits
 plugins:
@@ -21,5 +21,3 @@ plugins:
     assets:
       - path: 'envelope-*.tgz'
         label: Helm Chart
-
-  
