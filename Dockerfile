@@ -2,7 +2,7 @@ FROM node:16-alpine AS test
 
 WORKDIR /envelope-game
 
-COPY package*.json /envelope-game/
+COPY package*.json yarn.lock /envelope-game/
 
 RUN yarn install 
 
@@ -22,6 +22,8 @@ RUN yarn install --production --ignore-scripts --prefer-offline
 FROM node:16-alpine AS run
 
 WORKDIR /envelope-game
+
+LABEL org.opencontainers.image.source=https://github.com/liatrio/envelope-game
 
 COPY --from=test /envelope-game /envelope-game
 
