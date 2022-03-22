@@ -1,0 +1,23 @@
+branches:
+  - master
+repositoryUrl: 'git@github.com:liatrio/envelope-game.git'
+preset: conventionalcommits
+plugins:
+  - '@semantic-release/commit-analyzer'
+  - '@semantic-release/release-notes-generator'
+  - '@semantic-release/npm'
+  - path: '@liatrio/semantic-release-helm'
+    github:
+      pagesBranch: gh-pages
+    charts:
+      - charts/envelope-game
+  - path: '@semantic-release/git'
+    assets:
+      - package.json
+      - charts/envelope-game/Chart.yaml
+  - path: '@semantic-release/github'
+    failComment: false
+    successComment: false
+    assets:
+      - path: 'envelope-*.tgz'
+        label: Helm Chart

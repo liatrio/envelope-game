@@ -1,10 +1,10 @@
-FROM node:14-alpine AS test
+FROM node:16-alpine AS test
 
 WORKDIR /envelope-game
 
-COPY package*.json /envelope-game/
+COPY package*.json yarn.lock /envelope-game/
 
-RUN npm install 
+RUN yarn install 
 
 COPY *.js /envelope-game/
 COPY lib /envelope-game/lib
@@ -13,15 +13,17 @@ COPY routes /envelope-game/routes
 COPY __tests__ /envelope-game/__tests__
 COPY __mocks__ /envelope-game/__mocks__
 
-RUN npm test
+RUN yarn test
 
-RUN npm run build
+RUN yarn run build
 
-# RUN npm prune --production
+RUN yarn install --production --ignore-scripts --prefer-offline
 
-FROM node:14-alpine AS run
+FROM node:16-alpine AS run
 
 WORKDIR /envelope-game
+
+LABEL org.opencontainers.image.source=https://github.com/liatrio/envelope-game
 
 COPY --from=test /envelope-game /envelope-game
 
