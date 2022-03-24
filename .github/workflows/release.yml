@@ -10,7 +10,7 @@ on:
       - "lib/*.js"
       - "react/*.js"
       - "routes/*.js"
-      - ".releaserc.yaml"
+      - ".releaserc.yml"
   workflow_dispatch: {}
 
 concurrency:
