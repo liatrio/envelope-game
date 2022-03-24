@@ -74,7 +74,7 @@
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.10.4",
     "@babel/register": "^7.11.5",
-    "@liatrio/semantic-release-helm": "^2.0.0",
+    "@liatrio/semantic-release-helm": "^2.1.0",
     "@semantic-release/git": "^10.0.1",
     "@svgr/webpack": "^5.4.0",
     "@testing-library/react": "^11.0.2",
