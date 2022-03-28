@@ -1,5 +1,6 @@
 dependencies:
 - name: mysql
+  condition: mysql.disabled
   repository: https://charts.bitnami.com/bitnami
   version: 6.14.10
 digest: sha256:f73aadec3cac70b76966ffd4921c1fec4299362342e8297304927a56be48d41b
