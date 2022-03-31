@@ -1,9 +1,0 @@
-/node_modules
-/dist
-/coverage
-*debug.log
-.DS_Store
-react/.DS_Store
-react/assets/.DS_Store
-
-charts/envelope-game/charts
