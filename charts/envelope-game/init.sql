@@ -1,5 +1,5 @@
 /*
-Define database and tables if needed 
+Define tables needed 
 */
 CREATE TABLE IF NOT EXISTS TEAMS
 (
