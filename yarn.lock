@@ -2571,10 +2571,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@liatrio/semantic-release-helm@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@liatrio/semantic-release-helm/-/semantic-release-helm-2.2.1.tgz#5f5112814af07d00a760d39e0799ebc4c1c87b8f"
-  integrity sha512-e30TP+XYRT4NZLWhW+7WPU+fHRRIelqgDSGbEBPA3n/HErzkPAP+T12+CvUHAMbWEX91RaxSWptFYagIve1tIw==
+"@liatrio/semantic-release-helm@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@liatrio/semantic-release-helm/-/semantic-release-helm-2.2.2.tgz#e78b2a375d18fea2b5312f20a11647bbad6270bf"
+  integrity sha512-PpkRaHBEzXw19FSJ7MTRal614vXcNzfDngCeJ2QephmZPKx4odsJBdtfsQBsXeXK1qe+Slejoo446pChxPQJcA==
   dependencies:
     "@aws-sdk/client-s3" "^3.48.0"
     "@aws-sdk/client-sts" "^3.48.0"
