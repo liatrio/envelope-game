@@ -1,8 +1,6 @@
 /*
 Define database and tables if needed 
 */
-CREATE DATABASE IF NOT EXISTS envelope_game;
-
 CREATE TABLE IF NOT EXISTS TEAMS
 (
   team_id VARCHAR(16) NOT NULL,
