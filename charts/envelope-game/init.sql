@@ -1,7 +1,9 @@
 /*
-Define tables needed 
+Define database and tables if needed 
 */
-CREATE TABLE TEAMS
+CREATE DATABASE IF NOT EXISTS envelope_game;
+
+CREATE TABLE IF NOT EXISTS TEAMS
 (
   team_id VARCHAR(16) NOT NULL,
   envelopes_completed INT NOT NULL,
@@ -11,7 +13,7 @@ CREATE TABLE TEAMS
   PRIMARY KEY (team_id)
 );
 
-CREATE TABLE GAME
+CREATE TABLE IF NOT EXISTS GAME
 (
   game_id VARCHAR(16) NOT NULL,
   is_started BOOLEAN NOT NULL,
@@ -32,7 +34,7 @@ CREATE TABLE GAME
   UNIQUE (team_2_id)
 );
 
-CREATE TABLE SEATS
+CREATE TABLE IF NOT EXISTS SEATS
 (
   seat_number INT NOT NULL,
   seat_id VARCHAR(16) NOT NULL,
@@ -48,7 +50,7 @@ CREATE TABLE SEATS
   FOREIGN KEY (team_id) REFERENCES TEAMS(team_id)
 );
 
-CREATE TABLE ENVELOPES
+CREATE TABLE IF NOT EXISTS ENVELOPES
 (
   seat_number INT NOT NULL,
   group_number INT NOT NULL,
