@@ -10,6 +10,7 @@ function getDb() {
       database: 'envelope-game'
     });
   }
+  
   return db;
 }
 
