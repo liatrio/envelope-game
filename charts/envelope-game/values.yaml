@@ -45,7 +45,7 @@ ingress:
         - envelopegame.com
 
 istio:
-  enabled: true
+  enabled: false
   host: envelope-game
 
 cert:
