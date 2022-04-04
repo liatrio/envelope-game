@@ -5,6 +5,7 @@ const express = require('express');
 const path = require('path');
 const cookiesMiddleware = require('universal-cookie-express');
 const { nanoid } = require('nanoid');
+const db = require('./db');
 
 const app = express();
 const bodyParser = require('body-parser');
@@ -43,7 +44,15 @@ if (webpackConfig.mode === 'production') {
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`Listening on port ${port}...`);
-});
+db.connect(function(err) {
+  if (err) {
+    return console.error('error: ' + err.message);
+  }
 
+  console.log('Connected to the MySQL server.');
+
+  app.listen(port, () => {
+    console.log(`Listening on port ${port}...`);
+  });
+  
+});

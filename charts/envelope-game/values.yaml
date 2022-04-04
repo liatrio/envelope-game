@@ -12,6 +12,10 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+db:
+  host: envelope-game.mysql.database.azure.com
+  username: "envelope-game@envelope-game"
+
 podAnnotations: {}
 
 podSecurityContext: {}
@@ -82,4 +86,3 @@ mysql:
       limits:
         cpu: 300m
         memory: 1024Mi
-      

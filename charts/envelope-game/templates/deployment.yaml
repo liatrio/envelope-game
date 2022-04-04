@@ -25,10 +25,6 @@ spec:
       serviceAccountName: default
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      initContainers:
-        - name: wait-for-dbserver
-          image: bitnami/kubectl:1.15
-          args: ['wait','--for=condition=ready','pod/{{ .Release.Name }}-mysql-master-0','--timeout=300s']
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -39,9 +35,9 @@ spec:
             - name: NODE_ENV
               value: {{ .Values.nodeEnv }}
             - name: DB_HOST
-              value: {{ .Release.Name }}-mysql
+              value: {{ .Values.db.host }}
             - name: DB_USERNAME
-              value: envelope-game
+              value: {{ .Values.db.username }}
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
