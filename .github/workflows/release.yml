@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - master
-      - debug-manual-deploy
     paths:
       - "charts/**/*"
       - ".github/workflows/release.yml"
-      - ".github/workflows/post-release.yml"
       - "lib/*.js"
       - "react/*.js"
       - "routes/*.js"
