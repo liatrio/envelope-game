@@ -55,16 +55,9 @@ jobs:
 
     steps:
       - name: AZ Login
-        env:
-          SERVICE_PRINCIPAL_APP_ID: ${{ secrets.CLUSTER_CRED_GETTER_APPID }}
-          SERVICE_PRINCIPAL_SECRET: ${{ secrets.CLUSTER_CRED_GETTER_PWD }}
-          SERVICE_PRINCIPAL_TENANT: ${{ secrets.CLUSTER_TENANTID }}
-        run: |
-          az login \
-                --service-principal \
-                --username $(SERVICE_PRINCIPAL_APP_ID) \
-                --password $(SERVICE_PRINCIPAL_SECRET) \
-                --tenant $(SERVICE_PRINCIPAL_TENANT)
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Get AKS credentials
         run: |                
