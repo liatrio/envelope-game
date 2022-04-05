@@ -8,6 +8,9 @@ on:
 
 env:
   IMAGE_NAME: ghcr.io/liatrio/envelope-game
+  NAMESPACE: envelope-game
+  CLUSTER_RESOURCE_GROUP_NAME: ${{ secrets.CLUSTER_RESOURCE_GROUP_NAME }}
+  CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
 
 jobs:
   docker:
@@ -48,29 +51,25 @@ jobs:
 
     name: Helm Deploy Dev
     runs-on: ubuntu-latest
-
-    env:
-      CLUSTER_RESOURCE_GROUP_NAME: caf-aks-lz-dev-rg
-      CLUSTER_NAME: aks-lz-dev
+    environment: envelope-game-dev
 
     steps:
-      - name: AZ Login
-        uses: azure/login@v1
+      - name: AKS Set Context
+        uses: azure/aks-set-context@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          cluster-name: ${{ env.CLUSTER_NAME }}
+          resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
 
-      - name: Get AKS credentials
-        run: |                
-          az aks get-credentials \
-            --resource-group $CLUSTER_RESOURCE_GROUP_NAME \
-            --name $CLUSTER_NAME \
-            --overwrite-existing
+      - name: Create Namespace if !exist
+        run: |
+          kubectl create namespace ${{ env.NAMESPACE }} --dry-run=client -o json | kubectl apply -f -
 
-      - name: '⎈ Envelope Game Deploy'
+      - name: '⎈ Deploy'
         uses: 'deliverybot/helm@v1'
         with:
           release: envelope-game
-          namespace: envelope-game
+          namespace: ${{ env.NAMESPACE }}
           chart: envelope-game
           repo: https://liatrio.github.io/envelope-game
           token: '${{ github.token }}'
