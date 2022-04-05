@@ -17,8 +17,6 @@ RUN npm test
 
 RUN npm run build
 
-# RUN npm prune --production
-
 FROM node:14-alpine AS run
 
 WORKDIR /envelope-game
