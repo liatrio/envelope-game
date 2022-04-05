@@ -6,7 +6,7 @@ on:
       - master
       - debug-manual-deploy
     paths:
-      - "**/charts/*"
+      - "charts/**/*"
       - ".github/workflows/release.yml"
       - ".github/workflows/post-release.yml"
       - "lib/*.js"
