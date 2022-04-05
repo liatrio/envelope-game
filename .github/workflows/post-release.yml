@@ -33,8 +33,6 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: ${{ secrets.CR_USER }}
-          password: ${{ secrets.CR_PAT }}
 
       - name: Build and push
         uses: docker/build-push-action@v2
@@ -42,3 +40,49 @@ jobs:
           context: .
           push: true
           tags: ${{ env.IMAGE_NAME }}:latest,${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
+
+  helm:
+
+    needs: docker
+
+    name: Helm Deploy Dev
+    runs-on: ubuntu-latest
+
+    env:
+      CLUSTER_RESOURCE_GROUP_NAME: caf-aks-lz-dev-rg
+      CLUSTER_NAME: aks-lz-dev
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: AZ Login
+        env:
+          SERVICE_PRINCIPAL_APP_ID: ${{ secrets.CLUSTER_CRED_GETTER_APPID }}
+          SERVICE_PRINCIPAL_SECRET: ${{ secrets.CLUSTER_CRED_GETTER_PWD }}
+          SERVICE_PRINCIPAL_TENANT: ${{ secrets.CLUSTER_TENANTID }}
+        run: |
+          az login \
+                --service-principal \
+                --username $(SERVICE_PRINCIPAL_APP_ID) \
+                --password $(SERVICE_PRINCIPAL_SECRET) \
+                --tenant $(SERVICE_PRINCIPAL_TENANT)
+
+      - name: Get AKS credentials
+        run: |                
+          az aks get-credentials \
+            --resource-group $CLUSTER_RESOURCE_GROUP_NAME \
+            --name $CLUSTER_NAME \
+            --overwrite-existing
+
+      - name: '⎈ Envelope Game Deploy'
+        uses: 'deliverybot/helm@v1'
+        with:
+          release: envelope-game
+          namespace: envelope-game
+          chart: envelope-game/charts/envelope-game
+          token: '${{ github.token }}'
+          values: |
+            image.name: ${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
