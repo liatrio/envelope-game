@@ -61,10 +61,6 @@ jobs:
           cluster-name: ${{ env.CLUSTER_NAME }}
           resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
 
-      - name: Create Namespace if !exist
-        run: |
-          kubectl create namespace ${{ env.NAMESPACE }} --dry-run=client -o json | kubectl apply -f -
-
       - name: '⎈ Deploy'
         uses: 'deliverybot/helm@v1'
         with:
