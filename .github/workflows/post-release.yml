@@ -53,11 +53,6 @@ jobs:
       CLUSTER_NAME: aks-lz-dev
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
       - name: AZ Login
         env:
           SERVICE_PRINCIPAL_APP_ID: ${{ secrets.CLUSTER_CRED_GETTER_APPID }}
@@ -82,7 +77,8 @@ jobs:
         with:
           release: envelope-game
           namespace: envelope-game
-          chart: envelope-game/charts/envelope-game
+          chart: envelope-game
+          repo: https://liatrio.github.io/envelope-game
           token: '${{ github.token }}'
           values: |
             image.name: ${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
