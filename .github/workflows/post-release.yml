@@ -38,6 +38,8 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ secrets.CR_USER }}
+          password: ${{ secrets.CR_PAT }}
+
 
 
       - name: Build and push
