@@ -6,17 +6,22 @@ metadata:
 spec:
   acme:
     email: cloudservices@liatr.io
-    server: https://acme-v02.api.letsencrypt.org/directory
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: envelopegame-issuer-account-key
+      name: envelope-game-issuer-account-key
     solvers:
     - selector:
-        dnsNames: 
+        dnsNames:
         - envelopegame.com
-      dns01:
-        route53:
-          hostedZoneID: Z04422993QVTF8GKFMWBB
-          region: us-east-1
+        - envelope-game.aks-lz-dev.azurecaf.liatr.io
+      http01:
+        ingress:
+          class: nginx
+          ingressTemplate:
+            metadata:
+              annotations:
+                kubernetes.io/ingress.class: nginx
+
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -26,6 +31,7 @@ spec:
   secretName: envelopegame-cert
   dnsNames:
   - envelopegame.com
+  - envelope-game.aks-lz-dev.azurecaf.liatr.io
   privateKey:
     rotationPolicy: Always
   issuerRef:
