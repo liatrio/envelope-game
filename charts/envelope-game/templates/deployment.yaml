@@ -50,11 +50,12 @@ spec:
           livenessProbe:
             httpGet:
               path: /
-              port: http
+              port: 3000
           readinessProbe:
+            initialDelaySeconds: 5
             httpGet:
               path: /
-              port: http
+              port: 3000
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
