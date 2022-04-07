@@ -74,4 +74,4 @@ jobs:
           repo: https://liatrio.github.io/envelope-game
           token: '${{ github.token }}'
           values: |
-            image.name: ${{ env.IMAGE_NAME }}:${{ docker.outputs.tag }}
+            image.name: ${{ env.IMAGE_NAME }}:${{ needs.docker.outputs.tag }}
