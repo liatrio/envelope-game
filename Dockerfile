@@ -17,8 +17,6 @@ RUN yarn test
 
 RUN yarn run build
 
-RUN yarn install --production --ignore-scripts --prefer-offline
-
 FROM node:16-alpine AS run
 
 WORKDIR /envelope-game

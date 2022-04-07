@@ -4,9 +4,13 @@ on:
   release:
     types:
       - published
+  workflow_dispatch: {}
 
 env:
   IMAGE_NAME: ghcr.io/liatrio/envelope-game
+  NAMESPACE: envelope-game
+  CLUSTER_RESOURCE_GROUP_NAME: ${{ secrets.CLUSTER_RESOURCE_GROUP_NAME }}
+  CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
 
 jobs:
   docker:
@@ -36,9 +40,38 @@ jobs:
           username: ${{ secrets.CR_USER }}
           password: ${{ secrets.CR_PAT }}
 
+
+
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
           tags: ${{ env.IMAGE_NAME }}:latest,${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
+
+  helm:
+
+    needs: docker
+
+    name: Helm Deploy Dev
+    runs-on: ubuntu-latest
+    environment: envelope-game-dev
+
+    steps:
+      - name: AKS Set Context
+        uses: azure/aks-set-context@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          cluster-name: ${{ env.CLUSTER_NAME }}
+          resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
+
+      - name: '⎈ Deploy'
+        uses: 'deliverybot/helm@v1'
+        with:
+          release: envelope-game
+          namespace: ${{ env.NAMESPACE }}
+          chart: envelope-game
+          repo: https://liatrio.github.io/envelope-game
+          token: '${{ github.token }}'
+          values: |
+            image.name: ${{ env.IMAGE_NAME }}:${{ docker.outputs.tag }}

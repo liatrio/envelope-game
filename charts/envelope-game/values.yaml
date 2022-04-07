@@ -12,6 +12,10 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+db:
+  host: envelope-game.mysql.database.azure.com
+  username: "envelope-game@envelope-game"
+
 podAnnotations: {}
 
 podSecurityContext: {}
@@ -30,11 +34,15 @@ service:
   port: 80
 
 ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+  
   hosts:
+    - host: envelope-game.aks-lz-dev.azurecaf.liatr.io
+      paths: 
+        - /
     - host: envelopegame.com
       paths: 
         - /
@@ -43,13 +51,15 @@ ingress:
     - secretName: envelopegame-cert
       hosts:
         - envelopegame.com
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
 
 istio:
   enabled: false
   host: envelope-game
 
 cert:
-  enabled: false
+  enabled: true
 
 resources: 
   requests:
@@ -82,4 +92,3 @@ mysql:
       limits:
         cpu: 300m
         memory: 1024Mi
-      
