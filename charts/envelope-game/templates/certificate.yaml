@@ -6,7 +6,7 @@ metadata:
 spec:
   acme:
     email: cloudservices@liatr.io
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    server: {{ .Values.ingress.acme.server }}
     privateKeySecretRef:
       name: envelope-game-issuer-account-key
     solvers:

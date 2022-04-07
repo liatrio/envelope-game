@@ -51,6 +51,8 @@ ingress:
     - secretName: envelopegame-cert
       hosts:
         - envelopegame.com
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
 
 istio:
   enabled: false
