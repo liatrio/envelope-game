@@ -52,7 +52,7 @@ jobs:
     needs: docker
 
     name: Helm Deploy Dev
-    runs-on: [self-hosted, caf, prod, terraform]
+    runs-on: [self-hosted, caf]
     environment: envelope-game-dev
 
     steps:
@@ -71,6 +71,4 @@ jobs:
         run: |
           helm repo add envelope-game https://liatrio.github.io/envelope-game
           helm repo update
-          helm upgrade --install envelope-game envelope-game/envelope-game -n ${{ env.NAMESPACE }}
-        env:
-          image_name: ${{ env.IMAGE_NAME }}:${{ needs.docker.outputs.tag }}
+          helm upgrade --install envelope-game envelope-game/envelope-game --set image.name=${{ env.IMAGE_NAME }}:${{ needs.docker.outputs.tag }} -n ${{ env.NAMESPACE }}
