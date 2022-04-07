@@ -1,4 +1,4 @@
-FROM node:14-alpine AS test
+FROM node:16-alpine AS test
 
 WORKDIR /envelope-game
 
@@ -17,7 +17,7 @@ RUN yarn test
 
 RUN yarn run build
 
-FROM node:14-alpine AS run
+FROM node:16-alpine AS run
 
 WORKDIR /envelope-game
 

@@ -13,7 +13,6 @@ spec:
     - selector:
         dnsNames:
         - envelopegame.com
-        - envelope-game.aks-lz-dev.azurecaf.liatr.io
       http01:
         ingress:
           class: nginx
@@ -31,7 +30,6 @@ spec:
   secretName: envelopegame-cert
   dnsNames:
   - envelopegame.com
-  - envelope-game.aks-lz-dev.azurecaf.liatr.io
   privateKey:
     rotationPolicy: Always
   issuerRef:

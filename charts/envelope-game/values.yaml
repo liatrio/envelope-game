@@ -51,7 +51,6 @@ ingress:
     - secretName: envelopegame-cert
       hosts:
         - envelopegame.com
-        - envelope-game.aks-lz-dev.azurecaf.liatr.io
 
 istio:
   enabled: false
