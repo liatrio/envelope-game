@@ -44,7 +44,7 @@ if (webpackConfig.mode === 'production') {
 
 const port = process.env.PORT || 3000;
 
-db.connect(function(err) {
+db.query("SELECT * from TEAMS", function(err) {
   if (err) {
     return console.error('error: ' + err.message);
   }
