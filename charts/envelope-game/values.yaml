@@ -43,6 +43,9 @@ ingress:
     - host: envelope-game.aks-lz-dev.azurecaf.liatr.io
       paths: 
         - /
+    - host: envelopegame.com
+      paths: 
+        - /
       
   tls: 
     - secretName: envelopegame-cert
@@ -55,7 +58,7 @@ istio:
   host: envelope-game
 
 cert:
-  enabled: false
+  enabled: true
 
 resources: 
   requests:
