@@ -52,7 +52,7 @@ jobs:
     needs: docker
 
     name: Helm Deploy Dev
-    runs-on: [self-hosted, caf]
+    runs-on: [self-hosted, caf, prod]
     environment: envelope-game-dev
 
     steps:
