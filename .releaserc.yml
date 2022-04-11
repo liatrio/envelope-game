@@ -21,3 +21,4 @@ plugins:
     assets:
       - path: 'envelope-*.tgz'
         label: Helm Chart
+
