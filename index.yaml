@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   envelope-game:
   - apiVersion: v2
+    appVersion: 1.2.2
+    created: "2022-04-12T16:20:31.474236169Z"
+    description: A Helm chart for Kubernetes
+    digest: 681a5bc70545426c2dc225f085cba1738d47e43585136ab299fe4f62dbb8d617
+    name: envelope-game
+    type: application
+    urls:
+    - https://github.com/liatrio/envelope-game/releases/download/v1.2.2/envelope-game-1.2.2.tgz
+    version: 1.2.2
+  - apiVersion: v2
     appVersion: 1.2.1
     created: "2022-04-12T16:05:10.531673822Z"
     description: A Helm chart for Kubernetes
@@ -81,4 +91,4 @@ entries:
     urls:
     - https://github.com/liatrio/envelope-game/releases/download/v1.0.0/envelope-game-1.0.0.tgz
     version: 1.0.0
-generated: "2022-04-12T16:05:10.530192105Z"
+generated: "2022-04-12T16:20:31.473147822Z"
