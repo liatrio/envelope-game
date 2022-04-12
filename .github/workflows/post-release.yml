@@ -68,7 +68,7 @@ jobs:
         uses: azure/aks-set-context@v2.0
         with:
           cluster-name: ${{ env.CLUSTER_NAME }}
-          resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
+          resource-group: ${{ env.CLUSTER_RESOURCE_GROUP_NAME }}
 
       - name: Install Helm
         uses: azure/setup-helm@v1
