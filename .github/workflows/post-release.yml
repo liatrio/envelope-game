@@ -58,9 +58,9 @@ jobs:
     steps:
       - name: AZ Login
         env:
-          client_id: ${{ secrets.AZURE_CLIENT_ID }}
-          client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         run: |
           az login --service-principal -u "$CLIENT_ID" -p "$CLIENT_SECRET" --tenant "$TENANT_ID"
 
