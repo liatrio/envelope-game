@@ -44,7 +44,7 @@ if (webpackConfig.mode === 'production') {
 
 const port = process.env.PORT || 3000;
 
-// Now includes db connection test before starting web server
+// Now includes db connection test before starting web listener
 db.query("SELECT * from TEAMS", function(err) {
   if (err) {
     return console.error('error: ' + err.message);
