@@ -57,12 +57,12 @@ jobs:
 
     steps:
       - name: AZ Login
-        run: |
-          az login --service-principal -u ${{ env.CLIENT_ID }} -p ${{ env.CLIENT_SECRET }} --tenant ${{ env.TENANT_ID }}
         env:
           client_id: ${{ secrets.AZURE_CLIENT_ID }}
           client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+        run: |
+          az login --service-principal -u "$CLIENT_ID" -p "$CLIENT_SECRET" --tenant "$TENANT_ID"
 
       - name: AKS Set Context
         uses: azure/aks-set-context@v2.0
