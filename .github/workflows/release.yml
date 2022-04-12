@@ -10,6 +10,8 @@ on:
       - "lib/*.js"
       - "react/*.js"
       - "routes/*.js"
+      - "server.js"
+      - "db.js"
       - ".releaserc.yml"
       - "package.json"
       - "yarn.lock"
