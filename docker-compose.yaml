@@ -7,8 +7,6 @@ services:
       - DB_HOST=db
       - DB_USERNAME=root
       - DB_PASSWORD=root
-    volumes: 
-      - ./:/envelope-game/
     ports:
       - "3000:3000"
     restart: always
