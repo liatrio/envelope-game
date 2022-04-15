@@ -1,6 +1,7 @@
 //import Timers from '../lib/timers';
 const { nanoid } = require('nanoid/non-secure');
 const { Router } = require('express');
+const RateLimit = require('express-rate-limit')
 const router = Router();
 const db = require('../db');
 const timer = require('../lib/timers');
@@ -10,6 +11,16 @@ const numEnvelopes = 20;
 
 // number of envelopes for each batch
 const batchSize = 5;
+
+// set up rate limiting
+var limiter = RateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 1000,
+  standardHeaders: true,
+	legacyHeaders: false
+})
+
+router.use(limiter)
 
 //const timer = new Timers();
 // endpoint to create a game
