@@ -44,7 +44,7 @@ npm install
 - Helm
 
 ### Live Demo
-<https://www.envelopegame.com/>
+<https://envelopegame.com/>
 
 ### Running Locally
 You can also run it locally with docker compose
