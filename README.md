@@ -61,4 +61,3 @@ If you make a change to the database you'll need to run:
 docker-compose down
 ```
 before running it locally.
-
