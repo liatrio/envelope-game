@@ -44,7 +44,7 @@ npm install
 - Helm
 
 ### Live Demo
-<https://www.envelopegame.com/>
+<https://envelopegame.com/>
 
 ### Running Locally
 You can also run it locally with docker compose
@@ -61,4 +61,3 @@ If you make a change to the database you'll need to run:
 docker-compose down
 ```
 before running it locally.
-
