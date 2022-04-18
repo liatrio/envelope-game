@@ -1,6 +1,8 @@
 # Envelope Game
 ![alt text](./react/assets/screencap.png)
 
+[![CodeQL](https://github.com/liatrio/envelope-game/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/liatrio/envelope-game/actions/workflows/codeql-analysis.yml)
+
 ### About The Game
 The Envelope Game is a simple demonstration that shows the benefits of continuous flow delivery over a traditional large-batch delivery. 
 - Six players are divided into two Teams (Flow & Batch).
