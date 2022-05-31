@@ -3,7 +3,8 @@ name: Release
 on:
   push:
     branches:
-      - main
+      - master
+      - test-semantic-release
     paths:
       - "charts/**/*"
       - ".github/workflows/release.yml"
