@@ -1,5 +1,6 @@
 branches:
-  - master
+  - main
+  - test-semantic-release
 repositoryUrl: 'git@github.com:liatrio/envelope-game.git'
 preset: conventionalcommits
 plugins:
@@ -21,4 +22,3 @@ plugins:
     assets:
       - path: 'envelope-*.tgz'
         label: Helm Chart
-
