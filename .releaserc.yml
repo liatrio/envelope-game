@@ -1,6 +1,5 @@
 branches:
   - main
-  - test-semantic-release
 repositoryUrl: 'git@github.com:liatrio/envelope-game.git'
 preset: conventionalcommits
 plugins:
