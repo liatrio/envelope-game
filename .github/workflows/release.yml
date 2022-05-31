@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - test-semantic-release
     paths:
       - "charts/**/*"
       - ".github/workflows/release.yml"
