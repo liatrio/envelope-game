@@ -86,7 +86,7 @@
     "file-loader": "^6.1.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^26.4.2",
-    "jsdom": "^16.4.0",
+    "jsdom": "^19.0.0",
     "nyc": "^15.1.0",
     "react-dom": "^16.13.1",
     "react-test-renderer": "^16.13.1",
