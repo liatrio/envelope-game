@@ -3,7 +3,7 @@
   "version": "1.4.0",
   "private": true,
   "dependencies": {
-    "@babel/core": "^7.11.6",
+    "@babel/core": "^7.18.5",
     "@babel/plugin-transform-runtime": "^7.11.5",
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.10.4",
@@ -25,7 +25,7 @@
     "react-hot-loader": "^4.13.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.1",
-    "style-loader": "^2.0.0",
+    "style-loader": "^3.3.1",
     "universal-cookie": "^4.0.4",
     "universal-cookie-express": "^4.0.3",
     "webpack": "^5.72.1",
