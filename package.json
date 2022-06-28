@@ -92,6 +92,6 @@
     "nyc": "^15.1.0",
     "react-dom": "^16.13.1",
     "react-test-renderer": "^16.13.1",
-    "semantic-release": "^19.0.2"
+    "semantic-release": "^19.0.3"
   }
 }
