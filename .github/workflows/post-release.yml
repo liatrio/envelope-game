@@ -52,7 +52,7 @@ jobs:
     needs: docker
 
     name: Helm Deploy Dev
-    runs-on: [self-hosted, caf, prod]
+    runs-on: [self-hosted, liatrio-runners-prod]
     environment: envelope-game-dev
 
     steps:
