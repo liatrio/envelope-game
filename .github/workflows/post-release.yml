@@ -58,7 +58,7 @@ jobs:
     steps:
 
       - name: Install az-cli
-        run: sudo apt-get update && sudo apt-get install -y azure-cli
+        run: sudo apt-get update && sudo apt-get -y install azure-cli
 
       - name: AZ Login
         env:
