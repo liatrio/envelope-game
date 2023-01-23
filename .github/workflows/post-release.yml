@@ -21,6 +21,9 @@ jobs:
 
     steps:
 
+      - name: Install azure-cli
+        run: sudo apt-get update && sudo apt-get install azure-cli
+
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
