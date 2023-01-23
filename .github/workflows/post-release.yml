@@ -57,12 +57,17 @@ jobs:
 
     steps:
 
+      - name: Install deps
+        run: |
+          sudo apt-get update && sudo apt-get install azure-cli
+
       - name: AZ Login
         env:
           CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        run: sudo apt-get update && sudo apt-get install azure-cli && az login --service-principal -u "$CLIENT_ID" -p "$CLIENT_SECRET" --tenant "$TENANT_ID"
+        run: |
+          az login --service-principal -u "$CLIENT_ID" -p "$CLIENT_SECRET" --tenant "$TENANT_ID"
 
       - name: AKS Set Context
         uses: azure/aks-set-context@v3.0
