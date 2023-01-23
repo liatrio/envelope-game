@@ -57,9 +57,8 @@ jobs:
 
     steps:
 
-      - name: Install deps
-        run: |
-          sudo apt-get update && sudo apt-get install azure-cli
+      - name: Install az-cli
+        run: sudo apt-get update && sudo apt-get install -y azure-cli
 
       - name: AZ Login
         env:
