@@ -66,7 +66,7 @@ jobs:
           CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         run: |
-          az login --service-principal -u "$CLIENT_ID" -p "$CLIENT_SECRET" --tenant "$TENANT_ID"
+          az login --service-principal -u "$CLIENT_ID" -p "$CLIENT_SECRET" --tenant "$TENANT_ID" --allow-no-subscriptions
 
       - name: AKS Set Context
         uses: azure/aks-set-context@v3.0
