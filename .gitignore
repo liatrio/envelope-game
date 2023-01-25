@@ -6,5 +6,5 @@
 react/.DS_Store
 react/assets/.DS_Store
 .env
-
+terraform/*.tfvars
 charts/envelope-game/charts
