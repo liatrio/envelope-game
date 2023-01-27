@@ -1,6 +1,6 @@
 .PHONY=init fmt validate plan apply destroy clean
 
-TFVARS=
+TFVARS=envelope.tfvars
 
 plan: validate
 	terraform $@ -var-file=${TFVARS}

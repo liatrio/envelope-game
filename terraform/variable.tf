@@ -42,3 +42,7 @@ variable "client_secret" {
 variable "app_id" {
   sensitive = true
 }
+
+variable "sandbox_subscription" {
+  sensitive = true
+}
