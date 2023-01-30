@@ -8,9 +8,9 @@ on:
 
 env:
   IMAGE_NAME: ghcr.io/liatrio/envelope-game
-  NAMESPACE: envelope-game
-  CLUSTER_RESOURCE_GROUP_NAME: ${{ secrets.CLUSTER_RESOURCE_GROUP_NAME }}
-  CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
+  NAMESPACE: default
+  CLUSTER_RESOURCE_GROUP_NAME: ${{ secrets.CLUSTER_SANDBOX_RESOURCE_GROUP_NAME }}
+  CLUSTER_NAME: ${{ secrets.CLUSTER_NAME_SANDBOX }}
 
 jobs:
   docker:
@@ -62,11 +62,11 @@ jobs:
 
       - name: AZ Login
         env:
-          CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          CLIENT_ID: ${{ secrets.AZURE_SANDBOX_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.AZURE_SANDBOX_CLIENT_SECRET }}
+          TENANT_ID: ${{ secrets.AZURE_SANDBOX_TENANT_ID }}
         run: |
-          az login --service-principal -u "$CLIENT_ID" -p "$CLIENT_SECRET" --tenant "$TENANT_ID" --allow-no-subscriptions
+          az login --service-principal -u "$CLIENT_ID" -p "$CLIENT_SECRET" --tenant "$TENANT_ID"
 
       - name: AKS Set Context
         uses: azure/aks-set-context@v3.0
