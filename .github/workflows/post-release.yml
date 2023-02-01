@@ -9,8 +9,8 @@ on:
 env:
   IMAGE_NAME: ghcr.io/liatrio/envelope-game
   NAMESPACE: envelope-game
-  CLUSTER_RESOURCE_GROUP_NAME: ${{ secrets.CLUSTER_RESOURCE_GROUP_NAME }}
-  CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
+  CLUSTER_RESOURCE_GROUP_NAME: ${{ secrets.CLUSTER_SANDBOX_RESOURCE_GROUP_NAME }}
+  CLUSTER_NAME: ${{ secrets.CLUSTER_NAME_SANDBOX }}
 
 jobs:
   docker:
@@ -27,7 +27,7 @@ jobs:
 
       - name: Get Tag
         id: tag
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/tags/v}
+        run: echo "TAG=$(jq -r .version package.json)" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -44,22 +44,26 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE_NAME }}:latest,${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
+          tags: ${{ env.IMAGE_NAME }}:latest,${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
   helm:
 
     needs: docker
 
     name: Helm Deploy Dev
-    runs-on: [self-hosted, caf, prod]
+    runs-on: [self-hosted, liatrio-runners-prod]
     environment: envelope-game-dev
 
     steps:
+
+      - name: Install az-cli
+        run: sudo apt-get update && sudo apt-get -y install azure-cli
+
       - name: AZ Login
         env:
-          CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          CLIENT_ID: ${{ secrets.AZURE_SANDBOX_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.AZURE_SANDBOX_CLIENT_SECRET }}
+          TENANT_ID: ${{ secrets.AZURE_SANDBOX_TENANT_ID }}
         run: |
           az login --service-principal -u "$CLIENT_ID" -p "$CLIENT_SECRET" --tenant "$TENANT_ID"
 
