@@ -3,7 +3,7 @@ resource "azurerm_resource_group" "envelope-game-rg" {
   name     = var.resource_group_name
 }
 
-resource "azurerm_kubernetes_cluster" "envelope-game-cluster" {
+resource "azurerm_kubernetes_cluster" "envelope-game" {
   location            = azurerm_resource_group.envelope-game-rg.location
   name                = var.cluster_name
   resource_group_name = azurerm_resource_group.envelope-game-rg.name
