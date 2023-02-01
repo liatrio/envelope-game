@@ -8,7 +8,7 @@ on:
 
 env:
   IMAGE_NAME: ghcr.io/liatrio/envelope-game
-  NAMESPACE: default
+  NAMESPACE: envelope-game
   CLUSTER_RESOURCE_GROUP_NAME: ${{ secrets.CLUSTER_SANDBOX_RESOURCE_GROUP_NAME }}
   CLUSTER_NAME: ${{ secrets.CLUSTER_NAME_SANDBOX }}
 
