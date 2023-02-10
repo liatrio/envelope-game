@@ -46,3 +46,11 @@ variable "app_id" {
 variable "sandbox_subscription" {
   sensitive = true
 }
+
+variable "db_user" {
+  sensitive = true
+}
+
+variable "db_secret" {
+  sensitive = true
+}
