@@ -54,3 +54,8 @@ variable "db_user" {
 variable "db_secret" {
   sensitive = true
 }
+
+variable "namespace_name" {
+  sensitive = true
+  type      = string
+}

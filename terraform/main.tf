@@ -5,7 +5,7 @@ resource "azurerm_resource_group" "envelope-game-rg" {
     Client      = "Internal"
     Project     = "Flywheel"
     Environment = "Test"
-    Application = "Envelope Game"
+    Application = "Envelope-Game"
   }
 }
 
@@ -14,15 +14,10 @@ resource "azurerm_kubernetes_cluster" "envelope-game" {
   name                = var.cluster_name
   resource_group_name = azurerm_resource_group.envelope-game-rg.name
   dns_prefix          = var.dns_prefix
-  tags = {
-    Client      = azurerm_resource_group.envelope-game-rg.tags.Client
-    Project     = azurerm_resource_group.envelope-game-rg.tags.Project
-    Environment = azurerm_resource_group.envelope-game-rg.tags.Environment
-    Application = azurerm_resource_group.envelope-game-rg.tags.Application
-  }
+  tags                = azurerm_resource_group.envelope-game-rg.tags
 
   default_node_pool {
-    name       = "agentpool"
+    name       = "envelopegame"
     vm_size    = "Standard_D2_v2"
     node_count = var.agent_count
   }
@@ -33,7 +28,7 @@ resource "azurerm_kubernetes_cluster" "envelope-game" {
   }
 }
 
-resource "azurerm_mysql_server" "envelope-game-db" {
+resource "azurerm_mysql_server" "envelope-game-mysql" {
   name                = "envelope-game"
   location            = azurerm_resource_group.envelope-game-rg.location
   resource_group_name = azurerm_resource_group.envelope-game-rg.name
@@ -52,22 +47,23 @@ resource "azurerm_mysql_server" "envelope-game-db" {
   public_network_access_enabled     = true
   ssl_enforcement_enabled           = false
   ssl_minimal_tls_version_enforced  = "TLSEnforcementDisabled"
-
-  tags = {
-    Client      = azurerm_resource_group.envelope-game-rg.tags.Client
-    Project     = azurerm_resource_group.envelope-game-rg.tags.Project
-    Environment = azurerm_resource_group.envelope-game-rg.tags.Environment
-    Application = azurerm_resource_group.envelope-game-rg.tags.Application
-  }
+  tags                              = azurerm_resource_group.envelope-game-rg.tags
 }
 
-resource "azurerm_mysql_database" "envelope-game-test" {
+resource "azurerm_mysql_database" "envelope-game-db" {
   name                = "envelope-game"
   resource_group_name = azurerm_resource_group.envelope-game-rg.name
-  server_name         = azurerm_mysql_server.envelope-game-db.name
+  server_name         = azurerm_mysql_server.envelope-game-mysql.name
   charset             = "utf8"
   collation           = "utf8_unicode_ci"
 }
+
+#resource "azurerm_mysql_virtual_network_rule" "envelope-game-rule" {
+#  name                = "envelope-game-rule"
+#  resource_group_name = azurerm_resource_group.envelope-game-rg.name
+#  server_name         = azurerm_mysql_server.envelope-game-mysql.name
+#  subnet_id           = azurerm_subnet.internal.id
+#}
 
 resource "azurerm_public_ip" "envelope-game-pip" {
   name                = "envelope-game-pip"
@@ -75,10 +71,5 @@ resource "azurerm_public_ip" "envelope-game-pip" {
   location            = azurerm_resource_group.envelope-game-rg.location
   allocation_method   = "Static"
   sku                 = "Standard"
-  tags = {
-    Client      = azurerm_resource_group.envelope-game-rg.tags.Client
-    Project     = azurerm_resource_group.envelope-game-rg.tags.Project
-    Environment = azurerm_resource_group.envelope-game-rg.tags.Environment
-    Application = azurerm_resource_group.envelope-game-rg.tags.Application
-  }
+  tags                = azurerm_resource_group.envelope-game-rg.tags
 }
