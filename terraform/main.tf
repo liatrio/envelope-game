@@ -17,15 +17,19 @@ resource "azurerm_kubernetes_cluster" "envelope-game" {
   tags                = azurerm_resource_group.envelope-game-rg.tags
 
   default_node_pool {
-    name       = "envelopegame"
-    vm_size    = "Standard_D2_v2"
-    node_count = var.agent_count
+    name           = "envelopegame"
+    vm_size        = "Standard_D2_v2"
+    node_count     = var.agent_count
+    vnet_subnet_id = azurerm_subnet.envelope-game-subnet.id
   }
 
   service_principal {
     client_id     = var.app_id
     client_secret = var.client_secret
   }
+  depends_on = [
+    azurerm_subnet.envelope-game-subnet,
+  ]
 }
 
 resource "azurerm_mysql_server" "envelope-game-mysql" {
@@ -58,12 +62,28 @@ resource "azurerm_mysql_database" "envelope-game-db" {
   collation           = "utf8_unicode_ci"
 }
 
-#resource "azurerm_mysql_virtual_network_rule" "envelope-game-rule" {
-#  name                = "envelope-game-rule"
-#  resource_group_name = azurerm_resource_group.envelope-game-rg.name
-#  server_name         = azurerm_mysql_server.envelope-game-mysql.name
-#  subnet_id           = azurerm_subnet.internal.id
-#}
+resource "azurerm_virtual_network" "envelope-game-vnet" {
+  name                = "envelope-game-vnet"
+  address_space       = ["10.224.0.0/12"]
+  location            = azurerm_resource_group.envelope-game-rg.location
+  resource_group_name = azurerm_resource_group.envelope-game-rg.name
+  tags                = azurerm_resource_group.envelope-game-rg.tags
+}
+
+resource "azurerm_subnet" "envelope-game-subnet" {
+  name                 = "envelope-game-subnet"
+  resource_group_name  = azurerm_resource_group.envelope-game-rg.name
+  virtual_network_name = azurerm_virtual_network.envelope-game-vnet.name
+  address_prefixes     = ["10.224.0.0/16"]
+  service_endpoints    = ["Microsoft.Sql"]
+}
+
+resource "azurerm_mysql_virtual_network_rule" "envelope-game-rule" {
+  name                = "envelope-game-rule"
+  resource_group_name = azurerm_resource_group.envelope-game-rg.name
+  server_name         = azurerm_mysql_server.envelope-game-mysql.name
+  subnet_id           = azurerm_subnet.envelope-game-subnet.id
+}
 
 resource "azurerm_public_ip" "envelope-game-pip" {
   name                = "envelope-game-pip"
